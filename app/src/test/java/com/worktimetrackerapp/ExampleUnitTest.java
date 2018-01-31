@@ -1,4 +1,4 @@
-package com.example.worktimetracker.worktimetrackerapp;
+package com.worktimetrackerapp;
 
 import org.junit.Test;
 
