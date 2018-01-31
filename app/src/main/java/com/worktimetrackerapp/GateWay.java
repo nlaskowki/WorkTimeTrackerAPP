@@ -1,4 +1,4 @@
-package com.worktimetrackerapp.GUI_Interfaces;
+package com.worktimetrackerapp;
 
 /**
  * Created by Max Dawson on 1/31/2018.
