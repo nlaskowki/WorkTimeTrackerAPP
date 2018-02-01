@@ -4,5 +4,5 @@ package com.worktimetrackerapp.GUI_Interfaces;
  * Created by Max Dawson on 1/31/2018.
  */
 
-public class Finance {
+public class LogHistory_Controller {
 }
