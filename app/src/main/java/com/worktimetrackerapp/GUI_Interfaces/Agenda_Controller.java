@@ -1,23 +1,24 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
+
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import com.example.worktimetracker.wttapp.R;
 
-public class Agenda_Controller extends AppCompatActivity {
+public class Agenda_Controller extends Fragment {
 
+    View currentView;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //change to correct corresponding screen
-        //setContentView(com.worktimetrackerapp.R.layout.sign_in_screen);
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        currentView = inflater.inflate(R.layout.agenda, container, false);
+        return currentView;
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
 }
 
 

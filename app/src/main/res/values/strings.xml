@@ -1,20 +1,10 @@
 <resources>
-    <string name="app_name">WorkTimeTrackerAPP</string>
+    <string name="app_name">WTTapp</string>
 
-    //Values for the Sidebar Menu Button Names
-    <string name="agenda">Agenda</string>
-    <string name="main_menu">Main Menu</string>
-    <string name="finances">Finances</string>
-    <string name="log_history">Log History</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="settings">Settings</string>
-    <string name="remember_username">Remember Username</string>
-    <string name="login">Login</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="forgot_username">Forgot Username?</string>
-    <string name="username">Username:</string>
-    <string name="app_logo">app logo</string>
-    <string name="password">Password:</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    //Values for the Activity Main Buttons, Text Boxes, Labels, Check Box, and Content Description for the logo.
+    <string name="action_settings">Settings</string>
+    <string name="user1">User1</string>
+    <string name="user2">user2</string>
 </resources>

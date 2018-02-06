@@ -1,3 +1,0 @@
-# WorkTimeTrackerAPP
-
-Currently under construction.
