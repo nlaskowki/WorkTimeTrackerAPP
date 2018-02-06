@@ -2,6 +2,7 @@ package com.worktimetrackerapp;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,8 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.example.worktimetracker.wttapp.R;
+import com.couchbase.lite.Manager;
+import com.couchbase.lite.android.AndroidContext;
+import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
@@ -22,11 +26,16 @@ import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
 
 public class WTTApplication extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String TAG = "WorkTimeTracker";
+    Manager dbManager =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wttapplication);
+
+        //first run login/singup screens
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -106,5 +115,17 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    //display error messages from db
+    public void showErrorMessage(final String errorMessage, final Throwable throwable) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                android.util.Log.e(TAG, errorMessage, throwable);
+                String msg = String.format("%s: %s",
+                        errorMessage, throwable != null ? throwable : "");
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
