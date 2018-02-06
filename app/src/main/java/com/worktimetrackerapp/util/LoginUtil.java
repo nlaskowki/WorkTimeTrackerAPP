@@ -1,6 +1,5 @@
 package com.worktimetrackerapp.util;
 
-import android.content.Intent;
 
 import com.worktimetrackerapp.WTTApplication;
 
