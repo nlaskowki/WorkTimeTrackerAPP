@@ -2,6 +2,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import com.worktimetrackerapp.R;
 
 public class SignUp_Controller extends AppCompatActivity {
 

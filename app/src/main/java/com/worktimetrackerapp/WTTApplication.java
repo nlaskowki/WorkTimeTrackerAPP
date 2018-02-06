@@ -1,6 +1,7 @@
 package com.worktimetrackerapp;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -24,9 +25,11 @@ import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
+import com.worktimetrackerapp.util.*;
 
 public class WTTApplication extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
+    public String mCurrentUserId;
     Manager dbManager =null;
 
     @Override
@@ -116,6 +119,8 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
     //display error messages from db
     public void showErrorMessage(final String errorMessage, final Throwable throwable) {
         runOnUiThread(new Runnable() {

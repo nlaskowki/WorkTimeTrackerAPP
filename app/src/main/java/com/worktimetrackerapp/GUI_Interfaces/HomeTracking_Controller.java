@@ -7,7 +7,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
-        import com.example.worktimetracker.wttapp.R;
+        import com.worktimetrackerapp.R;
 
 public class HomeTracking_Controller extends Fragment {
 
