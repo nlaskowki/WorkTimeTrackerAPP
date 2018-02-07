@@ -7,4 +7,19 @@
     <string name="action_settings">Settings</string>
     <string name="user1">User1</string>
     <string name="user2">user2</string>
+
+    // Strings for User Info. Page
+    <string name="welcome_msg">Welcome to your Work Time Tracker!</string>
+    <string name="display_username"> </string>
+    <string name="next"> Next </string>
+
+    // Strings for Sign-Up Page
+    <string name="app_logo">Work Time Tracker</string>
+    <string name="name"> Name </string>
+    <string name="username"> Username </string>
+    <string name="password">Password</string>
+    <string name="confirm_password"> Confirm Password </string>
+    <string name="email"> E-Mail </string>
+    <string name="phone_number"> Phone Number</string>
+    <string name="sign_up"> Sign Up </string>
 </resources>
