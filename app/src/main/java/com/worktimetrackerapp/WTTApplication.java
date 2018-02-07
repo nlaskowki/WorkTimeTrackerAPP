@@ -37,7 +37,7 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wttapplication);
 
-        //first run login/singup screens
+        //first run login/singup screens**************************
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
