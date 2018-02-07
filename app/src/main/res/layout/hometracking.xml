@@ -5,12 +5,62 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Home"
-        android:id="@+id/textView2"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="72dp" />
+        android:layout_marginTop="12dp"
+        android:text="Home"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/numHoursJobTxtVw"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp" />
+
+
+    <TextView
+        android:id="@+id/numHoursJobTxtVw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/accumulatingWageTxtVW"
+        android:layout_centerHorizontal="true"
+        android:text="Hours"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/accumulatingWageTxtVW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/hoursToGoTxtVW"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:text="Wage Earned"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/hoursToGoTxtVW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/jobDoneBtn"
+        android:layout_alignStart="@+id/accumulatingWageTxtVW"
+        android:layout_marginBottom="21dp"
+        android:text="Hours To Go"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/jobDoneBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp"
+        android:text="Done" />
+
 </RelativeLayout>
