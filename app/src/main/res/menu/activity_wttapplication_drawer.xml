@@ -26,7 +26,7 @@
                 android:title="Settings" />
             <item
                 android:id="@+id/nav_LogOut"
-                android:icon="@mipmap/ic_launcher_round"
+                android:icon="@mipmap/ic_launcher_new_round"
                 android:title="Sign-out" />
         </menu>
     </item>
