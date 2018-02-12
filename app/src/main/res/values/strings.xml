@@ -24,4 +24,5 @@
     <string name="remember_username">Remember Username</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
+    <string name="forgot_username">Forgot Username?</string>
 </resources>
