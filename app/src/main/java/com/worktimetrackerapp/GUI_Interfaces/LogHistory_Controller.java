@@ -15,7 +15,7 @@ public class LogHistory_Controller extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        currentView = inflater.inflate(R.layout.loghistory, container, false);
+        currentView = inflater.inflate(R.layout.log_history, container, false);
         return currentView;
     }
 }

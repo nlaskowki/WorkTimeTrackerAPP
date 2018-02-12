@@ -16,7 +16,7 @@ public class HomeTracking_Controller extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        currentView = inflater.inflate(R.layout.hometracking, container, false);
+        currentView = inflater.inflate(R.layout.home_tracking, container, false);
         return currentView;
     }
 

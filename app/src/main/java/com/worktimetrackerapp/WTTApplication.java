@@ -3,10 +3,6 @@ package com.worktimetrackerapp;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +15,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
+import com.worktimetrackerapp.GUI_Interfaces.SignIn_Controller;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
@@ -30,6 +27,7 @@ import com.worktimetrackerapp.util.*;
 public class WTTApplication extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
     public String mCurrentUserId;
+
     Manager dbManager =null;
 
     @Override
@@ -37,19 +35,8 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wttapplication);
 
-        //first run login/singup screens**************************
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,6 +46,10 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //first frame
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
     }
 
     @Override
@@ -100,7 +91,7 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         FragmentManager fragmentManager = getFragmentManager();
 
         if (id == R.id.nav_home) {
-            //implement picking hometracking or homenottracking
+            //implement picking home_tracking or home_not_tracking
 
             fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
         } else if (id == R.id.nav_finances) {
@@ -113,6 +104,9 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
         } else if (id == R.id.nav_LogOut) {
             //log out
+            Intent ResetFrames = new Intent(getApplicationContext(), EntryPoint.class);
+            ResetFrames.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(ResetFrames);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
