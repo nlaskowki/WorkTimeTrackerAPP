@@ -5,13 +5,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_new"
-        android:label="@string/app_name"
+        android:label="WorkTimeTracker"
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.worktimetrackerapp.WTTApplication"
-            android:label="@string/app_name"
+            android:name="com.worktimetrackerapp.EntryPoint"
+            android:label="WTT"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WTTApplication" />
+        <activity android:name=".GUI_Interfaces.SignIn_Controller" />
+        <activity android:name=".GUI_Interfaces.SignUp_Controller" />
+
     </application>
 
 </manifest>
