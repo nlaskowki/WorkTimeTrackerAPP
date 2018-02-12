@@ -21,5 +21,7 @@
     <string name="confirm_password"> Confirm Password </string>
     <string name="email"> E-Mail </string>
     <string name="phone_number"> Phone Number</string>
-    <string name="sign_up"> Sign Up </string>
+    <string name="remember_username">Remember Username</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
