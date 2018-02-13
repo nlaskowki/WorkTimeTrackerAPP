@@ -12,17 +12,17 @@
     <string name="welcome_msg">Welcome to your Work Time Tracker!</string>
     <string name="display_username"> </string>
     <string name="next"> Next </string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 
     // Strings for Sign-Up Page
     <string name="app_logo">Work Time Tracker</string>
-    <string name="name"> Name </string>
-    <string name="username"> Username </string>
-    <string name="password">Password</string>
-    <string name="confirm_password"> Confirm Password </string>
-    <string name="email"> E-Mail </string>
-    <string name="phone_number"> Phone Number</string>
     <string name="remember_username">Remember Username</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="forgot_username">Forgot Username?</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
 </resources>
