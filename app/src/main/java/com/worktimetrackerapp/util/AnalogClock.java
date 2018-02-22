@@ -1,4 +1,4 @@
-package com.worktimetrackerapp.GUI_Interfaces;
+package com.worktimetrackerapp.util;
 
 import android.content.Context;
 import android.graphics.Canvas;

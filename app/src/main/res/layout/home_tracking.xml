@@ -11,15 +11,15 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
-        android:text="Home"
+        android:text="Welcome WTTuser"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
+    <com.worktimetrackerapp.util.AnalogClock
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_above="@+id/numHoursJobTxtVw"
+        android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="21dp" />
+        android:layout_marginTop="22dp" />
 
 
     <TextView
@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/accumulatingWageTxtVW"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
         android:text="Hours"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
@@ -36,9 +37,9 @@
         android:id="@+id/accumulatingWageTxtVW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/hoursToGoTxtVW"
+        android:layout_above="@+id/hoursToGoTxtVW"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
+        android:layout_marginBottom="24dp"
         android:text="Wage Earned"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
