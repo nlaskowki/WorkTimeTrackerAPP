@@ -30,6 +30,7 @@ public class SignIn_Controller extends AppCompatActivity  {
 
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_GOOGLE_SIGN_IN = 9001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,22 +103,16 @@ public class SignIn_Controller extends AppCompatActivity  {
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        System.out.println("entered task");
         try {
-            System.out.println("entered try");
-
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            System.out.println("crash");
-
             String idToken = account.getIdToken();
 
-            System.out.println(idToken);
-
-            // TODO(developer): send ID Token to server and validate
-
-            //Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
-           //LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            //startActivity(LaunchHome);
+            if(idToken != null) {
+                // TODO(developer): send ID Token to server and validate
+            }
+            Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
+           LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+           startActivity(LaunchHome);
 
         } catch (ApiException e) {
             Log.w(WTTApplication.TAG, "signInResult:failed code=" + e.getStatusCode());
