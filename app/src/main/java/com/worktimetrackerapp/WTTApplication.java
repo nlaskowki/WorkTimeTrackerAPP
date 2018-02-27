@@ -117,16 +117,5 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
     //get classes
 
 
-    //display error messages from db
-    public void showErrorMessage(final String errorMessage, final Throwable throwable) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                android.util.Log.e(TAG, errorMessage, throwable);
-                String msg = String.format("%s: %s",
-                        errorMessage, throwable != null ? throwable : "");
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+
 }

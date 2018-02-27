@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.couchbase.lite.Database;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
@@ -25,6 +26,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.worktimetrackerapp.util.DB;
 
 public class SignIn_Controller extends AppCompatActivity  {
 
@@ -91,13 +93,8 @@ public class SignIn_Controller extends AppCompatActivity  {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("onActivityResult");
         if (requestCode == RC_GOOGLE_SIGN_IN) {
-            System.out.println("start task");
-
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            System.out.println(task.getResult());
             handleSignInResult(task);
         }
     }
@@ -108,16 +105,15 @@ public class SignIn_Controller extends AppCompatActivity  {
             String idToken = account.getIdToken();
 
             if(idToken != null) {
-                // TODO(developer): send ID Token to server and validate
+                DB database = new DB();
+                database.loginWithGoogleSignIn(idToken);
+                Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
+                LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(LaunchHome);
             }
-            Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
-           LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-           startActivity(LaunchHome);
 
         } catch (ApiException e) {
             Log.w(WTTApplication.TAG, "signInResult:failed code=" + e.getStatusCode());
-
-
         }
     }
 
