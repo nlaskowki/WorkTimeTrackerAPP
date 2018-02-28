@@ -7,6 +7,9 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.Chronometer;
+
         import com.worktimetrackerapp.R;
 
 public class HomeTracking_Controller extends Fragment {
@@ -18,6 +21,13 @@ public class HomeTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
         return currentView;
+
+
+
+
+
+
+
     }
 
 
