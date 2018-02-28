@@ -48,8 +48,8 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
 
         //first frame
-            //FragmentManager fragmentManager = getFragmentManager();
-            //fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
     }
 
     @Override

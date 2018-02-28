@@ -8,6 +8,7 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
+import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.util.Log;
 import com.worktimetrackerapp.WTTApplication;
 import com.google.gson.Gson;
@@ -36,6 +37,9 @@ public class DB extends WTTApplication {
     public Manager dbManager = null;
     public Database Mydb = null;
     private final Gson gson = new Gson();
+    private Replication pull;
+    private Replication push;
+    private Throwable syncError;
 
 
     //*************************************************************** gateway start ******************************************
@@ -59,6 +63,7 @@ public class DB extends WTTApplication {
                     Map<String, Object> session = gson.fromJson(response.body().charStream(), type);
                     Map<String, Object> userInfo = (Map<String, Object>) session.get("userCtx");
                     final String username = (userInfo != null ? (String) userInfo.get("name") : null);
+                    System.out.println(username);
                     final List<Cookie> cookies = Cookie.parseAll(HttpUrl.get(new URL("http://wttuser.axelvh.com/wttdb/")), response.headers());
                    // if (login(username, cookies)) {
                         //completeLogin();
@@ -101,8 +106,7 @@ public class DB extends WTTApplication {
         }
         return null;
     }
-    //**************************************************************************** push and pull to db ***************************************************
-
+    //**************************************************************************** push and pull to syncgateway ***************************************************
 
 
 
