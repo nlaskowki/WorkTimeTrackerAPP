@@ -2,13 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_User1"
+        android:id="@+id/action_Job1"
+        android:checkable="false"
         android:orderInCategory="100"
-        android:title="User1"
-        app:showAsAction="never" />
+        android:title="Job 1" />
     <item
-        android:id="@+id/action_User2"
+        android:id="@+id/action_Job2"
         android:orderInCategory="101"
-        android:title="User2"
-        app:showAsAction="never" />
+        android:title="Job2" />
 </menu>
