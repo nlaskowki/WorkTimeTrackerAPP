@@ -26,9 +26,9 @@ import com.worktimetrackerapp.util.*;
 
 public class WTTApplication extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
-    public String mCurrentUserId;
+    public static String mCurrentUserId;
 
-    Manager dbManager =null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_User1) {
+        if (id == R.id.action_Job1) {
             return true;
         }
 
@@ -114,17 +114,8 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
         return true;
     }
 
+    //get classes
 
-    //display error messages from db
-    public void showErrorMessage(final String errorMessage, final Throwable throwable) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                android.util.Log.e(TAG, errorMessage, throwable);
-                String msg = String.format("%s: %s",
-                        errorMessage, throwable != null ? throwable : "");
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+
+
 }

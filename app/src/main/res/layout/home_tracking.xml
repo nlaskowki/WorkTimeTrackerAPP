@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,63 +17,50 @@
     <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_below="@+id/textView2"
+        android:layout_above="@+id/numHoursJobTxtVw"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:id="@+id/analogClock" />
+        android:layout_marginBottom="21dp" />
 
+
+    <TextView
+        android:id="@+id/numHoursJobTxtVw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/accumulatingWageTxtVW"
+        android:layout_centerHorizontal="true"
+        android:text="Hours"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/accumulatingWageTxtVW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/timeWorkedChrono"
-        android:layout_alignBottom="@+id/timeWorkedChrono"
-        android:layout_alignEnd="@+id/analogClock"
+        android:layout_alignBottom="@+id/hoursToGoTxtVW"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
         android:text="Wage Earned"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
-    <ToggleButton
-        android:id="@+id/clockIn_OutBtn"
+    <TextView
+        android:id="@+id/hoursToGoTxtVW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="54dp"
-        android:layout_marginEnd="41dp"
-        android:layout_toStartOf="@+id/textView2"
-        android:textOff="Clock In"
-        android:textOn="Clock Out" />
-
-    <ToggleButton
-        android:id="@+id/takeBreakBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/clockIn_OutBtn"
-        android:layout_alignBottom="@+id/clockIn_OutBtn"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@+id/textView2"
-        android:text="ToggleButton"
-        android:textOff="Start Break"
-        android:textOn="End Break" />
-
-    <Chronometer
-        android:id="@+id/timeWorkedChrono"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/analogClock"
-        android:layout_below="@+id/analogClock"
-        android:layout_marginTop="26dp"
+        android:layout_above="@+id/jobDoneBtn"
+        android:layout_alignStart="@+id/accumulatingWageTxtVW"
+        android:layout_marginBottom="21dp"
+        android:text="Hours To Go"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/TestBtn"
+        android:id="@+id/jobDoneBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/clockIn_OutBtn"
-        android:layout_below="@+id/timeWorkedChrono"
-        android:layout_marginTop="30dp"
-        android:text="Button" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp"
+        android:text="Done" />
 
 </RelativeLayout>

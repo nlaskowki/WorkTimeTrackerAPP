@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">WTTapp</string>
 
+    <string name="server_client_id">294619210953-lo805f9tfv3bnunf2u2449ent65d7jsp.apps.googleusercontent.com</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

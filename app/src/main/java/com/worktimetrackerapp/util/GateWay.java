@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class GateWay extends DB implements Replication.ChangeListener{
 
-    private static final String SYNC_URL_HTTP = "http://wttUser.axelvh.com:4984/WTTdb";
+    private static final String SYNC_URL_HTTP = "http://wttuser.axelvh.com/wttdb/";
     private Replication dbPull;
     private Replication dbPush;
     private Throwable dbReplError;
