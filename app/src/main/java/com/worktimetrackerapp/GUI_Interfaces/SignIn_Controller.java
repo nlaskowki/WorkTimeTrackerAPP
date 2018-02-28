@@ -107,6 +107,7 @@ public class SignIn_Controller extends AppCompatActivity  {
             if(idToken != null) {
                 DB database = new DB();
                 database.loginWithGoogleSignIn(idToken);
+
                 Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
                 LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(LaunchHome);
