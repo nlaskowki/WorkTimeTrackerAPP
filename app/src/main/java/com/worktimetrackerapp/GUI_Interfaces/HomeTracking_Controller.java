@@ -26,8 +26,8 @@ public class HomeTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
 
-       TestButton = (Button) currentView.findViewById(R.id.jobDoneBtn);
-       TestChronometer = (Chronometer) currentView.findViewById(R.id.TestChrono);
+        TestButton = (Button) currentView.findViewById(R.id.jobDoneBtn);
+        TestChronometer = (Chronometer) currentView.findViewById(R.id.TestChrono);
 
         TestButton.setOnClickListener(new View.OnClickListener() {
             @Override

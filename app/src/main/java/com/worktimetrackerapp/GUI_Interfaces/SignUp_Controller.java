@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.worktimetrackerapp.R;
-import com.worktimetrackerapp.WTTApplication;
+import com.worktimetrackerapp.MainActivity;
 
 public class SignUp_Controller extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class SignUp_Controller extends AppCompatActivity {
                 //send info to db
 
                 //temporary redirection
-                    Intent LaunchHome = new Intent(getApplicationContext(), WTTApplication.class);
+                    Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);
                     LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(LaunchHome);
             }

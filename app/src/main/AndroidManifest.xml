@@ -3,24 +3,21 @@
     package="com.worktimetrackerapp">
 
     <application
+        android:name=".DB"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_new"
         android:label="WorkTimeTracker"
         android:roundIcon="@mipmap/ic_launcher_new_round"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.worktimetrackerapp.EntryPoint"
-            android:label="WTT"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".GUI_Interfaces.SignIn_Controller"
+            android:label="WTT">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WTTApplication" />
-        <activity android:name=".GUI_Interfaces.SignIn_Controller" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".GUI_Interfaces.SignUp_Controller" />
 
     </application>

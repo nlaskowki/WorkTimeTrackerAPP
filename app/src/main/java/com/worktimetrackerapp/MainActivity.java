@@ -11,20 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
-import com.worktimetrackerapp.GUI_Interfaces.SignIn_Controller;
-import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
-import com.worktimetrackerapp.util.*;
 
-public class WTTApplication extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
     public static String mCurrentUserId;
 
@@ -104,9 +99,7 @@ public class WTTApplication extends AppCompatActivity implements NavigationView.
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
         } else if (id == R.id.nav_LogOut) {
             //log out
-            Intent ResetFrames = new Intent(getApplicationContext(), EntryPoint.class);
-            ResetFrames.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(ResetFrames);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
