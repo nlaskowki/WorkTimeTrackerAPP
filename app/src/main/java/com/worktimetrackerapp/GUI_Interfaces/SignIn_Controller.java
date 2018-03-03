@@ -1,15 +1,21 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
+
 import android.content.Intent;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 
-import com.couchbase.lite.android.AndroidContext;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -23,16 +29,16 @@ public class SignIn_Controller extends AppCompatActivity  {
 
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_GOOGLE_SIGN_IN = 9001;
-    private AndroidContext context;
+    public static final String INTENT_ACTION_LOGOUT = "logout";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_screen);
         final Button btnLogin = findViewById(R.id.btn_login);
-        final Button btnLoginGoogle = findViewById(R.id.btn_loginGoogle);
+        final SignInButton btnLoginGoogle = findViewById(R.id.btn_loginGoogle);
         final Button btnSignUp = findViewById(R.id.btn_Login_signUp);
-
+        btnLoginGoogle.setSize(SignInButton.SIZE_STANDARD);
 
         //google sign in
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -42,6 +48,10 @@ public class SignIn_Controller extends AppCompatActivity  {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        String action = getIntent().getAction();
+        if (INTENT_ACTION_LOGOUT.equals(action)) {
+            logout();
+        }
         //login Google button action
         btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -102,6 +112,28 @@ public class SignIn_Controller extends AppCompatActivity  {
             Log.w(MainActivity.TAG, "signInResult:failed code=" + e.getStatusCode());
         }
     }
+
+    //******************************************************* log out ************************************************
+
+    private void logout() {
+        mGoogleSignInClient.signOut();
+        clearWebViewCookies();
+
+    }
+
+    private void clearWebViewCookies() {
+        CookieManager cookieManager = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.removeAllCookies(null);
+            cookieManager.flush();
+        } else {
+            cookieManager.removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+        }
+    }
+
+
+
 }
 
 

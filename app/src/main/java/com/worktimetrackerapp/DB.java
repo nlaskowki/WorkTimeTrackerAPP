@@ -1,7 +1,6 @@
 package com.worktimetrackerapp;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
@@ -15,7 +14,7 @@ import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.worktimetrackerapp.GUI_Interfaces.SignUp_Controller;
+import com.worktimetrackerapp.GUI_Interfaces.SignIn_Controller;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -48,7 +47,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private com.couchbase.lite.Database Mydb = null;
     private final Gson gson = new Gson();
     private AndroidContext context;
-    private static Context appcontext;
 
     private ReplicationChangeHandler changeHandler = null;
     private Replication pull;
@@ -56,23 +54,20 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Throwable syncError;
     private String username;
 
-    @Override
-    public void onCreate(){
-        super.onCreate();
-        appcontext = getApplicationContext();
-    }
+
 
     private void completeLogin() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(appcontext, MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
     }
-    //*************************************************************** gateway login and start db ******************************************
+
+    //*************************************************************** Google Authentication ******************************************
     public void loginWithGoogleSignIn(final String idToken) {
         Request request = new Request.Builder()
                 .url(SYNC_URL_HTTP)
@@ -262,7 +257,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         enableLogging();
         if (dbManager == null) {
             try {
-                context = new AndroidContext(appcontext);
+                context = new AndroidContext(getApplicationContext());
                 dbManager = new Manager(context, Manager.DEFAULT_OPTIONS);
             } catch (IOException e) {
                 android.util.Log.e(TAG, "Couldn't create manager object", e);
@@ -282,6 +277,23 @@ public class DB extends android.app.Application implements Replication.ChangeLis
             }
         }
         return true;
+    }
+
+    public Database getMydb(){
+        return Mydb;
+    }
+
+    //**************************************************** logout *******************************************************
+
+    public void logout() {
+        stopReplication(true);
+
+        this.username = null;
+
+        Intent intent = new Intent(getApplicationContext(), SignIn_Controller.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(SignIn_Controller.INTENT_ACTION_LOGOUT);
+        startActivity(intent);
     }
 
     //******logging********

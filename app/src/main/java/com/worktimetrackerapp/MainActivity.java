@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static String mCurrentUserId;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
         } else if (id == R.id.nav_LogOut) {
             //log out
+            DB db = (DB) getApplication();
+            db.logout();
 
         }
 
