@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.MainActivity;
 
@@ -22,6 +23,10 @@ public class SignUp_Controller extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //send info to db
+
+                //DB app = (DB) getApplicationContext();
+                //NewJob(String jobType, String jobTitle, String jobEmployer, Double jobWage, Double jobAveHours)
+
 
                 //temporary redirection
                     Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);

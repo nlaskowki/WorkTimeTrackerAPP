@@ -1,7 +1,6 @@
 package com.worktimetrackerapp;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         System.out.println("Try");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -44,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+
     }
 
     @Override
@@ -83,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
+        DB db = (DB) getApplication();
+        Bundle bundle = new Bundle();
+
 
         if (id == R.id.nav_home) {
             //implement picking home_tracking or home_not_tracking
@@ -96,11 +98,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Agenda_Controller()).commit();
         } else if (id == R.id.nav_settings) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
+            try {
+                //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
+                //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
+                //db.StartTask("1", "" ,0.0, "ou", 0.0, "");
+            }catch (Exception e){}
         } else if (id == R.id.nav_LogOut) {
             //log out
-            DB db = (DB) getApplication();
             db.logout();
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

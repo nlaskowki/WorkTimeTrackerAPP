@@ -1,6 +1,8 @@
 package com.worktimetrackerapp;
 
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
@@ -8,7 +10,14 @@ import android.widget.Toast;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
+import com.couchbase.lite.Mapper;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
+import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.util.Log;
@@ -20,10 +29,16 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,11 +55,11 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private static final String SYNC_URL_HTTP = "http://wttuser.axelvh.com/wttdb/_session";
     private static final String SYNC_URL_HTTP_Database= "http://wttuser.axelvh.com/wttdb/";
     private static final String USER_LOCAL_DOC_ID = "user";
-    private final OkHttpClient httpClient = new OkHttpClient();
+    private OkHttpClient httpClient = new OkHttpClient();
     private static final String DATABASE_NAME = "wttdb";
 
     private Manager dbManager = null;
-    private com.couchbase.lite.Database Mydb = null;
+    private Database Mydb = null;
     private final Gson gson = new Gson();
     private AndroidContext context;
 
@@ -54,7 +69,15 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Throwable syncError;
     private String username;
 
+    private Document[] Jobs = new Document[10];
+    private Document currentJob;
 
+    public Document getcurrentJob(){
+        return currentJob;
+    }
+    public void setCurrentJob(Document CJ){
+        currentJob = CJ;
+    }
 
     private void completeLogin() {
         runOnUiThread(new Runnable() {
@@ -75,7 +98,9 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 .post(new FormBody.Builder().build())
                 .build();
 
-
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(5, TimeUnit.MINUTES).writeTimeout(5, TimeUnit.MINUTES).readTimeout(5, TimeUnit.MINUTES);
+        httpClient = builder.build();
         httpClient.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) {
                 showErrorMessage("Failed to create a new SGW session with IDToken : " + idToken, e);
@@ -283,17 +308,164 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return Mydb;
     }
 
+    //************************************************************** add, remove, update the DB ****************************************************
+
+    public boolean getAllJobs() throws Exception{
+        for(int count=0; count<10; count++){
+                Jobs[count] = null;
+                System.out.println(count);
+        }
+
+        //set view
+        View  jobview = getMydb().getView("User-Info");
+        jobview.setMap(new Mapper(){
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter){
+                List<String> jobs = (List) document.get("User-Info");
+                for (String job : jobs){
+                    emitter.emit(job, document.get("type"));
+                }
+            }
+        },"2");
+        System.out.println("Run 1");
+        Query query = getMydb().getView("jobview").createQuery();
+        query.setStartKey("User-Info");
+        QueryEnumerator result = query.run();
+        System.out.println("Run 1");
+        int i = 0;
+        for (Iterator<QueryRow> it = result; it.hasNext(); ) {
+            System.out.println("Run 2");
+            QueryRow row = it.next();
+            Jobs[i] = row.getDocument();
+            i++;
+            Log.w("wtt", "On %s: order for $%f", row.getKey(), ((Double)row.getValue()).doubleValue());
+        }
+        if(!Jobs[0].equals(null)) {
+            currentJob = Jobs[0];
+            System.out.println("WORKS");
+        }
+        return true;
+    }
+
+    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Double jobWage, Double jobAveHours) throws Exception {
+        DB app = (DB) getApplicationContext();
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        UUID uuid = UUID.randomUUID();
+        Calendar calendar = GregorianCalendar.getInstance();
+        long currentTime = calendar.getTimeInMillis();
+        String currentTimeString = dateFormatter.format(calendar.getTime());
+
+        String id = currentTime + "-" + uuid.toString();
+
+        Document document = getMydb().createDocument();
+        Map<String, Object> properties = new HashMap<String, Object>();
+
+        properties.put("jobavehours", jobAveHours);
+        properties.put("jobwage", jobWage);
+        properties.put("jobemployer", jobEmployer);
+        properties.put("jobtitle", jobTitle);
+        properties.put("jobtype", jobType);
+
+        properties.put("created_at", currentTimeString);
+        properties.put("owner", app.getUsername());
+        properties.put("_id", id);
+        properties.put("type", "User-info");
+        document.putProperties(properties);
+
+        Log.d(TAG, "Created new user item with id: %s", document.getId());
+
+        //for(int count=0; count<10; count++){
+            //if(Jobs[count].equals(null)){
+               // Jobs[count] = document;
+            //}
+        //}
+        return document;
+    }
+
+    public Document StartTask(String TaskName, String JobTitle ,Double TaskWage, String Client, Double EstimatedHours, String EndTime) throws Exception {
+        DB app = (DB) getApplicationContext();
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        UUID uuid = UUID.randomUUID();
+        Calendar calendar = GregorianCalendar.getInstance();
+        long currentTime = calendar.getTimeInMillis();
+        String currentTimeString = dateFormatter.format(calendar.getTime());
+
+        String id = currentTime + "-" + uuid.toString();
+
+        Document document = getMydb().createDocument();
+        Map<String, Object> properties = new HashMap<String, Object>();
+
+        properties.put("TaskEarnings", 0.0);
+        properties.put("TaskEndTime", "");
+        properties.put("TaskEstimatedEndTime", EndTime);
+        properties.put("TaskEstimatedHours", EstimatedHours);
+        properties.put("taskClient", Client);
+        properties.put("taskwage", TaskWage);
+        properties.put("jobtitle", JobTitle);
+        properties.put("taskname", TaskName);
+
+        properties.put("created_at", currentTimeString);
+        properties.put("owner", app.getUsername());
+        properties.put("_id", id);
+        properties.put("type", "Task");
+        document.putProperties(properties);
+
+        Log.d(TAG, "Started task item with id: %s", document.getId());
+
+        return document;
+    }
+
+    protected boolean EndTask(Document taskdocument, Double TaskEarnings) throws Exception {
+        DB app = (DB) getApplicationContext();
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Calendar calendar = GregorianCalendar.getInstance();
+        long currentTime = calendar.getTimeInMillis();
+        String currentTimeString = dateFormatter.format(calendar.getTime());
+
+
+        Document doc = getMydb().getDocument(taskdocument.getId());
+        Map<String, Object> properties = new HashMap<String, Object>();
+            properties.putAll(doc.getProperties());
+            properties.put("TaskEarnings", TaskEarnings);
+            properties.put("TaskEndTime", currentTimeString);
+        try {
+            doc.putProperties(properties);
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "Ended task item with id: %s", taskdocument.getId());
+
+        return true;
+    }
+
+
     //**************************************************** logout *******************************************************
 
     public void logout() {
-        stopReplication(true);
 
+        stopReplication(true);
         this.username = null;
+        try {
+            Mydb.delete();
+            Mydb = null;
+        } catch (Exception e){
+            Log.e(TAG, "cannot delete database", e);
+        }
 
         Intent intent = new Intent(getApplicationContext(), SignIn_Controller.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(SignIn_Controller.INTENT_ACTION_LOGOUT);
         startActivity(intent);
+    }
+
+    //*********************************************** get classes for application *********************************************
+
+    public Context getMyApplication(){
+        return getApplicationContext();
     }
 
     //******logging********
@@ -316,7 +488,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 errorMessage, throwable != null ? throwable : "");
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
-    private void runOnUiThread(Runnable runnable) {
+    public void runOnUiThread(Runnable runnable) {
         Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
         mainHandler.post(runnable);
     }
