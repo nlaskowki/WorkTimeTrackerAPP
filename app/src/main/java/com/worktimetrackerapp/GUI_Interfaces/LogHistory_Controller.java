@@ -183,7 +183,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
 
         //set on click listeners
-        /*btnDelete.setOnClickListener(new View.OnClickListener(){
+        btnDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Document task = (Document) mydb.getDocument(currentdoc.getId());
                 try {
@@ -231,7 +231,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                     pw.dismiss();
                 }
             }
-        });*/
+        });
 
 
         //set up touch closing outside of pop-up
