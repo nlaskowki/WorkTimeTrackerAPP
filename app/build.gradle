@@ -35,4 +35,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.couchbase.lite:couchbase-lite-android:1.4.1'
     compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
 }
