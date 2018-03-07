@@ -60,6 +60,9 @@ public class Agenda_Controller extends Fragment {
         agendalist = (ListView) currentView.findViewById(R.id.agenda_list_view);
         DB app = (DB) getActivity().getApplication();
 
+        //calendar credit to https://github.com/prolificinteractive/material-calendarview/blob/master/docs/DECORATORS.md
+                    //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
+
         MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
 
         materialCalendarView.state().edit()
