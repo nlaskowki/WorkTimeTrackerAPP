@@ -156,7 +156,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     }
 
     public void showPopup(final Document currentdoc) throws Exception{
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         View layout = inflater.inflate(R.layout.loghistory_pop, null);
 
         //calculate size of popup
@@ -239,9 +239,13 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                System.out.println("Touch");
+                System.out.println(event.getAction());
+                System.out.println("Action outside");
+                System.out.println(MotionEvent.ACTION_OUTSIDE);
                 if(event.getAction() == MotionEvent.ACTION_OUTSIDE){
                         System.out.println("Test");
-                        //pw.dismiss();
+                        pw.dismiss();
                         return true;
                 }
                 return false;
