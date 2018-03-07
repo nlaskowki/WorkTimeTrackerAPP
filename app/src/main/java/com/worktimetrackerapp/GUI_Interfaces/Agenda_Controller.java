@@ -127,7 +127,20 @@ public class Agenda_Controller extends Fragment {
                 new ArrayList<QueryRow>()
         );
         agendalist.setAdapter(aaa);
-        //agendalist.setOnItemClickListener(Agenda_Controller);
+        agendalist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
+                Document document = row.getDocument();
+                Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
+
+                try {
+                    showPopup(document);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
+        }) ;
     }
 
     private void startLiveQuery(com.couchbase.lite.View view) throws Exception {
@@ -153,18 +166,6 @@ public class Agenda_Controller extends Fragment {
         }
     }
 
-    //Handle click on item in list
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
-        Document document = row.getDocument();
-        Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
-
-        try {
-            showPopup(document);
-        }catch (Exception e){
-            System.out.println(e);
-        }
-    }
 
     public void showPopup(final Document currentdoc) throws Exception{
         LayoutInflater inflater = getActivity().getLayoutInflater();
