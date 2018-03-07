@@ -71,6 +71,8 @@ public class Agenda_Controller extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
+        materialCalendarView.setSelectedDate(CalendarDay.today());
+
        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
