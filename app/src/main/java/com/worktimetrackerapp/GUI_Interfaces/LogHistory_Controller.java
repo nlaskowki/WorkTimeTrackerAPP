@@ -241,13 +241,11 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                 public boolean onTouch(View v, MotionEvent event) {
                 System.out.println("Touch");
                 System.out.println(event.getAction());
-                System.out.println("Action outside");
-                System.out.println(MotionEvent.ACTION_OUTSIDE);
-                if(event.getAction() == MotionEvent.ACTION_OUTSIDE){
-                        System.out.println("Test");
-                        pw.dismiss();
-                        return true;
-                }
+                //if(event.getAction() == 0){
+                        //System.out.println("Test");
+                       // pw.dismiss();
+                       // return true;
+                //}
                 return false;
             }
         });

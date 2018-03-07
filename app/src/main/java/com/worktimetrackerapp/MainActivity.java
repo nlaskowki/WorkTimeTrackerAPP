@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
                 //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
-                //db.StartTask("1", "" ,0.0, "ou", 0.0, "");
+                //db.StartTask("Test", "" ,0.0, "ou", 0.0, "");
             }catch (Exception e){}
         } else if (id == R.id.nav_LogOut) {
             //log out

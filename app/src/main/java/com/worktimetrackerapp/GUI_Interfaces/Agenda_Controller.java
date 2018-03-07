@@ -32,7 +32,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
-import com.worktimetrackerapp.util.LogHistoryArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
