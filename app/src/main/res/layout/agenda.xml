@@ -13,4 +13,9 @@
         app:mcv_showOtherDates="all"
         app:mcv_selectionColor="#00F"
         />
+
+    <ListView
+        android:id="@+id/agenda_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
