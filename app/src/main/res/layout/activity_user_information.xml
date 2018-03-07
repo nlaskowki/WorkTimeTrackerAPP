@@ -7,50 +7,172 @@
 
     <TextView
         android:id="@+id/txt_welcome_msg"
-        android:layout_width="379dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="539dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="380dp"
+        android:layout_height="37dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="2dp"
         android:text="@string/welcome_msg"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.239" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_username"
-        android:layout_width="278dp"
-        android:layout_height="53dp"
-        android:layout_marginEnd="85dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="11dp"
-        android:text="@string/display_username"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="30sp"
-        android:visibility="visible"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="218dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="190dp"
+        android:layout_marginStart="3dp"
+        android:background="@android:drawable/btn_dropdown"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_welcome_msg" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_select_job" />
 
     <Button
         android:id="@+id/btn_next"
         android:layout_width="145dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="259dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="262dp"
         android:text="@string/next"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_select_job"
+        android:layout_width="205dp"
+        android:layout_height="33dp"
+        android:layout_marginEnd="203dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/choose_job"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_welcome_msg" />
+
+    <EditText
+        android:id="@+id/txt_job_title"
+        android:layout_width="401dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:ems="10"
+        android:hint="@string/job_title_user"
+        android:inputType="textPersonName"
+        android:text="@string/job_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_company" />
+
+    <EditText
+        android:id="@+id/txt_employer"
+        android:layout_width="401dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/employer_user"
+        android:inputType="textPersonName"
+        android:text="@string/employer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_job_title" />
+
+    <EditText
+        android:id="@+id/txt_hourly_wage"
+        android:layout_width="401dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/hourly_wage_user"
+        android:inputType="textPersonName"
+        android:text="@string/hourly_wage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_employer" />
+
+    <EditText
+        android:id="@+id/txt_avg_hours"
+        android:layout_width="401dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="@string/average_hours_optional"
+        android:inputType="textPersonName"
+        android:text="@string/avg_hours"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_hourly_wage" />
+
+    <TextView
+        android:id="@+id/tv_secondJob"
+        android:layout_width="274dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="134dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/second_job"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_avg_hours" />
+
+    <RadioGroup
+        android:id="@+id/rgroup"
+        android:layout_width="256dp"
+        android:layout_height="148dp"
+        android:layout_marginEnd="152dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_secondJob">
+
+        <RadioButton
+            android:id="@+id/rb_no"
+            android:layout_width="111dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="@string/no"
+            tools:layout_editor_absoluteX="26dp"
+            tools:layout_editor_absoluteY="519dp" />
+
+        <RadioButton
+            android:id="@+id/rb_yes"
+            android:layout_width="112dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="@string/yes"
+            tools:layout_editor_absoluteX="26dp"
+            tools:layout_editor_absoluteY="475dp" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/txt_company"
+        android:layout_width="401dp"
+        android:layout_height="51dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginStart="3dp"
+        android:ems="10"
+        android:hint="@string/company_name_self_employed_only"
+        android:inputType="textPersonName"
+        android:text="@string/company"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
 
 </android.support.constraint.ConstraintLayout>

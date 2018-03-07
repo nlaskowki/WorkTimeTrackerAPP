@@ -17,6 +17,10 @@
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string-array name="job_type">
+        <item>Self-Employed</item>
+        <item>Employee</item>
+    </string-array>
 
     // Strings for Sign-Up Page
     <string name="app_logo">Work Time Tracker</string>
@@ -27,4 +31,18 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="phone_number">Phone Number</string>
     <string name="email">Email</string>
+    <string name="choose_job">Choose your job type:</string>
+    <string name="job_title"></string>
+    <string name="employer"></string>
+    <string name="hourly_wage" />
+    <string name="avg_hours" />
+    <string name="second_job">Do you have a second job?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="company" />
+    <string name="company_name_self_employed_only">Company Name (Self-Employed Only)</string>
+    <string name="job_title_user">Job Title</string>
+    <string name="employer_user">Employer</string>
+    <string name="hourly_wage_user">Hourly Wage</string>
+    <string name="average_hours_optional">Average Hours (optional)</string>
 </resources>
