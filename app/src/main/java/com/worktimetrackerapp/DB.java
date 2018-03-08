@@ -343,7 +343,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Double jobWage, Double jobAveHours) throws Exception {
+    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Float jobWage, Float jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -356,17 +356,21 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Document document = getMydb().createDocument();
         Map<String, Object> properties = new HashMap<String, Object>();
-
-        properties.put("jobavehours", jobAveHours);
-        properties.put("jobwage", jobWage);
-        properties.put("jobemployer", jobEmployer);
-        properties.put("jobtitle", jobTitle);
-        properties.put("jobtype", jobType);
-
-        properties.put("created_at", currentTimeString);
-        properties.put("owner", app.getUsername());
         properties.put("_id", id);
         properties.put("type", "User-info");
+        properties.put("owner", app.getUsername());
+        properties.put("created_at", currentTimeString);
+
+        properties.put("jobtype", jobType);
+        properties.put("jobtitle", jobTitle);
+        properties.put("jobemployer", jobEmployer);
+        properties.put("jobwage", jobWage);
+        properties.put("jobavehours", jobAveHours);
+
+
+
+
+
         document.putProperties(properties);
 
         Log.d(TAG, "Created new user item with id: %s", document.getId());
@@ -374,7 +378,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return document;
     }
 
-    public Document NewTask(String TaskName, String JobTitle ,Float TaskWage, String Client,String CAddress, String StartTime, String EndTime) throws Exception {
+    public Document NewTask(String TaskName, String JobTitle ,Float TaskWage, String Client, String CAddress, String StartTime, String EndTime) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -430,7 +434,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    protected boolean EndTask(Document taskdocument, Float ExtraCosts, Float TaskEarnings) throws Exception {
+    public Boolean EndTask(Document taskdocument, Float ExtraCosts, Float TaskEarnings) throws Exception {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm:");
         Calendar calendar = GregorianCalendar.getInstance();
