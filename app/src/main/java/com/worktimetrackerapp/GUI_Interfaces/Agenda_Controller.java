@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,8 @@ import com.couchbase.lite.Mapper;
 import com.couchbase.lite.QueryRow;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.worktimetrackerapp.DB;
@@ -40,6 +43,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
+
 public class Agenda_Controller extends Fragment {
     View currentView;
     private ListView agendalist;
@@ -50,7 +54,6 @@ public class Agenda_Controller extends Fragment {
 
     public static final String designDocName = "Task";
     public static final String byDateViewName = "byDate";
-
 
     @Nullable
     @Override
@@ -64,6 +67,18 @@ public class Agenda_Controller extends Fragment {
 
         MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
 
+        // Add a decorator to disable prime numbered days
+        materialCalendarView.addDecorator(new PrimeDayDisableDecorator());
+
+        Calendar calendar = Calendar.getInstance();
+        materialCalendarView.setSelectedDate(calendar.getTime());
+
+        Calendar instance1 = Calendar.getInstance();
+        instance1.set(instance1.get(Calendar.YEAR), Calendar.JANUARY, 1);
+
+        Calendar instance2 = Calendar.getInstance();
+        instance2.set(instance2.get(Calendar.YEAR) + 2, Calendar.OCTOBER, 31);
+
         materialCalendarView.state().edit()
                 .setFirstDayOfWeek(Calendar.MONDAY)
                 .setMinimumDate(CalendarDay.from(1900, 1, 1))
@@ -71,16 +86,12 @@ public class Agenda_Controller extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
-        materialCalendarView.setSelectedDate(CalendarDay.today());
-
        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
         try {
             //app.StartTask("1", "" ,0.0, "ou", 0.0, "");
@@ -92,10 +103,63 @@ public class Agenda_Controller extends Fragment {
             app.showErrorMessage("Error initializing CBLite", e);
         }
 
-
-
         return currentView;
     }
+
+    private static class PrimeDayDisableDecorator implements DayViewDecorator {
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return PRIME_TABLE[day.getDay()];
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.setDaysDisabled(true);
+        }
+
+        private static boolean[] PRIME_TABLE = {
+                false,  // 0?
+                false,
+                true, // 2
+                true, // 3
+                false,
+                true, // 5
+                false,
+                true, // 7
+                false,
+                false,
+                false,
+                true, // 11
+                false,
+                true, // 13
+                false,
+                false,
+                false,
+                true, // 17
+                false,
+                true, // 19
+                false,
+                false,
+                false,
+                true, // 23
+                false,
+                false,
+                false,
+                false,
+                false,
+                true, // 29
+                false,
+                true, // 31
+                false,
+                false,
+                false, //PADDING
+        };
+    }
+
+
+
+
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
