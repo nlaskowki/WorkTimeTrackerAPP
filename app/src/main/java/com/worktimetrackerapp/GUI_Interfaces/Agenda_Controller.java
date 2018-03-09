@@ -77,26 +77,24 @@ public class Agenda_Controller extends Fragment {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
+                try {
+                    System.out.println(date);
+                    System.out.println(date.getYear());
+                    System.out.println(date.getMonth());
+                    System.out.println(date.getDay());
+                    startShowList(date);
+                }catch (Exception e){
+
+                }
             }
         });
 
 
 
-        try {
-            //app.StartTask("1", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("2", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("3", "" ,0.0, "ou", 0.0, "");
-            startShowList();
-        } catch (Exception e) {
-            //DB app = (DB) getContext();
-            app.showErrorMessage("Error initializing CBLite", e);
-        }
-
-
 
         return currentView;
     }
-    protected void startShowList() throws Exception {
+    protected void startShowList(CalendarDay curDate) throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
