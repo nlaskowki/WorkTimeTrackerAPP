@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,8 @@ import com.couchbase.lite.Mapper;
 import com.couchbase.lite.QueryRow;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.worktimetrackerapp.DB;
@@ -40,6 +43,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 
+
 public class Agenda_Controller extends Fragment {
     View currentView;
     private ListView agendalist;
@@ -50,7 +54,6 @@ public class Agenda_Controller extends Fragment {
 
     public static final String designDocName = "Task";
     public static final String byDateViewName = "byDate";
-
 
     @Nullable
     @Override
@@ -64,6 +67,16 @@ public class Agenda_Controller extends Fragment {
 
         MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
 
+
+        Calendar calendar = Calendar.getInstance();
+        materialCalendarView.setSelectedDate(calendar.getTime());
+
+        Calendar instance1 = Calendar.getInstance();
+        instance1.set(instance1.get(Calendar.YEAR), Calendar.JANUARY, 1);
+
+        Calendar instance2 = Calendar.getInstance();
+        instance2.set(instance2.get(Calendar.YEAR) + 2, Calendar.OCTOBER, 31);
+
         materialCalendarView.state().edit()
                 .setFirstDayOfWeek(Calendar.MONDAY)
                 .setMinimumDate(CalendarDay.from(1900, 1, 1))
@@ -71,30 +84,27 @@ public class Agenda_Controller extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
-        materialCalendarView.setSelectedDate(CalendarDay.today());
-
        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
-                try {
-                    System.out.println(date);
-                    System.out.println(date.getYear());
-                    System.out.println(date.getMonth());
-                    System.out.println(date.getDay());
-                    startShowList(date);
-                }catch (Exception e){
-
-                }
             }
         });
 
-
-
+        try {
+            //app.StartTask("1", "" ,0.0, "ou", 0.0, "");
+            //app.StartTask("2", "" ,0.0, "ou", 0.0, "");
+            //app.StartTask("3", "" ,0.0, "ou", 0.0, "");
+            startShowList();
+        } catch (Exception e) {
+            //DB app = (DB) getContext();
+            app.showErrorMessage("Error initializing CBLite", e);
+        }
 
         return currentView;
     }
-    protected void startShowList(CalendarDay curDate) throws Exception {
+
+    protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
