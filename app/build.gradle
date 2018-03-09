@@ -2,12 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'mainkey'
-            keyPassword 'CSI29991234'
-            storeFile file('C:/Users/axelv/.android/debug.keystore')
-            storePassword 'CSI29991234'
-        }
+
     }
     compileSdkVersion 26
     defaultConfig {
@@ -24,7 +19,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig signingConfigs.config
         }
     }
     packagingOptions {
