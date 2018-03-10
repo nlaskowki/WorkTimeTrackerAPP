@@ -428,7 +428,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.putAll(TaskDoc.getProperties());
 
-        properties.put("TaskStartTime", StartTime);
+        properties.put("TaskStartDateTime", StartTime);
 
         document.putProperties(properties);
 
@@ -448,7 +448,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         Map<String, Object> properties = new HashMap<String, Object>();
             properties.putAll(doc.getProperties());
 
-            properties.put("TaskEndTime", TaskEndTime);
+            properties.put("TaskEndDateTime", TaskEndTime);
             properties.put("extracost", ExtraCosts);
             properties.put("TaskEarnings", TaskEarnings);
 

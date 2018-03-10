@@ -2,18 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d2d2d2">
+    android:background="@drawable/popupbackground_border">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="vertical">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/Buttonlayout">
         <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp">
 
@@ -21,8 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="0"
-                android:layout_weight="1"
+                android:layout_row="1"
                 android:text="Task"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -31,8 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="1"
-                android:layout_weight="1"
+                android:layout_row="2"
                 android:text="Start"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -41,94 +37,201 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="2"
-                android:layout_weight="1"
-                android:text="End"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="3"
-                android:layout_weight="1"
+                android:layout_row="4"
                 android:text="Client"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <EditText
+                android:id="@+id/popup_taskname"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/popup_clientname"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/popup_startdatetime"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="2"
+                android:ems="10"
+                android:inputType="datetime" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="4"
-                android:layout_weight="1"
-                android:text="Wage /hr"
+                android:layout_row="3"
+                android:text="End"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/popup_task"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="0"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/popup_start"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="1"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/popup_end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="2"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/popup_client"
-                android:layout_width="match_parent"
+                android:id="@+id/popup_enddatetime"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_row="3"
-                android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="18sp" />
+                android:inputType="datetime" />
 
             <EditText
-                android:id="@+id/popup_wage"
-                android:layout_width="match_parent"
+                android:id="@+id/popup_clientaddress"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:layout_row="4"
-                android:layout_weight="1"
+                android:layout_row="5"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="18sp" />
+                android:inputType="textPostalAddress" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="5"
+                android:text="Client Address"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/popup_txtotherinformation"
+                android:layout_width="387dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_row="8"
+                android:text="Other information"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="6"
+                android:text="Wage / hr"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/popup_wagehr"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="6"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/popup_txtstartedtask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="9"
+                android:text="Started task "
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/popup_txtendedtask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="10"
+                android:text="Ended task"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_row="0"
+                android:text="Task information"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/popup_startedtask"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="9"
+                android:ems="10"
+                android:inputType="datetime" />
+
+            <EditText
+                android:id="@+id/popup_endedtask"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="10"
+                android:ems="10"
+                android:inputType="datetime" />
+
+            <TextView
+                android:id="@+id/popup_txtextracosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="11"
+                android:text="Extra costs"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/popup_txtearnings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="12"
+                android:text="Earnings"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_row="7"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/popup_extracosts"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="11"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/popup_earnings"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_row="12"
+                android:ems="10"
+                android:inputType="textPersonName" />
 
         </GridLayout>
+    </ScrollView>
 
         <LinearLayout
+            android:id="@+id/Buttonlayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button
@@ -159,7 +262,5 @@
                 android:padding="5dp"
                 android:text="Done" />
         </LinearLayout>
-
-    </LinearLayout>
 
 </RelativeLayout>

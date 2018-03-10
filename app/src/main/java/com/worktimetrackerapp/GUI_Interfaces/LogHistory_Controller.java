@@ -159,93 +159,39 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     public void showPopup(final Document currentdoc) throws Exception{
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View layout = inflater.inflate(R.layout.loghistory_pop, null);
-
-        //calculate size of popup
         float density =getActivity().getResources().getDisplayMetrics().density;
         final PopupWindow pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
 
+        //set fields from popup
         final Button btnDelete = (Button) layout.findViewById(R.id.popup_deletetask);
         final Button btnEdit = (Button) layout.findViewById(R.id.popup_edittask);
         final Button btnDone = (Button) layout.findViewById(R.id.popup_donetask);
-        final TextView task = (TextView) layout.findViewById(R.id.popup_task);
-        final TextView start = (TextView) layout.findViewById(R.id.popup_start);
-        final TextView end = (TextView) layout.findViewById(R.id.popup_end);
-        final TextView client = (TextView) layout.findViewById(R.id.popup_client);
-        final TextView wage = (TextView) layout.findViewById(R.id.popup_wage);
-
-        //disable textfields
-            task.setFocusable(false);
-            start.setFocusable(false);
-            end.setFocusable(false);
-            client.setFocusable(false);
-            wage.setFocusable(false);
-        //set text fields
-            task.setText(currentdoc.getProperty("taskname").toString());
+        //task info
+        final TextView taskName = (TextView) layout.findViewById(R.id.popup_taskname);
+        final TextView startTaskInfo = (TextView) layout.findViewById(R.id.popup_startdatetime);
+        final TextView endTaskInfo = (TextView) layout.findViewById(R.id.popup_enddatetime);
+        final TextView clientName = (TextView) layout.findViewById(R.id.popup_clientname);
+        final TextView clientAddress = (TextView) layout.findViewById(R.id.popup_clientaddress);
+        final TextView wage = (TextView) layout.findViewById(R.id.popup_wagehr);
+        //other information
+        final TextView otherInfoStartedTask = (TextView) layout.findViewById(R.id.popup_startedtask);
+        final TextView otherInfoEndedTask = (TextView) layout.findViewById(R.id.popup_endedtask);
+        final TextView TaskExtraCost = (TextView) layout.findViewById(R.id.popup_extracosts);
+        final TextView TaskEarnings = (TextView) layout.findViewById(R.id.popup_earnings);
 
 
-        //set on click listeners
-        btnDelete.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Document task = (Document) mydb.getDocument(currentdoc.getId());
-                try {
-                    task.delete();
-                    pw.dismiss();
-                }catch (Exception e){
-                    System.out.println(e);
-                }
-            }
-        });
-        btnEdit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(btnEdit.getText().equals("Edit")) {
-                    //rename edit button
-                        btnEdit.setText("Save");
-                        btnEdit.getText();
-                        btnDelete.setVisibility(View.INVISIBLE);
-                        btnDone.setVisibility(View.INVISIBLE);
-                    //enable textfields
-                        task.setFocusableInTouchMode(true);
-                        start.setFocusableInTouchMode(true);
-                        end.setFocusableInTouchMode(true);
-                        client.setFocusableInTouchMode(true);
-                        wage.setFocusableInTouchMode(true);
-                }else{
-                    //disable textfields
-                        btnEdit.setText("Edit");
-                        btnDelete.setVisibility(View.VISIBLE);
-                        btnDone.setVisibility(View.VISIBLE);
-                        task.setFocusable(false);
-                        start.setFocusable(false);
-                        end.setFocusable(false);
-                        client.setFocusable(false);
-                        wage.setFocusable(false);
-                    //save edited items
-                }
 
-            }
-        });
-
-        btnDone.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(btnEdit.getText().equals("Edit")) {
-                    System.out.println("Test");
-                    pw.dismiss();
-                }
-            }
-        });
-
-
-        //set up touch closing outside of pop-up
+//set up touch closing outside of pop-up
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
-                public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, MotionEvent event) {
                 System.out.println("Touch");
                 System.out.println(event.getAction());
                 //if(event.getAction() == 0){
-                        //System.out.println("Test");
-                       // pw.dismiss();
-                       // return true;
+                //System.out.println("Test");
+                // pw.dismiss();
+                // return true;
                 //}
                 return false;
             }
