@@ -17,7 +17,7 @@ import java.util.List;
 public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
     private List<QueryRow> historylist;
     private final Context context;
-
+    String strtaskinfo;
     public LogHistoryArrayAdapter(Context context, int resource, int tasknameResourceId, int taskinfoResourceId ,List<QueryRow> objects){
         super(context, resource, tasknameResourceId, objects);
         this.context = context;
@@ -49,7 +49,16 @@ public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
                 String strtaskname = (String) currentRevision.getProperty("taskname");
                 taskname.setText(strtaskname);
 
-                String strtaskinfo = (String) currentRevision.getProperty("created_at");
+                String TaskScheduledStartDate =(String) currentRevision.getProperty("TaskScheduledStartDate") ;
+                String TaskScheduledStartTime =(String) currentRevision.getProperty("TaskScheduledStartTime") ;
+                String TaskScheduledEndDate =(String) currentRevision.getProperty("TaskScheduledEndDate") ;
+                String TaskScheduledEndTime =(String) currentRevision.getProperty("TaskScheduledEndTime") ;
+
+                if(TaskScheduledStartDate.equals(TaskScheduledEndDate)){
+                    strtaskinfo = TaskScheduledStartDate + " - Time: " + TaskScheduledStartTime + " - " + TaskScheduledEndTime;
+                }else{
+                    strtaskinfo = TaskScheduledStartDate + " - " + TaskScheduledStartTime + " To: " +TaskScheduledEndDate + " - " + TaskScheduledEndTime;
+                }
                 taskinfo.setText(strtaskinfo);
 
 

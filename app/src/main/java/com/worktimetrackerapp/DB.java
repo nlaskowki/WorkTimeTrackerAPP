@@ -463,12 +463,28 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    public Boolean UpdateNewTask(Document taskdocument, String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime){
+    public Boolean UpdateTask(Document taskdocument, boolean ended, String TaskName ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
+                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings ) throws Exception{
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.putAll(taskdocument.getProperties());
+        properties.put("taskname", TaskName);
+        properties.put("taskwage", TaskWage);
 
-        return true;
-    }
-    public Boolean UpdateEndedTask(Document taskdocument, String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
-                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings ){
+        properties.put("taskClient", Client);
+        properties.put("ClientAddress", CAddress);
+
+        properties.put("TaskScheduledStartDate", StartDate);
+        properties.put("TaskScheduledStartTime", StartTime);
+
+        properties.put("TaskScheduledEndDate", EndDate);
+        properties.put("TaskScheduledEndTime", EndTime);
+        if(ended) {
+            properties.put("TaskStartDateTime", StartDateTime);
+            properties.put("TaskEndDateTime", EndDateTime);
+            properties.put("extracost", ExtraCosts);
+            properties.put("TaskEarnings", TaskEarnings);
+        }
+        taskdocument.putProperties(properties);
 
         return true;
     }

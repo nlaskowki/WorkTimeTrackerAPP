@@ -47,7 +47,8 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
     private Database mydb;
     private LiveQuery liveQuery;
-
+    boolean ended;
+    DB app;
     public static final String designDocName = "Task";
     public static final String byDateViewName = "byDate";
 
@@ -56,15 +57,11 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.log_history, container, false);
         HistoryList = (ListView) currentView.findViewById(R.id.log_history_list);
-        DB app = (DB) getActivity().getApplication();
+        app = (DB) getActivity().getApplication();
 
         try {
-            //app.StartTask("1", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("2", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("3", "" ,0.0, "ou", 0.0, "");
             startShowList();
         } catch (Exception e) {
-            //DB app = (DB) getContext();
             app.showErrorMessage("Error initializing CBLite", e);
         }
 
@@ -144,16 +141,6 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
         }catch (Exception e){
             System.out.println(e);
         }
-        //boolean checked = ((Boolean) newProperties.get("check")).booleanValue();
-        //newProperties.put("check", !checked);
-
-       // try {
-            //document.putProperties(newProperties);
-            //lhaa.notifyDataSetChanged();
-        //} catch (Exception e) {
-           // DB app = (DB) getContext();
-            //app.showErrorMessage("Error updating database", e);
-        //}
     }
 
     public void showPopup(final Document currentdoc) throws Exception{
@@ -161,6 +148,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
         View layout = inflater.inflate(R.layout.loghistory_pop, null);
         float density =getActivity().getResources().getDisplayMetrics().density;
         final PopupWindow pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
+        ended = false;
 
         //set fields from popup
             final Button btnDelete = (Button) layout.findViewById(R.id.popup_deletetask);
@@ -200,15 +188,19 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
             wage.setText(currentdoc.getProperty("taskwage").toString());
             if(currentdoc.getProperty("TaskStartDateTime") != null) {
                 otherInfoStartedTask.setText(currentdoc.getProperty("TaskStartDateTime").toString());
+                ended = true;
             }
             if(currentdoc.getProperty("TaskEndDateTime") != null) {
                 otherInfoEndedTask.setText(currentdoc.getProperty("TaskEndDateTime").toString());
+                ended = true;
             }
             if(currentdoc.getProperty("extracost") != null) {
                 TaskExtraCost.setText(currentdoc.getProperty("extracost").toString());
+                ended = true;
             }
             if(currentdoc.getProperty("TaskEarnings") != null) {
                 TaskEarnings.setText(currentdoc.getProperty("TaskEarnings").toString());
+                ended = true;
             }
 
         //set on click listeners
@@ -231,7 +223,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                         otherInfoEndedTask.setFocusableInTouchMode(true);
                         TaskExtraCost.setFocusableInTouchMode(true);
                         TaskEarnings.setFocusableInTouchMode(true);
-                }else{//buttontext is equal to save
+                }else {//buttontext is equal to save
                     //disable textfields
                         btnEdit.setText("Edit");
                         btnDelete.setVisibility(View.VISIBLE);
@@ -249,9 +241,26 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                         TaskEarnings.setFocusable(false);
                     //save edited fields
                         //format some fields first
-                        //db.updateTask(currentdoc,taskName.getText(), )
+                            String startDate ="";
+                            String startTime ="";
+                            String endDate ="";
+                            String endTime ="";
+                        if (!ended) {//omit 4 fields
+                            try {
+                                app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                                        null, null, null, null);
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        } else {//all fields
+                            try {
+                                app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                                        otherInfoStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), Double.parseDouble(TaskExtraCost.getText().toString()), Double.parseDouble(TaskEarnings.getText().toString()));
+                            } catch (Exception e){
+                                System.out.println(e);
+                            }
+                        }
                 }
-
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener(){
