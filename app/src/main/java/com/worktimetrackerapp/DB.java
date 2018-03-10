@@ -463,6 +463,15 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
+    public Boolean UpdateNewTask(Document taskdocument, String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime){
+
+        return true;
+    }
+    public Boolean UpdateEndedTask(Document taskdocument, String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
+                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings ){
+
+        return true;
+    }
 
     //**************************************************** logout *******************************************************
     public void logout() {
