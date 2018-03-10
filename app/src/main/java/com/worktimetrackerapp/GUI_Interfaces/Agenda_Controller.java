@@ -25,6 +25,7 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
 import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Mapper;
+import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryRow;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -36,10 +37,14 @@ import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -52,9 +57,9 @@ public class Agenda_Controller extends Fragment {
     private Database mydb;
     private LiveQuery liveQuery;
 
-    public static final String designDocName = "Task";
-    public static final String byDateViewName = "byDate";
-
+    public static final String designDocName = "AgendaDaySearch";
+    public static final String byDateViewName = "byDateAgenda";
+    com.couchbase.lite.View viewItemsByDate;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +71,6 @@ public class Agenda_Controller extends Fragment {
                     //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
 
         MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
-
 
         Calendar calendar = Calendar.getInstance();
         materialCalendarView.setSelectedDate(calendar.getTime());
@@ -84,22 +88,32 @@ public class Agenda_Controller extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
+        try {
+            SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
+            String selectedDay = today.format(calendar.getTime());
+            System.out.println(selectedDay);
+            startShowList();
+            startLiveQuery(selectedDay);
+        } catch (Exception e) {
+            app.showErrorMessage("Error initializing CBLite", e);
+        }
+
        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
+                try {
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String selectedDay = dateFormatter.format(date.getDate());
+
+                    startLiveQuery(selectedDay);
+                } catch (Exception e) {
+                    DB app = (DB) getContext();
+                    app.showErrorMessage("Error initializing CBLite", e);
+                }
+
             }
         });
-
-        try {
-            //app.StartTask("1", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("2", "" ,0.0, "ou", 0.0, "");
-            //app.StartTask("3", "" ,0.0, "ou", 0.0, "");
-            startShowList();
-        } catch (Exception e) {
-            //DB app = (DB) getContext();
-            app.showErrorMessage("Error initializing CBLite", e);
-        }
 
         return currentView;
     }
@@ -108,25 +122,20 @@ public class Agenda_Controller extends Fragment {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
-        com.couchbase.lite.View viewItemsByDate =
-                mydb.getView(String.format("%s/%s", designDocName, byDateViewName));
-        if (viewItemsByDate.getMap() == null) {
-            viewItemsByDate.setMap(new Mapper() {
-                @Override
-                public void map(Map<String, Object> document, Emitter emitter) {
-                    Object createdAt = document.get("created_at");
-                    if(document.get("type").equals("Task")) {
-                        if (createdAt != null) {
-                            emitter.emit(createdAt.toString(), null);
-                        }
+        viewItemsByDate = mydb.getView("TaskScheduledStartDate");
+        viewItemsByDate.setMap(new Mapper(){
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter){
+                if(document.get("type").equals("Task")) {
+                    if(document.get("TaskScheduledStartDate") != null) {
+                        String date = (String) document.get("TaskScheduledStartDate");
+                        emitter.emit(date.toString(), null);
                     }
-                }
-            }, "1.0");
-        }
+                }//end if
+            }
+        },"1");
 
         initItemListAdapter();
-
-        startLiveQuery(viewItemsByDate);
     }
 
     private void initItemListAdapter() {
@@ -155,11 +164,13 @@ public class Agenda_Controller extends Fragment {
         }) ;
     }
 
-    private void startLiveQuery(com.couchbase.lite.View view) throws Exception {
+    private void startLiveQuery(String SelectedDay) throws Exception {
         final DB app = (DB) getActivity().getApplication();
-
-        if (liveQuery == null) {
-            liveQuery = view.createQuery().toLiveQuery();
+            Query MyQuery = viewItemsByDate.createQuery();
+            MyQuery.setDescending(true);
+            MyQuery.setStartKey(SelectedDay);
+            MyQuery.setEndKey(SelectedDay);
+            liveQuery = MyQuery.toLiveQuery();
             liveQuery.addChangeListener(new LiveQuery.ChangeListener() {
                 public void changed(final LiveQuery.ChangeEvent event) {
                     app.runOnUiThread(new Runnable() {
@@ -175,7 +186,6 @@ public class Agenda_Controller extends Fragment {
             });
 
             liveQuery.start();
-        }
     }
 
 

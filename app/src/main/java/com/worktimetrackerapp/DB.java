@@ -378,7 +378,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return document;
     }
 
-    public Document NewTask(String TaskName, String JobTitle ,Float TaskWage, String Client, String CAddress, String StartTime, String EndTime) throws Exception {
+    public Document NewTask(String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -403,7 +403,10 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         properties.put("taskClient", Client);
         properties.put("ClientAddress", CAddress);
 
+        properties.put("TaskScheduledStartDate", StartDate);
         properties.put("TaskScheduledStartTime", StartTime);
+
+        properties.put("TaskScheduledEndDate", EndDate);
         properties.put("TaskScheduledEndTime", EndTime);
 
 
@@ -417,7 +420,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     public Boolean StartTask(Document TaskDoc) throws Exception {
 
         //get date format
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm:");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
         String StartTime = dateFormatter.format(calendar.getTime());
 
@@ -434,9 +437,9 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    public Boolean EndTask(Document taskdocument, Float ExtraCosts, Float TaskEarnings) throws Exception {
+    public Boolean EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm:");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
         String TaskEndTime = dateFormatter.format(calendar.getTime());
 

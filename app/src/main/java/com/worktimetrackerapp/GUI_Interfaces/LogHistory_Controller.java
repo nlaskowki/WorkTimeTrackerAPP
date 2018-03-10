@@ -114,6 +114,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
         if (liveQuery == null) {
             liveQuery = view.createQuery().toLiveQuery();
+            liveQuery.setDescending(true);
             liveQuery.addChangeListener(new LiveQuery.ChangeListener() {
                 public void changed(final LiveQuery.ChangeEvent event) {
                     app.runOnUiThread(new Runnable() {
