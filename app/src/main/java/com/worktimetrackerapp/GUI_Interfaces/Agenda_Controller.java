@@ -58,7 +58,7 @@ public class Agenda_Controller extends Fragment {
     private Database mydb;
     private LiveQuery liveQuery;
     DB app;
-
+    TextView agendaheader;
     public static final String designDocName = "AgendaDaySearch";
     public static final String byDateViewName = "byDateAgenda";
     com.couchbase.lite.View viewItemsByDate;
@@ -68,7 +68,7 @@ public class Agenda_Controller extends Fragment {
         currentView = inflater.inflate(R.layout.agenda, container, false);
         agendalist = (ListView) currentView.findViewById(R.id.agenda_list_view);
         app = (DB) getActivity().getApplication();
-
+        agendaheader = new TextView(getContext());
         //calendar credit to https://github.com/prolificinteractive/material-calendarview/blob/master/docs/DECORATORS.md
                     //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
 
@@ -93,7 +93,9 @@ public class Agenda_Controller extends Fragment {
         try {
             SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
             String selectedDay = today.format(calendar.getTime());
-            System.out.println(selectedDay);
+            agendaheader.setText(selectedDay);
+            agendalist.addHeaderView(agendaheader);
+            agendaheader.setFocusable(false);
             startShowList();
             startLiveQuery(selectedDay);
         } catch (Exception e) {
@@ -103,11 +105,13 @@ public class Agenda_Controller extends Fragment {
        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                //Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
                 try {
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
                     String selectedDay = dateFormatter.format(date.getDate());
-
+                    agendalist.removeHeaderView(agendaheader);
+                    agendaheader.setText(selectedDay);
+                    agendalist.addHeaderView(agendaheader);
                     startLiveQuery(selectedDay);
                 } catch (Exception e) {
                     DB app = (DB) getContext();
@@ -153,14 +157,16 @@ public class Agenda_Controller extends Fragment {
         agendalist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
-                Document document = row.getDocument();
-                Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
+                if(position != 0) {
+                    QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
+                    Document document = row.getDocument();
+                    Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
 
-                try {
-                    showPopup(document);
-                }catch (Exception e){
-                    System.out.println(e);
+                    try {
+                        showPopup(document);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
                 }
             }
         }) ;

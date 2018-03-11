@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
+import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
@@ -24,6 +26,7 @@ import com.couchbase.lite.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.worktimetrackerapp.GUI_Interfaces.SignIn_Controller;
+import com.worktimetrackerapp.GUI_Interfaces.SignUp_Controller;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -69,27 +72,58 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Throwable syncError;
     private String username;
 
-    private Document[] Jobs = new Document[10];
-    private Document currentJob;
+    private Object[] Jobs = new Object[10];
+    private Object currentJob;
 
-    public Document getcurrentJob(){
+    public Object getcurrentJob(){
         return currentJob;
     }
-    public void setCurrentJob(Document CJ){
+    public Object[] getAllJobs(){
+            return Jobs;
+    }
+    public void setCurrentJob(Object CJ){
         currentJob = CJ;
     }
 
     private void completeLogin() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-    }
+        boolean synccomplete = false;
+        while (!synccomplete) {
+            if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
+                synccomplete = true;
+                try {
+                    Jobs = getJobs();
+                    System.out.println(Jobs[0]);
 
+                    if (Jobs[0] == null) {//create new user
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //change again later
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        });
+
+                    } else {//already signed up for app redirect to home page
+                        // set job first
+                        currentJob = Jobs[0];
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
     //*************************************************************** Google Authentication ******************************************
     public void loginWithGoogleSignIn(final String idToken) {
         Request request = new Request.Builder()
@@ -306,44 +340,36 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     //************************************************************** add, remove, update the DB ****************************************************
 
-    public boolean getAllJobs() throws Exception{
-        for(int count=0; count<10; count++){
-                Jobs[count] = null;
-                System.out.println(count);
-        }
+    protected Object[] getJobs() throws Exception{
+        View JobView;
+        Object[] jobs = new Object[10];
 
-        //set view
-        View  jobview = getMydb().getView("User-Info");
-        jobview.setMap(new Mapper(){
+        JobView = Mydb.getView("ViewJobs");
+        JobView.setMap(new Mapper(){
             @Override
             public void map(Map<String, Object> document, Emitter emitter){
-                List<String> jobs = (List) document.get("User-Info");
-                for (String job : jobs){
-                    emitter.emit(job, document.get("type"));
-                }
+                if(document.get("type").equals("UserInfo")) {
+                    if(document.get("jobtitle") != null) {
+                        String date = (String) document.get("jobtitle");
+                        emitter.emit(date.toString(), null);
+                    }
+                }//end if
             }
         },"1");
-        System.out.println("Run 1");
-        Query query = getMydb().getView("jobview").createQuery();
-        query.setStartKey("User-Info");
-        QueryEnumerator result = query.run();
-        System.out.println("Run 1");
+
+        Query MyQuery = JobView.createQuery();
+        MyQuery.setDescending(true);
+        QueryEnumerator result = MyQuery.run();
         int i = 0;
-        for (Iterator<QueryRow> it = result; it.hasNext(); ) {
-            System.out.println("Run 2");
-            QueryRow row = it.next();
-            Jobs[i] = row.getDocument();
+        for(Iterator<QueryRow> it = result; it.hasNext();) {
+            jobs[i] = it.next().getDocumentId();
             i++;
-            Log.w("wtt", "On %s: order for $%f", row.getKey(), ((Double)row.getValue()).doubleValue());
         }
-        if(!Jobs[0].equals(null)) {
-            currentJob = Jobs[0];
-            System.out.println("WORKS");
-        }
-        return true;
+
+        return jobs;
     }
 
-    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Float jobWage, Float jobAveHours) throws Exception {
+    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -357,7 +383,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         Document document = getMydb().createDocument();
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("_id", id);
-        properties.put("type", "User-info");
+        properties.put("type", "UserInfo");
         properties.put("owner", app.getUsername());
         properties.put("created_at", currentTimeString);
 
@@ -366,10 +392,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         properties.put("jobemployer", jobEmployer);
         properties.put("jobwage", jobWage);
         properties.put("jobavehours", jobAveHours);
-
-
-
-
 
         document.putProperties(properties);
 
