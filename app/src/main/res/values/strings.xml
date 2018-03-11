@@ -45,4 +45,6 @@
     <string name="employer_user">Employer</string>
     <string name="hourly_wage_user">Hourly Wage</string>
     <string name="average_hours_optional">Average Hours (optional)</string>
+    <string name="Yes" />
+    <string name="No" />
 </resources>
