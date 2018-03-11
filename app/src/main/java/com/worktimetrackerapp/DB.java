@@ -274,10 +274,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return username;
     }
 
-    public com.couchbase.lite.Database getDatabase() {
-        return Mydb;
-    }
-
     public boolean initializeDatabase() {
         enableLogging();
         if (dbManager == null) {
@@ -326,7 +322,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                     emitter.emit(job, document.get("type"));
                 }
             }
-        },"2");
+        },"1");
         System.out.println("Run 1");
         Query query = getMydb().getView("jobview").createQuery();
         query.setStartKey("User-Info");
@@ -347,7 +343,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Double jobWage, Double jobAveHours) throws Exception {
+    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, Float jobWage, Float jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -360,30 +356,29 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Document document = getMydb().createDocument();
         Map<String, Object> properties = new HashMap<String, Object>();
-
-        properties.put("jobavehours", jobAveHours);
-        properties.put("jobwage", jobWage);
-        properties.put("jobemployer", jobEmployer);
-        properties.put("jobtitle", jobTitle);
-        properties.put("jobtype", jobType);
-
-        properties.put("created_at", currentTimeString);
-        properties.put("owner", app.getUsername());
         properties.put("_id", id);
         properties.put("type", "User-info");
+        properties.put("owner", app.getUsername());
+        properties.put("created_at", currentTimeString);
+
+        properties.put("jobtype", jobType);
+        properties.put("jobtitle", jobTitle);
+        properties.put("jobemployer", jobEmployer);
+        properties.put("jobwage", jobWage);
+        properties.put("jobavehours", jobAveHours);
+
+
+
+
+
         document.putProperties(properties);
 
         Log.d(TAG, "Created new user item with id: %s", document.getId());
 
-        //for(int count=0; count<10; count++){
-            //if(Jobs[count].equals(null)){
-               // Jobs[count] = document;
-            //}
-        //}
         return document;
     }
 
-    public Document StartTask(String TaskName, String JobTitle ,Double TaskWage, String Client, Double EstimatedHours, String EndTime) throws Exception {
+    public Document NewTask(String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -396,20 +391,25 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Document document = getMydb().createDocument();
         Map<String, Object> properties = new HashMap<String, Object>();
-
-        properties.put("TaskEarnings", 0.0);
-        properties.put("TaskEndTime", "");
-        properties.put("TaskEstimatedEndTime", EndTime);
-        properties.put("TaskEstimatedHours", EstimatedHours);
-        properties.put("taskClient", Client);
-        properties.put("taskwage", TaskWage);
-        properties.put("jobtitle", JobTitle);
-        properties.put("taskname", TaskName);
-
-        properties.put("created_at", currentTimeString);
-        properties.put("owner", app.getUsername());
         properties.put("_id", id);
         properties.put("type", "Task");
+        properties.put("owner", app.getUsername());
+        properties.put("created_at", currentTimeString);
+
+        properties.put("taskname", TaskName);
+        properties.put("jobtitle", JobTitle);
+        properties.put("taskwage", TaskWage);
+
+        properties.put("taskClient", Client);
+        properties.put("ClientAddress", CAddress);
+
+        properties.put("TaskScheduledStartDate", StartDate);
+        properties.put("TaskScheduledStartTime", StartTime);
+
+        properties.put("TaskScheduledEndDate", EndDate);
+        properties.put("TaskScheduledEndTime", EndTime);
+
+
         document.putProperties(properties);
 
         Log.d(TAG, "Started task item with id: %s", document.getId());
@@ -417,20 +417,41 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return document;
     }
 
-    protected boolean EndTask(Document taskdocument, Double TaskEarnings) throws Exception {
-        DB app = (DB) getApplicationContext();
+    public Boolean StartTask(Document TaskDoc) throws Exception {
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        //get date format
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
-        long currentTime = calendar.getTimeInMillis();
-        String currentTimeString = dateFormatter.format(calendar.getTime());
+        String StartTime = dateFormatter.format(calendar.getTime());
+
+        Document document = getMydb().getDocument(TaskDoc.getId());
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.putAll(TaskDoc.getProperties());
+
+        properties.put("TaskStartDateTime", StartTime);
+
+        document.putProperties(properties);
+
+        Log.d(TAG, "Started task item with id: %s", document.getId());
+
+        return true;
+    }
+
+    public Boolean EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        Calendar calendar = GregorianCalendar.getInstance();
+        String TaskEndTime = dateFormatter.format(calendar.getTime());
 
 
         Document doc = getMydb().getDocument(taskdocument.getId());
         Map<String, Object> properties = new HashMap<String, Object>();
             properties.putAll(doc.getProperties());
+
+            properties.put("TaskEndDateTime", TaskEndTime);
+            properties.put("extracost", ExtraCosts);
             properties.put("TaskEarnings", TaskEarnings);
-            properties.put("TaskEndTime", currentTimeString);
+
         try {
             doc.putProperties(properties);
         } catch (CouchbaseLiteException e) {
@@ -442,9 +463,33 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
+    public Boolean UpdateTask(Document taskdocument, boolean ended, String TaskName ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
+                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings ) throws Exception{
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.putAll(taskdocument.getProperties());
+        properties.put("taskname", TaskName);
+        properties.put("taskwage", TaskWage);
+
+        properties.put("taskClient", Client);
+        properties.put("ClientAddress", CAddress);
+
+        properties.put("TaskScheduledStartDate", StartDate);
+        properties.put("TaskScheduledStartTime", StartTime);
+
+        properties.put("TaskScheduledEndDate", EndDate);
+        properties.put("TaskScheduledEndTime", EndTime);
+        if(ended) {
+            properties.put("TaskStartDateTime", StartDateTime);
+            properties.put("TaskEndDateTime", EndDateTime);
+            properties.put("extracost", ExtraCosts);
+            properties.put("TaskEarnings", TaskEarnings);
+        }
+        taskdocument.putProperties(properties);
+
+        return true;
+    }
 
     //**************************************************** logout *******************************************************
-
     public void logout() {
 
         stopReplication(true);
@@ -462,11 +507,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         startActivity(intent);
     }
 
-    //*********************************************** get classes for application *********************************************
-
-    public Context getMyApplication(){
-        return getApplicationContext();
-    }
 
     //******logging********
 
