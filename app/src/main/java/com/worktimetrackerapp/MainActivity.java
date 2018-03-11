@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
+import com.worktimetrackerapp.GUI_Interfaces.HomeNotTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
 
     }
 
