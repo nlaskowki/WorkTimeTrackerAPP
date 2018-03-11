@@ -66,30 +66,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         Object[] jobs = app.getAllJobs();
-
-        for(int i=0; i<10; i++){
-            if(jobs[i] != null) {
+    if(jobs[0] != null) {
+        for (int i = 0; i < 10; i++) {
+            if (jobs[i] != null) {
                 System.out.println(jobs[i]);
                 menujobinterface.put(i, jobs[i].toString());
                 com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
-                menu.add(R.id.menu_jobgroup, i, i+100, currentdoc.getProperty("jobtitle").toString());
+                menu.add(R.id.menu_jobgroup, i, i + 100, currentdoc.getProperty("jobtitle").toString());
                 System.out.println(i);
             }
         }
         menu.setGroupCheckable(R.id.menu_jobgroup, true, true);
         menu.getItem(0).setChecked(true);
         //set title bar
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            String doc = menujobinterface.get(0);
-            String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
-            toolbar.setTitle(jobname);
-            app.setCurrentJob(doc);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        String doc = menujobinterface.get(0);
+        String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+        toolbar.setTitle(jobname);
+        app.setCurrentJob(doc);
         getMenuInflater().inflate(R.menu.wttapplication, menu);
+    }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         String doc = "";
         int id = item.getItemId();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
