@@ -22,22 +22,6 @@
         app:layout_constraintVertical_bias="0.017"
         app:srcCompat="@mipmap/ic_launcher_new" />
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="206dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="By-Pass google"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.811" />
-
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_loginGoogle"
         android:layout_width="206dp"
