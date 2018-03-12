@@ -18,6 +18,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string-array name="spinner">
+        <item> </item>
         <item>Self-Employed</item>
         <item>Employee</item>
     </string-array>
