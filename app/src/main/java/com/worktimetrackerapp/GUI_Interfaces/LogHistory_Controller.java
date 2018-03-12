@@ -57,6 +57,8 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.log_history, container, false);
         HistoryList = (ListView) currentView.findViewById(R.id.log_history_list);
+        TextView emptyText = (TextView) currentView.findViewById(R.id.empty_historylist);
+        HistoryList.setEmptyView(emptyText);
         app = (DB) getActivity().getApplication();
 
         try {

@@ -67,8 +67,11 @@ public class Agenda_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.agenda, container, false);
         agendalist = (ListView) currentView.findViewById(R.id.agenda_list_view);
+        TextView emptyText = (TextView) currentView.findViewById(R.id.empty_agendalist);
+        agendalist.setEmptyView(emptyText);
         app = (DB) getActivity().getApplication();
         agendaheader = new TextView(getContext());
+        agendaheader.setTextSize(getResources().getDimension(R.dimen.listview_header));
         //calendar credit to https://github.com/prolificinteractive/material-calendarview/blob/master/docs/DECORATORS.md
                     //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
 
