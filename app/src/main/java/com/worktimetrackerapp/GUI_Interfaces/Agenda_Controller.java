@@ -43,11 +43,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-<<<<<<< Updated upstream
+
 //calendar credit to https://github.com/prolificinteractive/material-calendarview/blob/master/docs/DECORATORS.md
 //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
-=======
->>>>>>> Stashed changes
+
+
 
 public class Agenda_Controller extends Fragment {
     View currentView;
@@ -73,12 +73,11 @@ public class Agenda_Controller extends Fragment {
         agendaheader = new TextView(getContext());
         agendaheader.setTextSize(getResources().getDimension(R.dimen.listview_header));
 
-<<<<<<< Updated upstream
+
         //Agenda items
-                MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
-=======
+
         final MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
->>>>>>> Stashed changes
+
 
                 Calendar calendar = Calendar.getInstance();
                 materialCalendarView.setSelectedDate(calendar.getTime());
@@ -213,8 +212,6 @@ public class Agenda_Controller extends Fragment {
 
             liveQuery.start();
     }
-<<<<<<< Updated upstream
-=======
 
 
     public void showPopup(final Document currentdoc) throws Exception{
@@ -378,7 +375,6 @@ public class Agenda_Controller extends Fragment {
         pw.showAtLocation(layout,Gravity.CENTER, 0,0);
     }
 
->>>>>>> Stashed changes
 }
 
 
