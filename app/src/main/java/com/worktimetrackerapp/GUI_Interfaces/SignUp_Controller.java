@@ -51,7 +51,7 @@ public class SignUp_Controller extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 //add job to db
-                DB app = (DB) getApplication();
+                final DB app = (DB) getApplication();
                 //app.AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours)
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
@@ -67,9 +67,7 @@ public class SignUp_Controller extends AppCompatActivity {
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);
-                                LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(LaunchHome);
+                                app.completeLogin();
                             }
                         });
 
