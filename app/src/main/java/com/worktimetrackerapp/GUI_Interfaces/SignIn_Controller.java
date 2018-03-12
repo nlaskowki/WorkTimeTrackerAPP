@@ -35,9 +35,7 @@ public class SignIn_Controller extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_screen);
-        final Button btnLogin = findViewById(R.id.btn_login);
         final SignInButton btnLoginGoogle = findViewById(R.id.btn_loginGoogle);
-        final Button btnSignUp = findViewById(R.id.btn_Login_signUp);
         btnLoginGoogle.setSize(SignInButton.SIZE_STANDARD);
 
         //google sign in
@@ -59,14 +57,6 @@ public class SignIn_Controller extends AppCompatActivity  {
             }
         });
 
-        //login button action
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);
-                LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(LaunchHome);
-            }
-        });
 
     }
 

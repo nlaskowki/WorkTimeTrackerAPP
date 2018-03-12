@@ -37,6 +37,7 @@
         android:layout_marginBottom="11dp"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="262dp"
+        android:onClick="dialogevent"
         android:text="@string/next"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="26dp"
         android:ems="10"
         android:hint="@string/job_title_user"
         android:inputType="textPersonName"
@@ -75,9 +76,9 @@
         android:id="@+id/txt_employer"
         android:layout_width="401dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="33dp"
         android:ems="10"
         android:hint="@string/employer_user"
         android:inputType="textPersonName"
@@ -90,9 +91,9 @@
         android:id="@+id/txt_hourly_wage"
         android:layout_width="401dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="31dp"
         android:ems="10"
         android:hint="@string/hourly_wage_user"
         android:inputType="textPersonName"
@@ -105,8 +106,9 @@
         android:id="@+id/txt_avg_hours"
         android:layout_width="401dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="@string/average_hours_optional"
         android:inputType="textPersonName"
@@ -115,57 +117,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_hourly_wage" />
 
-    <TextView
-        android:id="@+id/tv_secondJob"
-        android:layout_width="274dp"
-        android:layout_height="27dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="18dp"
-        android:text="@string/second_job"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_avg_hours" />
-
-    <RadioGroup
-        android:id="@+id/rgroup"
-        android:layout_width="256dp"
-        android:layout_height="148dp"
-        android:layout_marginEnd="152dp"
-        android:layout_marginStart="3dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_secondJob">
-
-        <RadioButton
-            android:id="@+id/rb_no"
-            android:layout_width="111dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:text="@string/no"
-            tools:layout_editor_absoluteX="26dp"
-            tools:layout_editor_absoluteY="519dp" />
-
-        <RadioButton
-            android:id="@+id/rb_yes"
-            android:layout_width="112dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClick"
-            android:text="@string/yes"
-            tools:layout_editor_absoluteX="26dp"
-            tools:layout_editor_absoluteY="475dp" />
-    </RadioGroup>
-
     <EditText
         android:id="@+id/txt_company"
         android:layout_width="401dp"
         android:layout_height="51dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="3dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:hint="@string/company_name_self_employed_only"
         android:inputType="textPersonName"
@@ -173,6 +131,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
 
 
 </android.support.constraint.ConstraintLayout>
