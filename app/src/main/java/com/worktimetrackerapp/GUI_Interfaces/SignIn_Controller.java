@@ -68,14 +68,6 @@ public class SignIn_Controller extends AppCompatActivity  {
             }
         });
 
-        //SignUp Button Action
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent GoToSignUp = new Intent(getApplicationContext(), SignUp_Controller.class);
-                GoToSignUp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(GoToSignUp);
-            }
-        });
     }
 
     @Override

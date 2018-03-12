@@ -7,13 +7,35 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/HomeNotTrackTitletxtvw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Home Not Tracking"
+        android:layout_marginTop="9dp"
+        android:text="Home"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
+        android:id="@+id/analogClock"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@+id/HomeNotTrackTitletxtvw"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/StartTaskButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/analogClock"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Start New Task" />
+
 </RelativeLayout>

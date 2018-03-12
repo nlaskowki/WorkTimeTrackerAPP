@@ -14,22 +14,29 @@ import android.view.MenuItem;
 
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
+import com.worktimetrackerapp.GUI_Interfaces.HomeNotTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
+
+import org.w3c.dom.Document;
+
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
     public static String mCurrentUserId;
-
+    DB app;
+    HashMap<Integer, String> menujobinterface = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wttapplication);
-        System.out.println("Try");
+        app = (DB) getApplication();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
 
     }
 
@@ -59,23 +66,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        Object[] jobs = app.getAllJobs();
+    if(jobs[0] != null) {
+        for (int i = 0; i < 10; i++) {
+            if (jobs[i] != null) {
+                System.out.println(jobs[i]);
+                menujobinterface.put(i, jobs[i].toString());
+                com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
+                menu.add(R.id.menu_jobgroup, i, i + 100, currentdoc.getProperty("jobtitle").toString());
+                System.out.println(i);
+            }
+        }
+        menu.setGroupCheckable(R.id.menu_jobgroup, true, true);
+        menu.getItem(0).setChecked(true);
+        //set title bar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        String doc = menujobinterface.get(0);
+        String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+        toolbar.setTitle(jobname);
+        app.setCurrentJob(doc);
         getMenuInflater().inflate(R.menu.wttapplication, menu);
+    }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Job1) {
-            return true;
+        String doc = "";
+        int id = item.getItemId();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        String jobname = "";
+
+        switch(id) {
+            case 0:
+                doc = menujobinterface.get(0);
+                item.setChecked(true);
+                app.setCurrentJob(doc);
+                jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+                toolbar.setTitle(jobname);
+                return true;
+            case 1:
+                doc = menujobinterface.get(1);
+                item.setChecked(true);
+                app.setCurrentJob(doc);
+                jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+                toolbar.setTitle(jobname);
+                return true;
+            case 2:
+                doc = menujobinterface.get(2);
+                item.setChecked(true);
+                app.setCurrentJob(doc);
+                jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+                toolbar.setTitle(jobname);
+                return true;
+            case 3:
+                doc = menujobinterface.get(3);
+                item.setChecked(true);
+                app.setCurrentJob(doc);
+                jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+                toolbar.setTitle(jobname);
+                return true;
+            case 4:
+                doc = menujobinterface.get(4);
+                item.setChecked(true);
+                app.setCurrentJob(doc);
+                jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+                toolbar.setTitle(jobname);
+                return true;
         }
 
-        return super.onOptionsItemSelected(item);
+       return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -90,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             //implement picking home_tracking or home_not_tracking
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
         } else if (id == R.id.nav_finances) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Finance_Controller()).commit();
         } else if (id == R.id.nav_loghistory) {
@@ -101,7 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
             try {
                 //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
-                //db.AddJob("SE", "Student", "OU", 0.0, 0.0);
+                //db.AddJob("E", "IDK", "Google", 0.0, 0.0);
+
                 //db.NewTask("Task1", "ou" ,20.00,"Apple", "DNT", "2018-03-09", "12:00", "2018-03-09", "14:00");
                 //db.NewTask("Task2", "ou" ,20.00,"Apple", "DNT", "2018-03-09", "16:00", "2018-03-09", "18:00");
                 //db.NewTask("Task3", "ou" ,20.00,"Apple", "DNT", "2018-03-10", "12:00", "2018-03-10", "14:00");
