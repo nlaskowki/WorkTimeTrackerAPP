@@ -6,20 +6,20 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/TaskNametxtVw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
-        android:text="Home"
+        android:text="Task "
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
         android:id="@+id/analogClock"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/TaskNametxtVw"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp" />
 
@@ -29,9 +29,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView4"
-        android:layout_below="@+id/textView5"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="9dp" />
+        android:layout_below="@+id/textView4"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="11dp" />
 
     <ToggleButton
         android:id="@+id/clockIn_OutToggleBtn"

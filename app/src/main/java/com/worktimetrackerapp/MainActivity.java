@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             //implement picking home_tracking or home_not_tracking
 
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
         } else if (id == R.id.nav_finances) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Finance_Controller()).commit();
         } else if (id == R.id.nav_loghistory) {
