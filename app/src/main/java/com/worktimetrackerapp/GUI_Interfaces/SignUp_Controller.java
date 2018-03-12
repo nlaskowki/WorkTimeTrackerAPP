@@ -98,7 +98,14 @@ public class SignUp_Controller extends AppCompatActivity {
         });
     }
 
+private void Reset(){
+        company.setText(null);
+        company.setVisibility(View.INVISIBLE);
 
+}
+private void ShowSEFields(){
+    company.setVisibility(View.VISIBLE);
+}
     @Override
     protected void onDestroy() {
         super.onDestroy();

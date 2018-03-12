@@ -86,6 +86,17 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     }
 
     public void completeLogin() {
+        //for testing
+        /*runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //change again later
+                                Intent intent = new Intent(getApplicationContext(), SignUp_Controller.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        });
+                        */
         boolean synccomplete = false;
         while (!synccomplete) {
             if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
@@ -95,6 +106,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                     //System.out.println(Jobs[0]);
 
                     if (Jobs[0] == null) {//create new user
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
