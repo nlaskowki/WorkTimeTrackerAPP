@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.MainActivity;
 import com.worktimetrackerapp.R;
 
@@ -42,26 +43,6 @@ public class SignUp_Controller extends AppCompatActivity {
 
             }
         });
-
-        final Button btnSignUp = findViewById(R.id.btn_sign_up);
-
-        //login button action
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //send info to db
-
-                //DB app = (DB) getApplicationContext();
-                //NewJob(String jobType, String jobTitle, String jobEmployer, Double jobWage, Double jobAveHours)
-
-
-                //temporary redirection
-                Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);
-                LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(LaunchHome);
-
-
-            }
-        });
     }
 
     public void dialogevent (View view){
@@ -69,11 +50,15 @@ public class SignUp_Controller extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                //add job to db
+                final DB app = (DB) getApplication();
+                //app.AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours)
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                //instead of using intent empty fields
                                 Intent RefreshUserInfo = new Intent(getApplicationContext(), SignUp_Controller.class);
                                 RefreshUserInfo.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(RefreshUserInfo);
@@ -82,9 +67,7 @@ public class SignUp_Controller extends AppCompatActivity {
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent LaunchHome = new Intent(getApplicationContext(), MainActivity.class);
-                                LaunchHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(LaunchHome);
+                                app.completeLogin();
                             }
                         });
 

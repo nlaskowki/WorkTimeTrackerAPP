@@ -85,7 +85,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         currentJob = CJ;
     }
 
-    private void completeLogin() {
+    public void completeLogin() {
         boolean synccomplete = false;
         while (!synccomplete) {
             if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
@@ -99,7 +99,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                             @Override
                             public void run() {
                                 //change again later
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), SignUp_Controller.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                             }
