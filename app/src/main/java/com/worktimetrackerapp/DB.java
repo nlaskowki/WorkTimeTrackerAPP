@@ -92,7 +92,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 synccomplete = true;
                 try {
                     Jobs = getJobs();
-                    System.out.println(Jobs[0]);
+                    //System.out.println(Jobs[0]);
 
                     if (Jobs[0] == null) {//create new user
                         runOnUiThread(new Runnable() {
@@ -369,7 +369,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return jobs;
     }
 
-    protected Document AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception {
+    public Document AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
