@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.worktimetrackerapp.DB;
@@ -21,7 +23,11 @@ import com.worktimetrackerapp.R;
 
 public class SignUp_Controller extends AppCompatActivity {
 
-
+    TextView company;
+    TextView jobTitle;
+    TextView employer;
+    TextView hourlywage;
+    TextView avghours;
     public static Button btn;
 
     @Override
@@ -29,6 +35,17 @@ public class SignUp_Controller extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
         Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        company = findViewById(R.id.txt_company);
+        jobTitle = findViewById(R.id.txt_job_title);
+        employer= findViewById(R.id.txt_employer);
+        hourlywage = findViewById(R.id.txt_hourly_wage);
+        avghours = findViewById(R.id.txt_avg_hours);
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -52,7 +69,10 @@ public class SignUp_Controller extends AppCompatActivity {
             public void onClick(View v){
                 //add job to db
                 final DB app = (DB) getApplication();
-                //app.AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours)
+                try{
+                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
+                }catch(Exception e){System.out.println(e);}
+
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
