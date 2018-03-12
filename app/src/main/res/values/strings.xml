@@ -17,7 +17,7 @@
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string-array name="job_type">
+    <string-array name="spinner">
         <item>Self-Employed</item>
         <item>Employee</item>
     </string-array>
