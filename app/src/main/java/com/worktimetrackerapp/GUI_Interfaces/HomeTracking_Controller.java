@@ -4,7 +4,6 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.app.Activity;
         import android.app.AlertDialog;
         import android.app.Fragment;
-        import android.app.FragmentManager;
         import android.content.DialogInterface;
         import android.os.Bundle;
         import android.os.CountDownTimer;
@@ -56,9 +55,7 @@ public class HomeTracking_Controller extends Fragment {
     //Popup box variables
     private EditText userWageInput;
     private EditText userHoursInput;
-
-
-
+    DB app;
 
     View currentView;
 
@@ -66,8 +63,12 @@ public class HomeTracking_Controller extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
-
-
+        app = (DB) getActivity().getApplication();
+        /*try {
+            app.EndTask()
+        }catch (Exception e){
+            System.out.println(e);
+        }*/
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
         workChronometer = (Chronometer) currentView.findViewById(R.id.workChrono);
@@ -80,14 +81,12 @@ public class HomeTracking_Controller extends Fragment {
         TaskViewName.setText(taskName);
         TakeBreakToggleBtn.setVisibility(View.INVISIBLE);
 
-
-
         ClockInOutToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (b){
-
+                    app.setTracking(true);
                     resetTimer();
                     continueThread = true;
                     count123 = 0;
@@ -100,8 +99,7 @@ public class HomeTracking_Controller extends Fragment {
                 }
 
                 else {
-
-                    //showClockOutAlert();
+                    app.setTracking(false);
                     workChronometer.stop();
                     continueThread = false;
                     pauseTimer();
@@ -116,12 +114,8 @@ public class HomeTracking_Controller extends Fragment {
                         pauseTimer();
                     }
 
-                    //This is were task info gets sent to DB
+                    //This is were wage info gets sent to DB
                     totalWageEarned = 0;
-
-
-
-
 
                 }
 
@@ -331,6 +325,8 @@ public class HomeTracking_Controller extends Fragment {
 
                         showContinueAddedHoursAlert();
 
+
+
                     }
                 })
                 .create();
@@ -350,6 +346,8 @@ public class HomeTracking_Controller extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+
+
                 dialog.dismiss();
 
                 resetTimer();
@@ -366,40 +364,16 @@ public class HomeTracking_Controller extends Fragment {
         }).create();
         myAlert.show();
 
-    }
-
-    public void showClockOutAlert(){
-
-        AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
-        myAlert.setMessage("Are you sure you want to clock out?")
-                .setPositiveButton("Return", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                ClockInOutToggleBtn.setChecked(true);
-
-            }
-        })
-                .setNegativeButton("Clock out", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        ClockInOutToggleBtn.setChecked(false);
-                        
-
-
-
-                    }
-                })
-                .create();
-        myAlert.show();
-
-
 
 
 
 
 
     }
+
+
+
+
+
 
 }
