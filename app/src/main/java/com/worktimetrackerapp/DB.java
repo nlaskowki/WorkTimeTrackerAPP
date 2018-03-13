@@ -87,7 +87,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     public void completeLogin() {
         //for testing
-        /*runOnUiThread(new Runnable() {
+       /* runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //change again later
@@ -96,7 +96,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                                 startActivity(intent);
                             }
                         });
-                        */
+*/
         boolean synccomplete = false;
         while (!synccomplete) {
             if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
