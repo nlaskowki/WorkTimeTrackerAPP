@@ -2,6 +2,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -27,12 +28,15 @@ public class HomeNotTracking_Controller extends Fragment {
         StartTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
+
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                /*try {
                     PopUpWindows ipp = new PopUpWindows();
                     ipp.showInfoPopup(null, getActivity(),true);
                 }catch (Exception e){
                     System.out.println(e);
-                }
+                }*/
 
             }
         });
