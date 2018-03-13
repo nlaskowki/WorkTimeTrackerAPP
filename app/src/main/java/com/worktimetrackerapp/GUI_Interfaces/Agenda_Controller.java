@@ -180,7 +180,7 @@ public class Agenda_Controller extends Fragment {
 
                     try {
                         PopUpWindows ipp = new PopUpWindows();
-                        ipp.showInfoPopup(document, getActivity());
+                        ipp.showInfoPopup(document, getActivity(), false);
                     } catch (Exception e) {
                         System.out.println(e);
                     }

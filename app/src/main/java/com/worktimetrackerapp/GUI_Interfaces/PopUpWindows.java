@@ -1,6 +1,9 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -8,186 +11,198 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 
 class PopUpWindows {
-    boolean ended;
-    DB app;
+    private boolean ended;
+    private View layout;
+    private DB app;
     private Database mydb;
-    boolean editing;
+    private boolean editing;
+    private static boolean FromMain;
+    private Calendar myCalendar;
+    final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
     //variables
-        Button btnDelete;
-        Button btnEdit;
-        Button btnDone;
+    private Button btnDelete;
+        private Button btnEdit;
+        private Button btnDone;
     //task info
-        TextView taskName;
-        TextView startTaskInfo;
-        TextView endTaskInfo;
-        TextView clientName;
-        TextView clientAddress;
-        TextView wage;
+    private TextView taskName;
+        private TextView startTaskInfo;
+        private TextView endTaskInfo;
+        private TextView clientName;
+        private TextView clientAddress;
+        private TextView wage;
     //other information
-        TextView otherInfoStartedTask;
-        TextView otherInfoEndedTask;
-        TextView TaskExtraCost;
-        TextView TaskEarnings;
+    private TextView otherInfoStartedTask;
+        private TextView otherInfoEndedTask;
+        private TextView TaskExtraCost;
+        private TextView TaskEarnings;
+        private TextView LabelOtherInformation;
+        private TextView LabelotherInfoStartedTask;
+        private TextView LabelotherInfoEndedTask;
+        private TextView LabelTaskExtraCost;
+        private TextView LabelTaskEarnings;
 
-
-
-    void showInfoPopup(final Document currentdoc, Activity myActif) throws Exception{
+    void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean FromMain) throws Exception{
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
-        View layout = inflater.inflate(R.layout.loghistory_pop, null);
+        layout = inflater.inflate(R.layout.loghistory_pop, null);
         float density =myActif.getResources().getDisplayMetrics().density;
         final PopupWindow pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
         ended = false;
         mydb = app.getMydb();
+        PopUpWindows.FromMain = FromMain;
 
-        //set fields from popup
-            btnDelete = layout.findViewById(R.id.popup_deletetask);
-            btnEdit = layout.findViewById(R.id.popup_edittask);
-            btnDone = layout.findViewById(R.id.popup_donetask);
-        //task info
-            taskName = layout.findViewById(R.id.popup_taskname);
-            startTaskInfo = layout.findViewById(R.id.popup_startdatetime);
-            endTaskInfo = layout.findViewById(R.id.popup_enddatetime);
-            clientName = layout.findViewById(R.id.popup_clientname);
-            clientAddress = layout.findViewById(R.id.popup_clientaddress);
-            wage = layout.findViewById(R.id.popup_wagehr);
-        //other information
-            otherInfoStartedTask = layout.findViewById(R.id.popup_startedtask);
-            otherInfoEndedTask = layout.findViewById(R.id.popup_endedtask);
-            TaskExtraCost = layout.findViewById(R.id.popup_extracosts);
-            TaskEarnings = layout.findViewById(R.id.popup_earnings);
-
+        setAllFields(layout);
 
         DisableAllFields();
 
-        //set text fields
-            taskName.setText(currentdoc.getProperty("taskname").toString());
-            String startTask = currentdoc.getProperty("TaskScheduledStartDate").toString() + " - " + currentdoc.getProperty("TaskScheduledStartTime");
-            startTaskInfo.setText(startTask);
-            String endTask = currentdoc.getProperty("TaskScheduledEndDate").toString() + " - " + currentdoc.getProperty("TaskScheduledEndTime");
-            endTaskInfo.setText(endTask);
-            clientName.setText(currentdoc.getProperty("taskClient").toString());
-            clientAddress.setText(currentdoc.getProperty("ClientAddress").toString());
-            wage.setText(currentdoc.getProperty("taskwage").toString());
+        LoadTaskInfo(currentdoc);
+        HideOtherInfo();
+        if(currentdoc == null){//creating new task
+            editing = true;
+            EnableAllFields();
+            btnEdit.setVisibility(View.INVISIBLE);
+            btnDelete.setText("Cancel");
 
-            if(currentdoc.getProperty("TaskStartDateTime") != null) {
-                otherInfoStartedTask.setText(currentdoc.getProperty("TaskStartDateTime").toString());
-                ended = true;
+            if(FromMain){//omit last part
+                btnDone.setText("Start");
+
+            }else{
+                btnDone.setText("Add");
+                ShowLoadOtherInfo(currentdoc);
             }
-            if(currentdoc.getProperty("TaskEndDateTime") != null) {
-                otherInfoEndedTask.setText(currentdoc.getProperty("TaskEndDateTime").toString());
-                ended = true;
+
+        }else{
+            if(currentdoc.getProperty("TaskStartDateTime") != null && currentdoc.getProperty("TaskEndDateTime") != null ) {
+                ShowLoadOtherInfo(currentdoc);
             }
-            if(currentdoc.getProperty("extracost") != null) {
-                TaskExtraCost.setText(currentdoc.getProperty("extracost").toString());
-                ended = true;
-            }
-            if(currentdoc.getProperty("TaskEarnings") != null) {
-                TaskEarnings.setText(currentdoc.getProperty("TaskEarnings").toString());
-                ended = true;
-            }
+        }
 
         //set on click listeners
-        startTaskInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //implement
-                if(editing) {
-                    System.out.println("Clicked");
-                }
-            }
-        });
-        endTaskInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //implement
-                if(editing) {
-                    System.out.println("Clicked");
-                }
-            }
-        });
-
-        btnEdit.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(btnEdit.getText().equals("Edit")) {
-                    //rename edit button
-                        btnEdit.setText("Save");
-                        btnEdit.getText();
-                        btnDelete.setVisibility(View.INVISIBLE);
-                        btnDone.setVisibility(View.INVISIBLE);
-                    //enable textfields
-                        EnableAllFields();
-                }else {//buttontext is equal to save
-                    //disable textfields
-                        btnEdit.setText("Edit");
-                        btnDelete.setVisibility(View.VISIBLE);
-                        btnDone.setVisibility(View.VISIBLE);
-
-                    DisableAllFields();
-
-                    //save edited fields
-                    //format some fields first
-                    String startDate ="";
-                    String startTime ="";
-                    String endDate ="";
-                    String endTime ="";
-                    if (!ended) {//omit 4 fields
-                        try {
-                            app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
-                                    null, null, null, null);
-                        } catch (Exception e){
-                            System.out.println(e);
-                        }
-                    } else {//all fields
-                        try {
-                            app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
-                                    otherInfoStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), Double.parseDouble(TaskExtraCost.getText().toString()), Double.parseDouble(TaskEarnings.getText().toString()));
-                        } catch (Exception e){
-                            System.out.println(e);
-                        }
+            startTaskInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //implement
+                    if(editing || !btnDone.getText().toString().equals("Done")) {
+                        DateTimeSetter(startTaskInfo, startTaskInfo.getText().toString());
                     }
                 }
-            }
-        });
-        btnDelete.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Document task = (Document) mydb.getDocument(currentdoc.getId());
-                try {
-                    task.delete();
-                    pw.dismiss();
-                }catch (Exception e){
-                    System.out.println(e);
+            });
+            endTaskInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //implement
+                    if(editing || !btnDone.getText().toString().equals("Done")) {
+                        DateTimeSetter(endTaskInfo, endTaskInfo.getText().toString());
+                    }
                 }
-            }
-        });
+            });
+            otherInfoStartedTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //implement
+                    if(editing || !btnDone.getText().toString().equals("Done")) {
+                        DateTimeSetter(otherInfoStartedTask, otherInfoStartedTask.getText().toString());
+                    }
+                }
+            });
+            otherInfoEndedTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //implement
+                    if(editing || !btnDone.getText().toString().equals("Done")) {
+                        DateTimeSetter(otherInfoEndedTask, otherInfoEndedTask.getText().toString());
+                    }
+                }
+            });
+            btnEdit.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    if(btnEdit.getText().equals("Edit")) {
+                        //rename edit button
+                            btnEdit.setText("Save");
+                            btnEdit.getText();
+                            btnDelete.setVisibility(View.INVISIBLE);
+                            btnDone.setVisibility(View.INVISIBLE);
+                        //enable textfields
+                            EnableAllFields();
+                    }else {//buttontext is equal to save
+                        //disable textfields
+                            btnEdit.setText("Edit");
+                            btnDelete.setVisibility(View.VISIBLE);
+                            btnDone.setVisibility(View.VISIBLE);
+
+                        DisableAllFields();
+
+                        SendToDB(currentdoc);
+                    }
+                }
+            });
+            btnDelete.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    if(btnDelete.getText().toString().equals("Delete")) {
+                        Document task = (Document) mydb.getDocument(currentdoc.getId());
+                        try {
+                            editing = false;
+                            task.delete();
+                            pw.dismiss();
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+                    }else{
+                        pw.dismiss();
+                    }
+                }
+            });
 
 
-        btnDone.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(btnEdit.getText().equals("Edit")) {
-                    System.out.println("Test");
-                    pw.dismiss();
+            btnDone.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    switch (btnDone.getText().toString()){
+                        case "Done":
+                            if(btnEdit.getText().equals("Edit")) {
+                                editing = false;
+                                pw.dismiss();
+                            }
+                            break;
+                        case "Start":
+                            //save and go to hometracking
+                            SendToDB(null);
+                            Intent StartTracking = new Intent(app.getApplicationContext(), HomeTracking_Controller.class);
+                            StartTracking.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            app.startActivity(StartTracking);
+                            break;
+                        case "Add":
+                            //save and close
+                            SendToDB(null);
+                            pw.dismiss();
+                            break;
+                    }
+
                 }
-            }
-        });
+            });
 //set up touch closing outside of pop-up
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pw.getBackground().setAlpha(128);
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                System.out.println("Touch");
-                System.out.println(event.getAction());
                 //if(event.getAction() == 0){
                 //System.out.println("Test");
                 // pw.dismiss();
@@ -213,15 +228,168 @@ class PopUpWindows {
         TaskExtraCost.setFocusable(false);
         TaskEarnings.setFocusable(false);
     }
+
     private void EnableAllFields(){
         editing = true;
         taskName.setFocusableInTouchMode(true);
         clientName.setFocusableInTouchMode(true);
         clientAddress.setFocusableInTouchMode(true);
         wage.setFocusableInTouchMode(true);
-        otherInfoStartedTask.setFocusableInTouchMode(true);
-        otherInfoEndedTask.setFocusableInTouchMode(true);
         TaskExtraCost.setFocusableInTouchMode(true);
         TaskEarnings.setFocusableInTouchMode(true);
+    }
+
+    private void HideOtherInfo(){
+        otherInfoStartedTask.setVisibility(View.INVISIBLE);
+        otherInfoEndedTask.setVisibility(View.INVISIBLE);
+        TaskExtraCost.setVisibility(View.INVISIBLE);
+        TaskEarnings.setVisibility(View.INVISIBLE);
+        LabelOtherInformation.setVisibility(View.INVISIBLE);
+        LabelotherInfoStartedTask.setVisibility(View.INVISIBLE);
+        LabelotherInfoEndedTask.setVisibility(View.INVISIBLE);
+        LabelTaskExtraCost.setVisibility(View.INVISIBLE);
+        LabelTaskEarnings.setVisibility(View.INVISIBLE);
+    }
+
+    private void LoadTaskInfo(Document currentdoc){
+        if(currentdoc != null) {
+            taskName.setText(currentdoc.getProperty("taskname").toString());
+            String startTask = currentdoc.getProperty("TaskScheduledStartDate").toString() + " - " + currentdoc.getProperty("TaskScheduledStartTime");
+            startTaskInfo.setText(startTask);
+            String endTask = currentdoc.getProperty("TaskScheduledEndDate").toString() + " - " + currentdoc.getProperty("TaskScheduledEndTime");
+            endTaskInfo.setText(endTask);
+            clientName.setText(currentdoc.getProperty("taskClient").toString());
+            clientAddress.setText(currentdoc.getProperty("ClientAddress").toString());
+            wage.setText(currentdoc.getProperty("taskwage").toString());
+        }
+    }
+
+    private void ShowLoadOtherInfo(Document currentdoc){
+        otherInfoStartedTask.setVisibility(View.VISIBLE);
+        otherInfoEndedTask.setVisibility(View.VISIBLE);
+        TaskExtraCost.setVisibility(View.VISIBLE);
+        TaskEarnings.setVisibility(View.VISIBLE);
+        LabelOtherInformation.setVisibility(View.VISIBLE);
+        LabelotherInfoStartedTask.setVisibility(View.VISIBLE);
+        LabelotherInfoEndedTask.setVisibility(View.VISIBLE);
+        LabelTaskExtraCost.setVisibility(View.VISIBLE);
+        LabelTaskEarnings.setVisibility(View.VISIBLE);
+        if(currentdoc != null){
+            ended = true;
+            otherInfoStartedTask.setText(currentdoc.getProperty("TaskStartDateTime").toString());
+            otherInfoEndedTask.setText(currentdoc.getProperty("TaskEndDateTime").toString());
+            TaskExtraCost.setText(currentdoc.getProperty("extracost").toString());
+            TaskEarnings.setText(currentdoc.getProperty("TaskEarnings").toString());
+        }
+    }
+
+    private void SendToDB(Document currentdoc){
+        Document doc = null;
+        String startDate = "";
+        String startTime = "";
+        String endDate = "";
+        String endTime ="";
+        Calendar calendar = GregorianCalendar.getInstance();
+        SimpleDateFormat dateFormatterday = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormatterTime = new SimpleDateFormat("HH:mm");
+        try {
+            Date startDateFormat = dateFormatter.parse(startTaskInfo.getText().toString());
+            Date endDateFormat = dateFormatter.parse(endTaskInfo.getText().toString());
+            startDate = dateFormatterday.format(startDateFormat.getTime());
+            startTime = dateFormatterTime.format(startDateFormat.getTime());
+            endDate = dateFormatterday.format(endDateFormat.getTime());
+            endTime = dateFormatterTime.format(endDateFormat.getTime());
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        if(currentdoc != null) { //update doc
+            if (!ended) {//omit 4 fields
+                try {
+                    app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                            null, null, null, null);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else {//all fields
+                try {
+                    app.UpdateTask(currentdoc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                            otherInfoStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), Double.parseDouble(TaskExtraCost.getText().toString()), Double.parseDouble(TaskEarnings.getText().toString()));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }else{ //create new document
+            try{
+               doc = app.NewTask(taskName.getText().toString(),app.getUsername() ,Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime);
+            }catch (Exception e) {
+                System.out.println(e);
+            }
+            if(!FromMain){
+                try {
+                    app.UpdateTask(doc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                            otherInfoStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), Double.parseDouble(TaskExtraCost.getText().toString()), Double.parseDouble(TaskEarnings.getText().toString()));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
+
+    private void setAllFields(View layout){
+        //set fields from popup
+        btnDelete = layout.findViewById(R.id.popup_deletetask);
+        btnEdit = layout.findViewById(R.id.popup_edittask);
+        btnDone = layout.findViewById(R.id.popup_donetask);
+        //task info
+        taskName = layout.findViewById(R.id.popup_taskname);
+        startTaskInfo = layout.findViewById(R.id.popup_startdatetime);
+        endTaskInfo = layout.findViewById(R.id.popup_enddatetime);
+        clientName = layout.findViewById(R.id.popup_clientname);
+        clientAddress = layout.findViewById(R.id.popup_clientaddress);
+        wage = layout.findViewById(R.id.popup_wagehr);
+        //other information
+        otherInfoStartedTask = layout.findViewById(R.id.popup_startedtask);
+        otherInfoEndedTask = layout.findViewById(R.id.popup_endedtask);
+        TaskExtraCost = layout.findViewById(R.id.popup_extracosts);
+        TaskEarnings = layout.findViewById(R.id.popup_earnings);
+        //other information labels
+        LabelOtherInformation = layout.findViewById(R.id.popup_txtotherinformation);
+        LabelotherInfoStartedTask = layout.findViewById(R.id.popup_txtstartedtask);
+        LabelotherInfoEndedTask = layout.findViewById(R.id.popup_txtendedtask);
+        LabelTaskExtraCost = layout.findViewById(R.id.popup_txtextracosts);
+        LabelTaskEarnings = layout.findViewById(R.id.popup_txtearnings);
+    }
+
+    private void DateTimeSetter(final TextView v, String dateTime){
+        myCalendar = Calendar.getInstance();
+        try {
+            if(!dateTime.isEmpty()) {
+                Date date = dateFormatter.parse(dateTime);
+                myCalendar.setTime(date);
+            }else{
+                myCalendar = Calendar.getInstance();
+            }
+        }catch(Exception e){
+
+        }
+        new DatePickerDialog(layout.getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                new TimePickerDialog(layout.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        myCalendar.set(Calendar.HOUR, selectedHour);
+                        myCalendar.set(Calendar.MINUTE, selectedMinute);
+                        v.setText(dateFormatter.format(myCalendar.getTime()));
+                    }
+                }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
+            }
+        },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 }
