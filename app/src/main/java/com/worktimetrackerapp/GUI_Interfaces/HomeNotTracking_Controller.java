@@ -22,7 +22,7 @@ public class HomeNotTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_not_tracking, container, false);
 
-        StartTaskButton = (Button) currentView.findViewById(R.id.StartTaskButton);
+        StartTaskButton = (Button) currentView.findViewById(R.id.StartTaskHomeNotButton);
 
         StartTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
