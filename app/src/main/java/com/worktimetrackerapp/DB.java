@@ -1,19 +1,19 @@
 package com.worktimetrackerapp;
 
 
-import android.app.Application;
-import android.content.Context;
+//import android.app.Application;
+//import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
-import android.widget.Toolbar;
+//import android.widget.Toolbar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
-import com.couchbase.lite.LiveQuery;
+//import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;

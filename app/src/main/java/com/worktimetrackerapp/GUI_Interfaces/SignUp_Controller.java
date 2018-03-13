@@ -2,7 +2,6 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,19 +29,18 @@ public class SignUp_Controller extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
+
         Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+
         company = findViewById(R.id.txt_company);
         jobTitle = findViewById(R.id.txt_job_title);
         employer= findViewById(R.id.txt_employer);
         hourlywage = findViewById(R.id.txt_hourly_wage);
         avghours = findViewById(R.id.txt_avg_hours);
-
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -78,26 +76,34 @@ public class SignUp_Controller extends AppCompatActivity {
         });
     }
 
-    public void dialogevent(View view, final ListActivity spinner){
+    public void dialogevent(View view){
         btn = findViewById(R.id.btn_next);
         btn.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View v){
                 //add job to db
-                final DB app = (DB) getApplication();
+               /* final DB app = (DB) getApplication();
                 try{
                     app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
-                }catch(Exception e){System.out.println(e);}
+                }catch(Exception e){System.out.println(e);}*/
 
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //instead of using intent empty fields
                                /* Intent RefreshUserInfo = new Intent(getApplicationContext(), SignUp_Controller.class);
                                 RefreshUserInfo.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(RefreshUserInfo); */
+                                final Spinner spinner = findViewById(R.id.spinner);
+                                final DB app = (DB) getApplication();
+                                try{
+                                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
+                                }catch(Exception e){System.out.println(e);}
+
                                 spinner.setSelection(0);
                                 company.setText(null);
                                 company.setVisibility(View.INVISIBLE);
@@ -116,6 +122,10 @@ public class SignUp_Controller extends AppCompatActivity {
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                final DB app = (DB) getApplication();
+                                try{
+                                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
+                                }catch(Exception e){System.out.println(e);}
                                 app.completeLogin();
                             }
                         })
@@ -133,19 +143,6 @@ public class SignUp_Controller extends AppCompatActivity {
         });
     }
 
-/*private void Reset(){
-    company.setText(null);
-    company.setVisibility(View.INVISIBLE);
-    jobTitle.setText(null);
-    jobTitle.setVisibility(View.INVISIBLE);
-    employer.setText(null);
-    employer.setVisibility(View.INVISIBLE);
-    hourlywage.setText(null);
-    hourlywage.setVisibility(View.INVISIBLE);
-    avghours.setText(null);
-    avghours.setVisibility(View.INVISIBLE);
-
-}*/
 
     @Override
     protected void onDestroy() {
