@@ -64,8 +64,11 @@ public class HomeTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
         app = (DB) getActivity().getApplication();
-
-
+        /*try {
+            app.EndTask()
+        }catch (Exception e){
+            System.out.println(e);
+        }*/
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
         workChronometer = (Chronometer) currentView.findViewById(R.id.workChrono);
