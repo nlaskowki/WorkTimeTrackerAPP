@@ -124,10 +124,10 @@ public class SignUp_Controller extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 final DB app = (DB) getApplication();
-                                /*try{
+                                try{
                                     app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
                                 }catch(Exception e){System.out.println(e);}
-                                */
+
                                 app.completeLogin();
                             }
                         })
