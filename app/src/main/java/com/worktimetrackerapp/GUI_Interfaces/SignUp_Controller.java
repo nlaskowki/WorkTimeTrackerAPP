@@ -60,6 +60,7 @@ public class SignUp_Controller extends AppCompatActivity {
                     hourlywage.setVisibility(View.VISIBLE);
                     avghours.setVisibility(View.VISIBLE);
                 } else {
+                    company.setText(null);
                     company.setVisibility(View.INVISIBLE);
                     jobTitle.setVisibility(View.VISIBLE);
                     employer.setVisibility(View.VISIBLE);

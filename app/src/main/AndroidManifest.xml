@@ -21,6 +21,8 @@
         <activity android:name=".GUI_Interfaces.SignUp_Controller" />
 
 
+
+
     </application>
 
 </manifest>
