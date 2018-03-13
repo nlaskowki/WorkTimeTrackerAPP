@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.Finances;
 import java.util.ArrayList;
