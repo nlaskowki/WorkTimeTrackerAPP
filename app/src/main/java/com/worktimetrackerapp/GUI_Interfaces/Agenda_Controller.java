@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,8 +48,6 @@ import java.util.Map;
 //calendar credit to https://github.com/prolificinteractive/material-calendarview/blob/master/docs/DECORATORS.md
 //  and  https://www.youtube.com/watch?v=RN4Zmxlah_I
 
-
-
 public class Agenda_Controller extends Fragment {
     View currentView;
     private ListView agendalist;
@@ -75,7 +74,6 @@ public class Agenda_Controller extends Fragment {
 
 
         //Agenda items
-
         final MaterialCalendarView materialCalendarView = (MaterialCalendarView) currentView.findViewById(R.id.calendarView);
 
 
@@ -135,6 +133,20 @@ public class Agenda_Controller extends Fragment {
             @Override
             public void decorate(DayViewFacade view) {
                 view.addSpan(new DotSpan(Color.RED));
+            }
+        });
+
+        //floating button
+        FloatingActionButton fab = currentView.findViewById(R.id.agendafab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    PopUpWindows ipp = new PopUpWindows();
+                    ipp.showInfoPopup(null, getActivity(),false);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
             }
         });
         return currentView;

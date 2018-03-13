@@ -1,8 +1,5 @@
 package com.worktimetrackerapp;
 
-
-//import android.app.Application;
-//import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
@@ -74,6 +71,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     private Object[] Jobs = new Object[10];
     private Object currentJob;
+    private Boolean Tracking = false;
 
     public Object getcurrentJob(){
         return currentJob;
@@ -84,7 +82,12 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     public void setCurrentJob(Object CJ){
         currentJob = CJ;
     }
-
+    public void setTracking(Boolean tr){
+        Tracking = tr;
+    }
+    public boolean getTracking(){
+        return Tracking;
+    }
     public void completeLogin() {
         //for testing
        /* runOnUiThread(new Runnable() {
