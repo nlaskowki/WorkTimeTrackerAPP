@@ -1,19 +1,19 @@
 package com.worktimetrackerapp;
 
 
-import android.app.Application;
-import android.content.Context;
+//import android.app.Application;
+//import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
-import android.widget.Toolbar;
+//import android.widget.Toolbar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
-import com.couchbase.lite.LiveQuery;
+//import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
@@ -87,7 +87,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     public void completeLogin() {
         //for testing
-        /*runOnUiThread(new Runnable() {
+       /* runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //change again later
@@ -96,7 +96,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                                 startActivity(intent);
                             }
                         });
-                        */
+*/
         boolean synccomplete = false;
         while (!synccomplete) {
             if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
