@@ -4,6 +4,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.app.Activity;
         import android.app.AlertDialog;
         import android.app.Fragment;
+        import android.app.FragmentManager;
         import android.content.DialogInterface;
         import android.os.Bundle;
         import android.os.CountDownTimer;
@@ -100,6 +101,7 @@ public class HomeTracking_Controller extends Fragment {
 
                 else {
 
+                    //showClockOutAlert();
                     workChronometer.stop();
                     continueThread = false;
                     pauseTimer();
@@ -114,8 +116,12 @@ public class HomeTracking_Controller extends Fragment {
                         pauseTimer();
                     }
 
-                    //This is were wage info gets sent to DB
+                    //This is were task info gets sent to DB
                     totalWageEarned = 0;
+
+
+
+
 
                 }
 
@@ -325,8 +331,6 @@ public class HomeTracking_Controller extends Fragment {
 
                         showContinueAddedHoursAlert();
 
-
-
                     }
                 })
                 .create();
@@ -346,8 +350,6 @@ public class HomeTracking_Controller extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-
-
                 dialog.dismiss();
 
                 resetTimer();
@@ -364,16 +366,40 @@ public class HomeTracking_Controller extends Fragment {
         }).create();
         myAlert.show();
 
+    }
+
+    public void showClockOutAlert(){
+
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
+        myAlert.setMessage("Are you sure you want to clock out?")
+                .setPositiveButton("Return", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                ClockInOutToggleBtn.setChecked(true);
+
+            }
+        })
+                .setNegativeButton("Clock out", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        ClockInOutToggleBtn.setChecked(false);
+                        
+
+
+
+                    }
+                })
+                .create();
+        myAlert.show();
+
+
 
 
 
 
 
     }
-
-
-
-
-
 
 }
