@@ -384,7 +384,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return jobs;
     }
 
-    public Document AddJob(String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception {
+    public Document AddJob(String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -402,6 +402,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         properties.put("owner", app.getUsername());
         properties.put("created_at", currentTimeString);
 
+        properties.put("jobcompany", jobCompany);
         properties.put("jobtype", jobType);
         properties.put("jobtitle", jobTitle);
         properties.put("jobemployer", jobEmployer);
@@ -528,20 +529,25 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     //**************************************************** logout *******************************************************
     public void logout() {
+        boolean synccomplete = false;
+        while (!synccomplete) {
+            if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
+                synccomplete = true;
+                stopReplication(true);
+                this.username = null;
+                try {
+                    Mydb.delete();
+                    Mydb = null;
+                } catch (Exception e) {
+                    Log.e(TAG, "cannot delete database", e);
+                }
 
-        stopReplication(true);
-        this.username = null;
-        try {
-            Mydb.delete();
-            Mydb = null;
-        } catch (Exception e){
-            Log.e(TAG, "cannot delete database", e);
+                Intent intent = new Intent(getApplicationContext(), SignIn_Controller.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setAction(SignIn_Controller.INTENT_ACTION_LOGOUT);
+                startActivity(intent);
+            }
         }
-
-        Intent intent = new Intent(getApplicationContext(), SignIn_Controller.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setAction(SignIn_Controller.INTENT_ACTION_LOGOUT);
-        startActivity(intent);
     }
 
 

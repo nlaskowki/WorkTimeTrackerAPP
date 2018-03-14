@@ -18,6 +18,7 @@ import com.worktimetrackerapp.R;
 
 public class SignUp_Controller extends AppCompatActivity {
 
+    Spinner spinner;
     TextView company;
     TextView jobTitle;
     TextView employer;
@@ -30,7 +31,7 @@ public class SignUp_Controller extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
 
-        Spinner spinner = findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -67,7 +68,7 @@ public class SignUp_Controller extends AppCompatActivity {
                     hourlywage.setVisibility(View.VISIBLE);
                     avghours.setVisibility(View.VISIBLE);
                 }
-                Toast.makeText(SignUp_Controller.this, parent.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SignUp_Controller.this, parent.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -83,11 +84,6 @@ public class SignUp_Controller extends AppCompatActivity {
 
             @Override
             public void onClick(View v){
-                //add job to db
-               /* final DB app = (DB) getApplication();
-                try{
-                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
-                }catch(Exception e){System.out.println(e);}*/
 
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
@@ -95,14 +91,19 @@ public class SignUp_Controller extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //instead of using intent empty fields
-                               /* Intent RefreshUserInfo = new Intent(getApplicationContext(), SignUp_Controller.class);
-                                RefreshUserInfo.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(RefreshUserInfo); */
-                                final Spinner spinner = findViewById(R.id.spinner);
                                 final DB app = (DB) getApplication();
+                                Double dblavghours = 0.0;
+                                String cmp = null;
                                 try{
-                                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
+                                    System.out.println(avghours.getText().toString().isEmpty());
+                                    if(!avghours.getText().toString().isEmpty()) {
+                                        dblavghours = Double.parseDouble(avghours.getText().toString());
+                                    }
+                                    if(company.getText().toString().isEmpty()){
+                                        cmp = company.getText().toString();
+                                    }
+                                    System.out.println(hourlywage.getText().toString());
+                                    app.AddJob(cmp, spinner.getSelectedItem().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), dblavghours);
                                 }catch(Exception e){System.out.println(e);}
 
                                 spinner.setSelection(0);
@@ -124,8 +125,17 @@ public class SignUp_Controller extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 final DB app = (DB) getApplication();
+                                Double dblavghours = 0.0;
+                                String cmp = null;
                                 try{
-                                    app.AddJob(company.getText().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), Double.parseDouble(avghours.getText().toString()));
+                                    System.out.println("AVG hours " + avghours.getText().toString() + " dd");
+                                    if(!avghours.getText().toString().isEmpty()) {
+                                        dblavghours = Double.parseDouble(avghours.getText().toString());
+                                    }
+                                    if(company.getText().toString().isEmpty()){
+                                        cmp = company.getText().toString();
+                                    }
+                                    app.AddJob(cmp, spinner.getSelectedItem().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), dblavghours);
                                 }catch(Exception e){System.out.println(e);}
 
                                 app.completeLogin();

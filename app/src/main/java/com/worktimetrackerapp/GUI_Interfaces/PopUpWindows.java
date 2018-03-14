@@ -36,7 +36,7 @@ class PopUpWindows {
     private boolean editing;
     private static boolean FromMain;
     private Calendar myCalendar;
-    final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+    final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
     //variables
     private Button btnDelete;
         private Button btnEdit;
@@ -383,7 +383,7 @@ class PopUpWindows {
                 new TimePickerDialog(layout.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        myCalendar.set(Calendar.HOUR, selectedHour);
+                        myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         v.setText(dateFormatter.format(myCalendar.getTime()));
                     }
