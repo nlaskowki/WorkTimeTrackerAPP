@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
@@ -20,9 +21,11 @@ import com.couchbase.lite.Mapper;
 import com.couchbase.lite.QueryRow;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
-import com.worktimetrackerapp.util.LogHistoryArrayAdapter;
+import com.worktimetrackerapp.util.AgendaArrayAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +33,7 @@ import java.util.Map;
 public class LogHistory_Controller extends Fragment implements AdapterView.OnItemClickListener{
     View currentView;
     private ListView HistoryList;
-    private LogHistoryArrayAdapter lhaa;
+    private AgendaArrayAdapter aaa;
 
     private Database mydb;
     private LiveQuery liveQuery;
@@ -98,32 +101,36 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
     private void initItemListAdapter() {
         DB app = (DB) getActivity().getApplicationContext();
-        lhaa = new LogHistoryArrayAdapter(
+        aaa = new AgendaArrayAdapter(
                 app,
-                R.layout.loghistory_row_layout,
-                R.id.row_task_name,
-                R.id.row_task_info,
+                R.layout.agenda_row_layout,
+                R.id.agenda_row_task_name,
+                R.id.agenda_row_task_info,
                 new ArrayList<QueryRow>()
         );
-        HistoryList.setAdapter(lhaa);
+        HistoryList.setAdapter(aaa);
         HistoryList.setOnItemClickListener(LogHistory_Controller.this);
     }
 
     private void startLiveQuery(com.couchbase.lite.View view) throws Exception {
         final DB app = (DB) getActivity().getApplication();
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
+        String selectedDay = today.format(calendar.getTime());
         if (liveQuery == null) {
             liveQuery = view.createQuery().toLiveQuery();
             liveQuery.setDescending(true);
+            liveQuery.setStartKey(selectedDay);
             liveQuery.addChangeListener(new LiveQuery.ChangeListener() {
                 public void changed(final LiveQuery.ChangeEvent event) {
                     app.runOnUiThread(new Runnable() {
                         public void run() {
-                            lhaa.clear();
+                            aaa.clear();
                             for (Iterator<QueryRow> it = event.getRows(); it.hasNext();) {
-                                lhaa.add(it.next());
+                                aaa.add(it.next());
                             }
-                            lhaa.notifyDataSetChanged();
+                            aaa.notifyDataSetChanged();
                         }
                     });
                 }

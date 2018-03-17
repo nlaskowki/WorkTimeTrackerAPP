@@ -144,18 +144,18 @@ public class Agenda_Controller extends Fragment {
         });
 
         //floating button
-        FloatingActionButton fab = currentView.findViewById(R.id.agendafab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    PopUpWindows ipp = new PopUpWindows();
-                    ipp.showInfoPopup(null, getActivity(),false, null);
-                }catch (Exception e){
-                    System.out.println(e);
+            FloatingActionButton fab = currentView.findViewById(R.id.agendafab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        PopUpWindows ipp = new PopUpWindows();
+                        ipp.showInfoPopup(null, getActivity(),false, null);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
-            }
-        });
+            });
         return currentView;
     }
 

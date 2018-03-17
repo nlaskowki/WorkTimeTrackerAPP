@@ -76,8 +76,10 @@ class PopUpWindows {
 
         DisableAllFields();
 
-        LoadTaskInfo(currentdoc);
         HideOtherInfo();
+
+        LoadTaskInfo(currentdoc);
+
         if(currentdoc == null){//creating new task
             editing = true;
             EnableAllFields();
@@ -100,6 +102,7 @@ class PopUpWindows {
                 ShowLoadOtherInfo(currentdoc);
             }
         }
+
 
         //set on click listeners
             startTaskInfo.setOnClickListener(new View.OnClickListener() {
@@ -315,6 +318,7 @@ class PopUpWindows {
         }catch (Exception e){
             System.out.println(e);
         }
+
         if(currentdoc != null) { //update doc
             if (!ended) {//omit 4 fields
                 try {
@@ -340,7 +344,7 @@ class PopUpWindows {
             }
             if(!FromMain){
                 try {
-                    app.UpdateTask(doc, ended, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
+                    app.UpdateTask(doc, true, taskName.getText().toString(), Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime,
                             otherInfoStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), Double.parseDouble(TaskExtraCost.getText().toString()), Double.parseDouble(TaskEarnings.getText().toString()));
                 } catch (Exception e) {
                     System.out.println(e);

@@ -10,10 +10,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Emitter;
+import com.couchbase.lite.Mapper;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
+import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.Finances;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static com.worktimetrackerapp.R.layout.finance_list;
 
@@ -21,6 +34,9 @@ public class Finance_Controller extends Fragment {
 
     View currentView;
     List<Finances> finances = new ArrayList<Finances>();
+    Database mydb;
+    DB app;
+    com.couchbase.lite.View financeView;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +76,22 @@ public class Finance_Controller extends Fragment {
             thisMonth.setText(currentFinance.getAmtThisMonth());
             TextView thisQuarter = view.findViewById(R.id.amtThisQuarter);
             thisQuarter.setText(currentFinance.getAmtThisQuarter());
+
+            try {
+                startShowList();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                //get current month first and last day
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.DATE, 1);
+                    String firstDay = formatter.format(cal.getTime());
+                    cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    String LastDay = formatter.format(cal.getTime());
+
+                System.out.println("Total: " + TotalAllJobs(firstDay, LastDay));
+            }catch (Exception e){
+                System.out.println(e);
+            }
 
             return view;
         }
@@ -106,5 +138,49 @@ public class Finance_Controller extends Fragment {
             i++;
         }
     }
+
+    protected void startShowList() throws Exception {
+        DB app = (DB) getActivity().getApplication();
+        mydb = app.getMydb();
+
+        financeView = mydb.getView("FinanceView");
+        financeView.setMap(new Mapper(){
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter){
+                if(document.get("type").equals("Task")) {
+                    if(document.get("TaskScheduledStartDate") != null) {
+                        String date = (String) document.get("TaskScheduledStartDate");
+                        emitter.emit(date.toString(), null);
+                    }
+                }//end if
+            }
+        },"1");
+
+    }
+
+    private Double TotalAllJobs(String firstDay, String LastDay){
+        Double total = 0.0;
+        QueryEnumerator result = null;
+        Query query = financeView.createQuery();
+        query.setDescending(true);
+        query.setStartKey(LastDay);//last day you want
+        query.setEndKey(firstDay); //first day you want
+        try {
+            result = query.run();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        int i = 0;
+        for(Iterator<QueryRow> it = result; it.hasNext();) {
+            QueryRow itnow = it.next();
+                com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
+                if(currentdoc.getProperty("TaskEarnings") != null) {
+                    total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
+                }
+        }
+        return total;
+    }
+
+
 }
 
