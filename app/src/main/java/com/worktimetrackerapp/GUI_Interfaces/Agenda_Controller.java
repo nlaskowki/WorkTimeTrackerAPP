@@ -150,7 +150,7 @@ public class Agenda_Controller extends Fragment {
             public void onClick(View view) {
                 try {
                     PopUpWindows ipp = new PopUpWindows();
-                    ipp.showInfoPopup(null, getActivity(),false);
+                    ipp.showInfoPopup(null, getActivity(),false, null);
                 }catch (Exception e){
                     System.out.println(e);
                 }
@@ -199,7 +199,7 @@ public class Agenda_Controller extends Fragment {
 
                     try {
                         PopUpWindows ipp = new PopUpWindows();
-                        ipp.showInfoPopup(document, getActivity(), false);
+                        ipp.showInfoPopup(document, getActivity(), false, null);
                     } catch (Exception e) {
                         System.out.println(e);
                     }

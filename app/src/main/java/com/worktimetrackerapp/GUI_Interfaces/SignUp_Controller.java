@@ -84,7 +84,6 @@ public class SignUp_Controller extends AppCompatActivity {
 
             @Override
             public void onClick(View v){
-
                 AlertDialog.Builder btn_next = new AlertDialog.Builder(SignUp_Controller.this);
                 btn_next.setMessage("Do you want to add another job?").setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -95,11 +94,10 @@ public class SignUp_Controller extends AppCompatActivity {
                                 Double dblavghours = 0.0;
                                 String cmp = null;
                                 try{
-                                    System.out.println(avghours.getText().toString().isEmpty());
                                     if(!avghours.getText().toString().isEmpty()) {
                                         dblavghours = Double.parseDouble(avghours.getText().toString());
                                     }
-                                    if(company.getText().toString().isEmpty()){
+                                    if(!company.getText().toString().isEmpty()){
                                         cmp = company.getText().toString();
                                     }
                                     System.out.println(hourlywage.getText().toString());
@@ -128,11 +126,10 @@ public class SignUp_Controller extends AppCompatActivity {
                                 Double dblavghours = 0.0;
                                 String cmp = null;
                                 try{
-                                    System.out.println("AVG hours " + avghours.getText().toString() + " dd");
                                     if(!avghours.getText().toString().isEmpty()) {
                                         dblavghours = Double.parseDouble(avghours.getText().toString());
                                     }
-                                    if(company.getText().toString().isEmpty()){
+                                    if(!company.getText().toString().isEmpty()){
                                         cmp = company.getText().toString();
                                     }
                                     app.AddJob(cmp, spinner.getSelectedItem().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), dblavghours);

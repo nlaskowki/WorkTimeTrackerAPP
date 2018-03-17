@@ -2,7 +2,9 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.FragmentManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,7 +38,8 @@ class PopUpWindows {
     private boolean editing;
     private static boolean FromMain;
     private Calendar myCalendar;
-    final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
+    private PopupWindow pw;
     //variables
     private Button btnDelete;
         private Button btnEdit;
@@ -59,15 +62,15 @@ class PopUpWindows {
         private TextView LabelTaskExtraCost;
         private TextView LabelTaskEarnings;
 
-    void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean FromMain) throws Exception{
+    void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
         layout = inflater.inflate(R.layout.loghistory_pop, null);
         float density =myActif.getResources().getDisplayMetrics().density;
-        final PopupWindow pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
+        pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
         ended = false;
         mydb = app.getMydb();
-        PopUpWindows.FromMain = FromMain;
+        FromMain = frommain;
 
         setAllFields(layout);
 
@@ -83,6 +86,9 @@ class PopUpWindows {
 
             if(FromMain){//omit last part
                 btnDone.setText("Start");
+                Calendar calendar = Calendar.getInstance();
+                String selectedDay = dateFormatter.format(calendar.getTime());
+                startTaskInfo.setText(selectedDay);
 
             }else{
                 btnDone.setText("Add");
@@ -183,11 +189,16 @@ class PopUpWindows {
                             break;
                         case "Start":
                             //save and go to hometracking
-                            SendToDB(null);
-                            Intent StartTracking = new Intent(app.getApplicationContext(), HomeTracking_Controller.class);
-                            StartTracking.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            app.startActivity(StartTracking);
-                            break;
+                            Document doc = SendToDB(null);
+                            try {
+                                app.setTaskDoc(doc);
+                                FM.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                                pw.dismiss();
+                            }catch (Exception e){
+                                System.out.println(e);
+
+                            }
+                          break;
                         case "Add":
                             //save and close
                             SendToDB(null);
@@ -213,7 +224,6 @@ class PopUpWindows {
         });
         pw.setOutsideTouchable(true);
         pw.showAtLocation(layout, Gravity.CENTER, 0,0);
-
     }
     private void DisableAllFields(){
         editing = false;
@@ -283,22 +293,25 @@ class PopUpWindows {
         }
     }
 
-    private void SendToDB(Document currentdoc){
+    private Document SendToDB(Document currentdoc){
         Document doc = null;
         String startDate = "";
         String startTime = "";
         String endDate = "";
         String endTime ="";
-        Calendar calendar = GregorianCalendar.getInstance();
         SimpleDateFormat dateFormatterday = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat dateFormatterTime = new SimpleDateFormat("HH:mm");
         try {
-            Date startDateFormat = dateFormatter.parse(startTaskInfo.getText().toString());
-            Date endDateFormat = dateFormatter.parse(endTaskInfo.getText().toString());
-            startDate = dateFormatterday.format(startDateFormat.getTime());
-            startTime = dateFormatterTime.format(startDateFormat.getTime());
-            endDate = dateFormatterday.format(endDateFormat.getTime());
-            endTime = dateFormatterTime.format(endDateFormat.getTime());
+            if(!startTaskInfo.getText().toString().isEmpty()) {
+                Date startDateFormat = dateFormatter.parse(startTaskInfo.getText().toString());
+                startDate = dateFormatterday.format(startDateFormat.getTime());
+                startTime = dateFormatterTime.format(startDateFormat.getTime());
+            }
+            if(!endTaskInfo.getText().toString().isEmpty()) {
+                Date endDateFormat = dateFormatter.parse(endTaskInfo.getText().toString());
+                endDate = dateFormatterday.format(endDateFormat.getTime());
+                endTime = dateFormatterTime.format(endDateFormat.getTime());
+            }
         }catch (Exception e){
             System.out.println(e);
         }
@@ -320,7 +333,8 @@ class PopUpWindows {
             }
         }else{ //create new document
             try{
-               doc = app.NewTask(taskName.getText().toString(),app.getUsername() ,Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime);
+                String jobTitle = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
+               doc = app.NewTask(taskName.getText().toString(),jobTitle ,Double.parseDouble(wage.getText().toString()), clientName.getText().toString(), clientAddress.getText().toString(), startDate, startTime, endDate, endTime);
             }catch (Exception e) {
                 System.out.println(e);
             }
@@ -333,6 +347,7 @@ class PopUpWindows {
                 }
             }
         }
+        return doc;
     }
 
     private void setAllFields(View layout){
@@ -358,6 +373,10 @@ class PopUpWindows {
         LabelotherInfoEndedTask = layout.findViewById(R.id.popup_txtendedtask);
         LabelTaskExtraCost = layout.findViewById(R.id.popup_txtextracosts);
         LabelTaskEarnings = layout.findViewById(R.id.popup_txtearnings);
+
+        //load wage information
+            String jobTitle = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobwage").toString();
+            wage.setText(jobTitle);
     }
 
     private void DateTimeSetter(final TextView v, String dateTime){
@@ -392,4 +411,5 @@ class PopUpWindows {
         },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
+
 }

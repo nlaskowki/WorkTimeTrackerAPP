@@ -38,5 +38,22 @@
         android:layout_marginTop="22dp"
         android:text="Start New Task" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/StartTaskHomeNotButton">
+        <ListView
+            android:id="@+id/homenottracking_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/empty_homenottrackinglist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="No tasks scheduled today"/>
+    </FrameLayout>
+
 
 </RelativeLayout>

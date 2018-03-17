@@ -61,7 +61,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                 public void onClick(View view) {
                     try {
                         PopUpWindows ipp = new PopUpWindows();
-                        ipp.showInfoPopup(null, getActivity(),false);
+                        ipp.showInfoPopup(null, getActivity(),false, null);
                     }catch (Exception e){
                         System.out.println(e);
                     }
@@ -141,7 +141,7 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
         try {
             PopUpWindows ipp = new PopUpWindows();
-            ipp.showInfoPopup(document, getActivity(),false);
+            ipp.showInfoPopup(document, getActivity(),false, null);
 
         }catch (Exception e){
             System.out.println(e);

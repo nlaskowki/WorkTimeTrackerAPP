@@ -72,7 +72,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Object[] Jobs = new Object[10];
     private Object currentJob;
     private Boolean Tracking = false;
-
+    private Document currentTask;
     public Object getcurrentJob(){
         return currentJob;
     }
@@ -87,6 +87,12 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     }
     public boolean getTracking(){
         return Tracking;
+    }
+    public void setTaskDoc(Document doc){
+        currentTask = doc;
+    }
+    public Document getTaskDoc(){
+        return currentTask;
     }
     public void completeLogin() {
         //for testing

@@ -33,12 +33,12 @@ public class Settings_Controller extends Fragment {
                         com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
                         try {
                             currentdoc.delete();
-                            app.logout();
                         }catch (Exception e){
                             System.out.println(e);
                         }
                     }
                 }
+                //app.logout();
             }
         });
 
