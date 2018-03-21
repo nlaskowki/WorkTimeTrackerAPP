@@ -18,8 +18,14 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.ToggleButton;
+
+        import com.couchbase.lite.Document;
         import com.worktimetrackerapp.DB;
         import com.worktimetrackerapp.R;
+
+        import java.text.SimpleDateFormat;
+        import java.time.Period;
+        import java.util.Date;
         import java.util.Locale;
 
 public class HomeTracking_Controller extends Fragment {
@@ -56,6 +62,7 @@ public class HomeTracking_Controller extends Fragment {
     private EditText userWageInput;
     private EditText userHoursInput;
     DB app;
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
 
     View currentView;
 
@@ -64,11 +71,24 @@ public class HomeTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
         app = (DB) getActivity().getApplication();
-        /*try {
-            app.EndTask()
-        }catch (Exception e){
+
+        final Document currentdoc = app.getTaskDoc();
+        Double wage = (Double) currentdoc.getProperty("taskwage");
+        String Taskname = (String) currentdoc.getProperty("taskname");
+        String startTask = currentdoc.getProperty("TaskScheduledStartDate").toString() + " - " + currentdoc.getProperty("TaskScheduledStartTime");
+        String endTask = currentdoc.getProperty("TaskScheduledEndDate").toString() + " - " + currentdoc.getProperty("TaskScheduledEndTime");
+        Date startDateFormat = null;
+        Date EndDateFormat = null;
+        try {
+            startDateFormat = dateFormatter.parse(startTask);
+            EndDateFormat = dateFormatter.parse(endTask);
+
+        }catch(Exception e){
             System.out.println(e);
-        }*/
+        }
+        //milliseconds
+        long diff = EndDateFormat.getTime() - startDateFormat.getTime();
+
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
         workChronometer = (Chronometer) currentView.findViewById(R.id.workChrono);
@@ -81,12 +101,18 @@ public class HomeTracking_Controller extends Fragment {
         TaskViewName.setText(taskName);
         TakeBreakToggleBtn.setVisibility(View.INVISIBLE);
 
+
         ClockInOutToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (b){
                     app.setTracking(true);
+                    try {
+                        app.StartTask(currentdoc);
+                    }catch(Exception e){
+                        System.out.println(e);
+                    }
                     resetTimer();
                     continueThread = true;
                     count123 = 0;
@@ -99,7 +125,7 @@ public class HomeTracking_Controller extends Fragment {
                 }
 
                 else {
-                    app.setTracking(false);
+
                     workChronometer.stop();
                     continueThread = false;
                     pauseTimer();
@@ -116,12 +142,20 @@ public class HomeTracking_Controller extends Fragment {
 
                     //This is were wage info gets sent to DB
                     totalWageEarned = 0;
+                    app.setTracking(false);
+                    Double Extracosts = 0.0;
+                    Double TaskEarnings = 0.0;
+                    try {
+                        app.EndTask(currentdoc, Extracosts, TaskEarnings);
+                    }catch(Exception e){
+                        System.out.println(e);
+                    }
 
                 }
 
             }
         });
-
+        ClockInOutToggleBtn.setChecked(true);
         TakeBreakToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

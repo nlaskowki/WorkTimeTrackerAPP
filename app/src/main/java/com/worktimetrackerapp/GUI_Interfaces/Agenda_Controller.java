@@ -41,7 +41,9 @@ import com.worktimetrackerapp.util.AgendaArrayAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -128,12 +130,22 @@ public class Agenda_Controller extends Fragment {
         materialCalendarView.addDecorators(new DayViewDecorator() {
             @Override
             public boolean shouldDecorate(CalendarDay day) {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 QueryEnumerator result = DecorDays();
+                HashSet<Calendar> dates = new HashSet<>(20);
                 for(Iterator<QueryRow> it = result; it.hasNext();) {
                     com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) it.next().getDocumentId());
-                    currentdoc.getProperty("TaskScheduledStartDate").toString();
-
+                    String cdday = currentdoc.getProperty("TaskScheduledStartDate").toString();
+                    try {
+                        Date dd = formatter.parse(cdday);
+                        Calendar cd = Calendar.getInstance();
+                        cd.setTime(dd);
+                        dates.add(cd);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
+
                 return true;
             }
 
