@@ -73,6 +73,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Object currentJob;
     private Boolean Tracking = false;
     private Document currentTask;
+
     public Object getcurrentJob(){
         return currentJob;
     }
@@ -94,6 +95,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     public Document getTaskDoc(){
         return currentTask;
     }
+
+
     public void completeLogin() {
         //for testing
        /* runOnUiThread(new Runnable() {
@@ -145,6 +148,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
             }
         }
     }
+
     //*************************************************************** Google Authentication ******************************************
     public void loginWithGoogleSignIn(final String idToken) {
         Request request = new Request.Builder()
@@ -577,6 +581,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 errorMessage, throwable != null ? throwable : "");
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
+
     public void runOnUiThread(Runnable runnable) {
         Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
         mainHandler.post(runnable);

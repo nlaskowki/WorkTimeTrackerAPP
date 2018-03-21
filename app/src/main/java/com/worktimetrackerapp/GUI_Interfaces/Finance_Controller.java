@@ -78,7 +78,7 @@ public class Finance_Controller extends Fragment {
             thisQuarter.setText(currentFinance.getAmtThisQuarter());
 
             try {
-                startShowList();
+                GetFinances();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
                 //get current month first and last day
@@ -139,7 +139,7 @@ public class Finance_Controller extends Fragment {
         }
     }
 
-    protected void startShowList() throws Exception {
+    protected void GetFinances() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
