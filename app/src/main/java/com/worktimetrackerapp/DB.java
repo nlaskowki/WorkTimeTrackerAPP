@@ -485,6 +485,27 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
+    public Boolean StartTaskOvertime(Document TaskDoc, Double TaskWageOvertime) throws Exception {
+
+        //get date format
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        Calendar calendar = GregorianCalendar.getInstance();
+        String StartTime = dateFormatter.format(calendar.getTime());
+
+        Document document = getMydb().getDocument(TaskDoc.getId());
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.putAll(TaskDoc.getProperties());
+
+        properties.put("TaskStartOvertimeDateTime", StartTime);
+        properties.put("taskwageovertime", TaskWageOvertime);
+
+        document.putProperties(properties);
+
+        Log.d(TAG, "Started task item with id: %s", document.getId());
+
+        return true;
+    }
+
     public Boolean EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
@@ -512,7 +533,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     }
 
     public Boolean UpdateTask(Document taskdocument, boolean ended, String TaskName ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
-                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings ) throws Exception{
+                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings, Double TaskWageOvertime, String StartOverTimeDateTime) throws Exception{
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.putAll(taskdocument.getProperties());
         properties.put("taskname", TaskName);
@@ -531,7 +552,12 @@ public class DB extends android.app.Application implements Replication.ChangeLis
             properties.put("TaskEndDateTime", EndDateTime);
             properties.put("extracost", ExtraCosts);
             properties.put("TaskEarnings", TaskEarnings);
+            if(TaskEarnings != null){
+                properties.put("TaskStartOvertimeDateTime", StartOverTimeDateTime);
+                properties.put("taskwageovertime", TaskWageOvertime);
+            }
         }
+
         taskdocument.putProperties(properties);
 
         return true;

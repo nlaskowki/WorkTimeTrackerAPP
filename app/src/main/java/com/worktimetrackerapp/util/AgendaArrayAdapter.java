@@ -17,7 +17,7 @@ import java.util.List;
 public class AgendaArrayAdapter extends ArrayAdapter<QueryRow>{
     private List<QueryRow> historylist;
     private final Context context;
-    String strtaskinfo;
+    String strtaskinfo = "empty";
 
     public AgendaArrayAdapter(Context context, int resource, int tasknameResourceId, int taskinfoResourceId ,List<QueryRow> objects){
         super(context, resource, tasknameResourceId, objects);
@@ -54,15 +54,15 @@ public class AgendaArrayAdapter extends ArrayAdapter<QueryRow>{
             String TaskScheduledStartTime =(String) currentRevision.getProperty("TaskScheduledStartTime") ;
             String TaskScheduledEndDate =(String) currentRevision.getProperty("TaskScheduledEndDate") ;
             String TaskScheduledEndTime =(String) currentRevision.getProperty("TaskScheduledEndTime") ;
-
-            if(TaskScheduledStartDate.equals(TaskScheduledEndDate)){
-                strtaskinfo = TaskScheduledStartDate + " - Time: " + TaskScheduledStartTime + " - " + TaskScheduledEndTime;
-            }else{
-                strtaskinfo = TaskScheduledStartDate + " - " + TaskScheduledStartTime + " To: " +TaskScheduledEndDate + " - " + TaskScheduledEndTime;
+            if(!TaskScheduledStartDate.isEmpty() && !TaskScheduledEndDate.isEmpty()) {
+                if (TaskScheduledStartDate.equals(TaskScheduledEndDate)) {
+                    strtaskinfo = TaskScheduledStartDate + " - Time: " + TaskScheduledStartTime + " - " + TaskScheduledEndTime;
+                } else {
+                    strtaskinfo = TaskScheduledStartDate + " - " + TaskScheduledStartTime + " To: " + TaskScheduledEndDate + " - " + TaskScheduledEndTime;
+                }
+                taskinfo.setText(strtaskinfo);
+                taskinfo.setText(strtaskinfo);
             }
-            taskinfo.setText(strtaskinfo);
-            taskinfo.setText(strtaskinfo);
-
 
         } catch (Exception e){
             e.printStackTrace();
