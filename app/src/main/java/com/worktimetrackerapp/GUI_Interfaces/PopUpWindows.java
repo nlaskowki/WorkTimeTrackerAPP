@@ -85,6 +85,8 @@ class PopUpWindows {
     private Double DBTaskWageOvertime = null;
     private String DBStartOverTimeDateTime = null;
 
+
+
     void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
@@ -226,7 +228,7 @@ class PopUpWindows {
                             if(doc !=null) {
                                 try {
                                     app.setTaskDoc(doc);
-                                    FM.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                                    FM.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
                                     pw.dismiss();
                                 } catch (Exception e) {
                                     System.out.println(e);
@@ -475,6 +477,10 @@ class PopUpWindows {
                         myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         v.setText(dateFormatter.format(myCalendar.getTime()));
+
+
+
+
                     }
                 }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
             }

@@ -32,9 +32,9 @@ public class HomeTracking_Controller extends Fragment {
 
 
     //Variables from task settings
-    public double hourlyWage = 19.50;
+    public double hourlyWage;
     public double numberOfHoursWorked = .002;
-    public String taskName = "Test Job";
+    public String taskName;
 
     //Chronometer and toggle buttons variables
     private Chronometer workChronometer;
@@ -70,11 +70,23 @@ public class HomeTracking_Controller extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
-        app = (DB) getActivity().getApplication();
 
+        double wage;
+
+        app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
-        Double wage = (Double) currentdoc.getProperty("taskwage");
-        String Taskname = (String) currentdoc.getProperty("taskname");
+
+
+        hourlyWage = (Double) currentdoc.getProperty("taskwage");
+
+        System.out.println("Hourlywage = " + hourlyWage);
+
+        wagePerHour = hourlyWage / 3600;
+
+        System.out.println("Wage Per hour = " + wagePerHour);
+
+
+        taskName = (String) currentdoc.getProperty("taskname");
         String startTask = currentdoc.getProperty("TaskScheduledStartDate").toString() + " - " + currentdoc.getProperty("TaskScheduledStartTime");
         String endTask = currentdoc.getProperty("TaskScheduledEndDate").toString() + " - " + currentdoc.getProperty("TaskScheduledEndTime");
         Date startDateFormat = null;
@@ -89,15 +101,18 @@ public class HomeTracking_Controller extends Fragment {
         //milliseconds
         long diff = EndDateFormat.getTime() - startDateFormat.getTime();
 
+
+
+
+
+
+
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
         workChronometer = (Chronometer) currentView.findViewById(R.id.workChrono);
         TakeBreakToggleBtn = (ToggleButton) currentView.findViewById((R.id.breakToggleBtn));
         WageTextView = (TextView) currentView.findViewById(R.id.wageEarnedTxtVw);
-
         TxtOutputTimer = (TextView) currentView.findViewById(R.id.TimeUntilTaskDoneTimertxtvw);
-
-
         TaskViewName.setText(taskName);
         TakeBreakToggleBtn.setVisibility(View.INVISIBLE);
 
@@ -155,7 +170,10 @@ public class HomeTracking_Controller extends Fragment {
 
             }
         });
-        ClockInOutToggleBtn.setChecked(true);
+
+        //Line can be used for auto clock in when task is started
+        //ClockInOutToggleBtn.setChecked(true);
+
         TakeBreakToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -201,13 +219,11 @@ public class HomeTracking_Controller extends Fragment {
                             @Override
                             public void run() {
 
-                                if (totalWageEarned != 0){
-
-                                    double count123 = totalWageEarned;
-
-                                }
-
                                 count123 += wagePerHour;
+
+                                System.out.println("Count123  = " + count123);
+
+                                System.out.println("wagePerHour = " + wagePerHour);
 
                                 totalWageEarned += count123;
 
@@ -298,9 +314,6 @@ public class HomeTracking_Controller extends Fragment {
         System.out.println(hourlyWage);
 
         wagePerHour = hourlyWage / 3600;
-
-
-
 
     }
 
