@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -43,47 +45,47 @@ class PopUpWindows {
     private PopupWindow pw;
     private Activity globalActivity;
     //variables
-    private Button btnDelete;
+        private Button btnDelete;
         private Button btnEdit;
         private Button btnDone;
     //task info
-    private TextView taskName;
+        private TextView taskName;
         private TextView startTaskInfo;
         private TextView endTaskInfo;
         private TextView clientName;
         private TextView clientAddress;
         private TextView wage;
-        private TextView WageExtraTime; // /TODO: set is done
-        private TextView labelWageExtraTime;// /TODO: set is done
+        private TextView WageExtraTime;
+        private TextView labelWageExtraTime;
 
     //other information
         private TextView otherInfoStartedTask;
-        private TextView otherInfoOvertimeStartedTask; // /TODO: set is done
+        private TextView otherInfoOvertimeStartedTask;
         private TextView otherInfoEndedTask;
         private TextView TaskExtraCost;
         private TextView TaskEarnings;
         private TextView LabelOtherInformation;
         private TextView LabelotherInfoStartedTask;
-        private TextView LabelotherInfoOvertimeStartedTask; // /TODO: set is done
+        private TextView LabelotherInfoOvertimeStartedTask;
         private TextView LabelotherInfoEndedTask;
         private TextView LabelTaskExtraCost;
         private TextView LabelTaskEarnings;
 
     //DB input values
-    private String DBTaskName = null;
-    private Double DBTaskWage = null;
-    private String DBClient = null;
-    private String DBCAddress = null;
-    private String DBStartDate = null;
-    private String DBStartTime = null;
-    private String DBEndDate = null;
-    private String DBEndTime = null;
-    private String DBStartDateTime = null;
-    private String DBEndDateTime = null;
-    private Double DBExtraCosts = null;
-    private Double DBEarnings = null;
-    private Double DBTaskWageOvertime = null;
-    private String DBStartOverTimeDateTime = null;
+        private String DBTaskName = null;
+        private Double DBTaskWage = null;
+        private String DBClient = null;
+        private String DBCAddress = null;
+        private String DBStartDate = null;
+        private String DBStartTime = null;
+        private String DBEndDate = null;
+        private String DBEndTime = null;
+        private String DBStartDateTime = null;
+        private String DBEndDateTime = null;
+        private Double DBExtraCosts = null;
+        private Double DBEarnings = null;
+        private Double DBTaskWageOvertime = null;
+        private String DBStartOverTimeDateTime = null;
 
 
 
@@ -154,6 +156,7 @@ class PopUpWindows {
                     //implement
                     if(editing || !btnDone.getText().toString().equals("Done")) {
                         DateTimeSetter(otherInfoStartedTask, otherInfoStartedTask.getText().toString());
+
                     }
                 }
             });
@@ -173,6 +176,24 @@ class PopUpWindows {
                     if(editing || !btnDone.getText().toString().equals("Done")) {
                         DateTimeSetter(otherInfoEndedTask, otherInfoEndedTask.getText().toString());
                     }
+                }
+            });
+            TaskExtraCost.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    System.out.println("Editing");
+                    double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                    TaskEarnings.setText(String.format("%.2f", result));
                 }
             });
             btnEdit.setOnClickListener(new View.OnClickListener(){
@@ -263,6 +284,7 @@ class PopUpWindows {
         pw.setOutsideTouchable(true);
         pw.showAtLocation(layout, Gravity.CENTER, 0,0);
     }
+
     private void DisableAllFields(){
         editing = false;
         taskName.setFocusable(false);
@@ -287,7 +309,6 @@ class PopUpWindows {
         wage.setFocusableInTouchMode(true);
         WageExtraTime.setFocusableInTouchMode(true);
         TaskExtraCost.setFocusableInTouchMode(true);
-        TaskEarnings.setFocusableInTouchMode(true);
     }//done
 
     private void HideOtherInfo(){
@@ -477,15 +498,15 @@ class PopUpWindows {
                         myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         v.setText(dateFormatter.format(myCalendar.getTime()));
-
-
-
+                        double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                        TaskEarnings.setText(String.format("%.2f", result));
 
                     }
                 }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
             }
         },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
     }
 
     private Boolean CheckInputs(Document currentdoc) {
@@ -581,5 +602,58 @@ class PopUpWindows {
         }
     }
 
+    private double CalculateTaskEarnings(String startime, String startovertime, String endtime, String regWage, String ovWage, String extra){
+        double earnings = 0.0;
+        double dblExtra = 0.0;
+        if(!extra.isEmpty()) {
+            dblExtra = Double.parseDouble(extra);
+        }
+        Date startDateFormat = null;
+        Date startovertimeFormat = null;
+        Date EndDateFormat = null;
+        if(!startime.isEmpty() && !endtime.isEmpty()) {
+            if (!startovertime.isEmpty() || !ovWage.isEmpty()) {
+                double dblregWage = Double.parseDouble(regWage);
+                double dblOVwage = Double.parseDouble(ovWage);
+                try {
+                    startDateFormat = dateFormatter.parse(startime);
+                    startovertimeFormat = dateFormatter.parse(startovertime);
+                    EndDateFormat = dateFormatter.parse(endtime);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                long differenceReg = startovertimeFormat.getTime() - startDateFormat.getTime();//milliseconds
+                long differenceOVTime = EndDateFormat.getTime() - startovertimeFormat.getTime();//milliseconds
+
+                double earningReg = differenceReg * (dblregWage / 3600000);
+                double earningOVTime = differenceOVTime * (dblOVwage / 3600000);
+                System.out.println("Reg earnings: " + earningReg);
+                System.out.println("OV earnings: " + earningOVTime);
+                earnings = earningReg + earningOVTime + dblExtra;
+                if (earnings < 0) {
+                    earnings = 0.0;
+                }
+                System.out.println("Total: " + earnings);
+            } else {
+                double dblregWage = Double.parseDouble(regWage);
+                try {
+                    startDateFormat = dateFormatter.parse(startime);
+                    EndDateFormat = dateFormatter.parse(endtime);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                long differenceReg = EndDateFormat.getTime() - startDateFormat.getTime();//milliseconds
+
+                double earningReg = differenceReg * (dblregWage / 3600000);
+                earnings = earningReg + dblExtra;
+                if (earnings < 0) {
+                    earnings = 0.0;
+                }
+                System.out.println("reg earnings: " + earningReg);
+                System.out.println("Total: " + earnings);
+            }
+        }
+        return earnings;
+    }
 
 }
