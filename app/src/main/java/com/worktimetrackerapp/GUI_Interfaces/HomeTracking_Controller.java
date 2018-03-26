@@ -3,7 +3,9 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
         import android.app.Activity;
         import android.app.AlertDialog;
+        import android.app.DialogFragment;
         import android.app.Fragment;
+        import android.app.TimePickerDialog;
         import android.content.DialogInterface;
         import android.os.Bundle;
         import android.os.CountDownTimer;
@@ -17,6 +19,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.widget.CompoundButton;
         import android.widget.EditText;
         import android.widget.TextView;
+        import android.widget.TimePicker;
         import android.widget.ToggleButton;
 
         import com.couchbase.lite.Document;
@@ -25,15 +28,18 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
         import java.text.SimpleDateFormat;
         import java.time.Period;
+        import java.util.Calendar;
         import java.util.Date;
         import java.util.Locale;
+
+
 
 public class HomeTracking_Controller extends Fragment {
 
 
     //Variables from task settings
     public double hourlyWage;
-    public double numberOfHoursWorked = .002;
+    public double numberOfHoursWorked;
     public String taskName;
 
     //Chronometer and toggle buttons variables
@@ -64,6 +70,8 @@ public class HomeTracking_Controller extends Fragment {
     DB app;
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
 
+    Calendar calendar = Calendar.getInstance();
+
     View currentView;
 
     @Nullable
@@ -71,7 +79,11 @@ public class HomeTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_tracking, container, false);
 
+        Date_To_Decimal_Converter convertTime = new Date_To_Decimal_Converter();
+
         double wage;
+
+        long timeInMillis;
 
         app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
@@ -101,6 +113,18 @@ public class HomeTracking_Controller extends Fragment {
         //milliseconds
         long diff = EndDateFormat.getTime() - startDateFormat.getTime();
 
+        timeInMillis = convertTime.getDateTime(startDateFormat,EndDateFormat);
+
+        TimeLeftInMillisecs = timeInMillis;
+
+        System.out.println("difference in millis " + TimeLeftInMillisecs);
+
+
+
+
+
+
+
 
 
 
@@ -128,7 +152,7 @@ public class HomeTracking_Controller extends Fragment {
                     }catch(Exception e){
                         System.out.println(e);
                     }
-                    resetTimer();
+                    //resetTimer();
                     continueThread = true;
                     count123 = 0;
                     workChronometer.setBase(SystemClock.elapsedRealtime());
@@ -384,10 +408,12 @@ public class HomeTracking_Controller extends Fragment {
     public void showContinueAddedHoursAlert(){
 
         AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
-        myAlert.setMessage("Update Hours Added to Task:");
+        myAlert.setMessage("Update Time Added to Task:");
 
         userHoursInput = new EditText(this.getContext());
         myAlert.setView(userHoursInput);
+
+
 
         myAlert.setPositiveButton("Finish", new DialogInterface.OnClickListener() {
             @Override
@@ -411,12 +437,9 @@ public class HomeTracking_Controller extends Fragment {
         }).create();
         myAlert.show();
 
-
-
-
-
-
     }
+
+
 
 
 
