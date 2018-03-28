@@ -22,6 +22,7 @@ import com.couchbase.lite.QueryRow;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
+import com.worktimetrackerapp.util.LogHistoryArrayAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class LogHistory_Controller extends Fragment implements AdapterView.OnItemClickListener{
     View currentView;
     private ListView HistoryList;
-    private AgendaArrayAdapter aaa;
+    private LogHistoryArrayAdapter aaa;
 
     private Database mydb;
     private LiveQuery liveQuery;
@@ -77,7 +78,6 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
-
         com.couchbase.lite.View viewItemsByDate =
                 mydb.getView(String.format("%s/%s", designDocName, byDateViewName));
         if (viewItemsByDate.getMap() == null) {
@@ -86,12 +86,12 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
                 public void map(Map<String, Object> document, Emitter emitter) {
                     Object createdAt = document.get("created_at");
                     if(document.get("type").equals("Task")) {
-                        if (createdAt != null) {
-                            emitter.emit(createdAt.toString(), null);
+                                if (createdAt != null) {
+                                    emitter.emit(createdAt.toString(), null);
                         }
                     }
                 }
-            }, "1.0");
+            }, "2");
         }
 
         initItemListAdapter();
@@ -101,11 +101,12 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
 
     private void initItemListAdapter() {
         DB app = (DB) getActivity().getApplicationContext();
-        aaa = new AgendaArrayAdapter(
+        aaa = new LogHistoryArrayAdapter(
                 app,
-                R.layout.agenda_row_layout,
-                R.id.agenda_row_task_name,
-                R.id.agenda_row_task_info,
+                R.layout.loghistory_row_layout,
+                R.id.loghistory_row_task_name,
+                R.id.loghistory_row_task_jobtitle,
+                R.id.loghistory_row_task_info,
                 new ArrayList<QueryRow>()
         );
         HistoryList.setAdapter(aaa);

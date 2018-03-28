@@ -143,19 +143,21 @@ public class Agenda_Controller extends Fragment {
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
-
+        final String jobname = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
         viewItemsByDate = mydb.getView("TaskScheduledStartDate");
         viewItemsByDate.setMap(new Mapper(){
             @Override
             public void map(Map<String, Object> document, Emitter emitter){
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
-                        String date = (String) document.get("TaskScheduledStartDate");
-                        emitter.emit(date.toString(), null);
+                        if(document.get("jobtitle").equals(jobname)) {
+                            String date = (String) document.get("TaskScheduledStartDate");
+                            emitter.emit(date.toString(), null);
+                        }
                     }
                 }//end if
             }
-        },"1");
+        },"2");
 
         initItemListAdapter();
     }
