@@ -103,13 +103,15 @@ public class HomeNotTracking_Controller extends Fragment {
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
                         if(document.get("jobtitle").equals(jobname)) {
-                            String date = (String) document.get("TaskScheduledStartDate");
-                            emitter.emit(date.toString(), null);
+                            if(document.get("TaskEndDateTime") == null) {
+                                String date = (String) document.get("TaskScheduledStartDate");
+                                emitter.emit(date.toString(), null);
+                            }
                         }
                     }
                 }//end if
             }
-        },"2");
+        },"3");
 
         initItemListAdapter();
     }

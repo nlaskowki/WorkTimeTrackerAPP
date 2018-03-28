@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/popupbackground_border">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/popup_scrollView2"
+        android:layout_above="@+id/Buttonlayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_welcome_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="15dp"
+                android:paddingTop="5dp"
+                android:text="Add or edit a job"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:visibility="visible" />
+            <TextView
+                android:id="@+id/popup_tv_select_job"
+                android:layout_width="205dp"
+                android:layout_height="33dp"
+                android:layout_marginEnd="203dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="14dp"
+                android:text="@string/choose_job"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/popup_spinner"
+                android:layout_width="218dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="190dp"
+                android:layout_marginStart="3dp"
+                android:background="@android:drawable/btn_dropdown" />
+
+            <EditText
+                android:id="@+id/popup_txt_job_title"
+                android:layout_width="401dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="26dp"
+                android:ems="10"
+                android:hint="@string/job_title_user"
+                android:inputType="textPersonName"
+                android:text="@string/job_title" />
+
+            <EditText
+                android:id="@+id/popup_txt_employer"
+                android:layout_width="401dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="33dp"
+                android:ems="10"
+                android:hint="@string/employer_user"
+                android:inputType="textPersonName"
+                android:text="@string/employer" />
+
+            <EditText
+                android:id="@+id/popup_txt_hourly_wage"
+                android:layout_width="401dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="31dp"
+                android:ems="10"
+                android:hint="@string/hourly_wage_user"
+                android:inputType="textPersonName"
+                android:text="@string/hourly_wage" />
+
+            <EditText
+                android:id="@+id/txt_avg_hours"
+                android:layout_width="401dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:hint="@string/average_hours_optional"
+                android:inputType="textPersonName"
+                android:text="@string/avg_hours" />
+
+            <EditText
+                android:id="@+id/popup_txt_company"
+                android:layout_width="401dp"
+                android:layout_height="51dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="60dp"
+                android:ems="10"
+                android:hint="@string/company_name_self_employed_only"
+                android:inputType="textPersonName"
+                android:text="@string/company" />
+
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/Buttonlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/popup_btn_next"
+            android:layout_width="145dp"
+            android:layout_height="wrap_content"
+            android:onClick="dialogevent"
+            android:text="Save"
+            android:visibility="visible"
+            android:layout_gravity="bottom|right"
+            />
+    </LinearLayout>
+</RelativeLayout>
