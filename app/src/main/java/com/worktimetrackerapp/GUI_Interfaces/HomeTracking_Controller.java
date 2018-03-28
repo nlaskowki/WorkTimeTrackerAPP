@@ -3,6 +3,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
         import android.app.Activity;
         import android.app.AlertDialog;
+        import android.app.DatePickerDialog;
         import android.app.DialogFragment;
         import android.app.Fragment;
         import android.app.TimePickerDialog;
@@ -11,12 +12,15 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.os.CountDownTimer;
         import android.os.SystemClock;
         import android.support.annotation.Nullable;
+        import android.text.Layout;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.view.inputmethod.EditorInfo;
         import android.widget.Button;
         import android.widget.Chronometer;
         import android.widget.CompoundButton;
+        import android.widget.DatePicker;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.TimePicker;
@@ -35,6 +39,11 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 
 public class HomeTracking_Controller extends Fragment {
+
+    //Calendar currentTime;
+    //int hour;
+    //int minute;
+    private Calendar myCalendar;
 
 
     //Variables from task settings
@@ -70,8 +79,6 @@ public class HomeTracking_Controller extends Fragment {
     DB app;
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
 
-    Calendar calendar = Calendar.getInstance();
-
     View currentView;
 
     @Nullable
@@ -81,13 +88,10 @@ public class HomeTracking_Controller extends Fragment {
 
         Date_To_Decimal_Converter convertTime = new Date_To_Decimal_Converter();
 
-        double wage;
-
         long timeInMillis;
 
         app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
-
 
         hourlyWage = (Double) currentdoc.getProperty("taskwage");
 
@@ -110,26 +114,12 @@ public class HomeTracking_Controller extends Fragment {
         }catch(Exception e){
             System.out.println(e);
         }
-        //milliseconds
-        long diff = EndDateFormat.getTime() - startDateFormat.getTime();
 
         timeInMillis = convertTime.getDateTime(startDateFormat,EndDateFormat);
 
         TimeLeftInMillisecs = timeInMillis;
 
         System.out.println("difference in millis " + TimeLeftInMillisecs);
-
-
-
-
-
-
-
-
-
-
-
-
 
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
@@ -381,8 +371,9 @@ public class HomeTracking_Controller extends Fragment {
 
     public void showContinueAddWageAlert(){
 
-        AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
+        final AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
         myAlert.setMessage("Update your current hourly wage $" + hourlyWage+ " or type the same wage to keep it the same.");
+
         userWageInput = new EditText(this.getContext());
         myAlert.setView(userWageInput);
 
@@ -392,9 +383,9 @@ public class HomeTracking_Controller extends Fragment {
 
                         updateWageValue();
 
-                        dialog.dismiss();
-
                         showContinueAddedHoursAlert();
+
+                        dialog.dismiss();
 
 
 
@@ -410,32 +401,84 @@ public class HomeTracking_Controller extends Fragment {
         AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
         myAlert.setMessage("Update Time Added to Task:");
 
+        System.out.println("This is working");
+
         userHoursInput = new EditText(this.getContext());
         myAlert.setView(userHoursInput);
 
+        userHoursInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
+        userHoursInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DateTimeSetter(userHoursInput, (String) userHoursInput.getText().toString());
+
+
+            }
+        });
 
         myAlert.setPositiveButton("Finish", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-
-
                 dialog.dismiss();
 
-                resetTimer();
-                updateTimerValue();
 
-                continueThread = true;
-                wageTrack();
 
-                startTimer();
-                workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
-                workChronometer.start();
+                //resetTimer();
+                //updateTimerValue();
+
+                //continueThread = true;
+                //wageTrack();
+
+                //startTimer();
+                //workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
+                //workChronometer.start();
 
             }
-        }).create();
+     }).create();
         myAlert.show();
+
+    }
+
+    public void DateTimeSetter(final TextView v, String dateTime){
+        myCalendar = Calendar.getInstance();
+        try {
+            if(!dateTime.isEmpty()) {
+                Date date = dateFormatter.parse(dateTime);
+                myCalendar.setTime(date);
+            }else{
+                myCalendar = Calendar.getInstance();
+            }
+        }catch(Exception e){
+
+        }
+        new DatePickerDialog(getLayoutInflater().getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                new TimePickerDialog(getLayoutInflater().getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                        myCalendar.set(Calendar.MINUTE, selectedMinute);
+                        v.setText(dateFormatter.format(myCalendar.getTime()));
+
+                        //double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                        //TaskEarnings.setText(String.format("%.2f", result));
+
+                    }
+                }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
+            }
+        },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+    }
 
     }
 
@@ -446,4 +489,4 @@ public class HomeTracking_Controller extends Fragment {
 
 
 
-}
+

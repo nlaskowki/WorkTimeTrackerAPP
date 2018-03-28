@@ -498,6 +498,7 @@ class PopUpWindows {
                         myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         v.setText(dateFormatter.format(myCalendar.getTime()));
+
                         double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
                         TaskEarnings.setText(String.format("%.2f", result));
 
