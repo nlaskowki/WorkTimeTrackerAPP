@@ -30,6 +30,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import com.worktimetrackerapp.DB;
         import com.worktimetrackerapp.R;
 
+        import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.time.Period;
         import java.util.Calendar;
@@ -44,6 +45,7 @@ public class HomeTracking_Controller extends Fragment {
     //int hour;
     //int minute;
     private Calendar myCalendar;
+    private Date updatedEndDate = null;
 
 
     //Variables from task settings
@@ -78,6 +80,8 @@ public class HomeTracking_Controller extends Fragment {
     private EditText userHoursInput;
     DB app;
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
+    Date startDateFormat = null;
+    Date EndDateFormat = null;
 
     View currentView;
 
@@ -105,8 +109,7 @@ public class HomeTracking_Controller extends Fragment {
         taskName = (String) currentdoc.getProperty("taskname");
         String startTask = currentdoc.getProperty("TaskScheduledStartDate").toString() + " - " + currentdoc.getProperty("TaskScheduledStartTime");
         String endTask = currentdoc.getProperty("TaskScheduledEndDate").toString() + " - " + currentdoc.getProperty("TaskScheduledEndTime");
-        Date startDateFormat = null;
-        Date EndDateFormat = null;
+
         try {
             startDateFormat = dateFormatter.parse(startTask);
             EndDateFormat = dateFormatter.parse(endTask);
@@ -415,6 +418,8 @@ public class HomeTracking_Controller extends Fragment {
                 DateTimeSetter(userHoursInput, (String) userHoursInput.getText().toString());
 
 
+
+
             }
         });
 
@@ -424,17 +429,29 @@ public class HomeTracking_Controller extends Fragment {
 
                 dialog.dismiss();
 
+                String overTime = userHoursInput.getText().toString();
 
+                try {
+                    updatedEndDate = dateFormatter.parse(overTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date_To_Decimal_Converter convert = new Date_To_Decimal_Converter();
+
+                long newTimeInMillis = convert.getDateTime(EndDateFormat,updatedEndDate);
+
+                TimeLeftInMillisecs = newTimeInMillis;
 
                 //resetTimer();
                 //updateTimerValue();
 
-                //continueThread = true;
-                //wageTrack();
+                continueThread = true;
+                wageTrack();
 
-                //startTimer();
-                //workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
-                //workChronometer.start();
+                startTimer();
+                workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
+                workChronometer.start();
 
             }
      }).create();
