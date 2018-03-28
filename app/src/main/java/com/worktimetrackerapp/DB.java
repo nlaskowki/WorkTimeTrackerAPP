@@ -73,6 +73,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Object currentJob;
     private Boolean Tracking = false;
     private Document currentTask;
+    private String UserEmail;
+    private String UserProfileName;
 
     public Object getcurrentJob(){
         return currentJob;
@@ -94,6 +96,18 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     }
     public Document getTaskDoc(){
         return currentTask;
+    }
+    public void setUserEmail(String email){
+        UserEmail = email;
+    }
+    public String getUserEmail(){
+        return UserEmail;
+    }
+    public void setUserProfileName(String name){
+        UserProfileName = name;
+    }
+    public String getUserProfileName(){
+        return UserProfileName;
     }
 
 

@@ -29,11 +29,8 @@ import com.couchbase.lite.QueryEnumerator;
 import com.couchbase.lite.QueryRow;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
@@ -124,34 +121,6 @@ public class Agenda_Controller extends Fragment {
                     app.showErrorMessage("Error initializing CBLite", e);
                 }
 
-            }
-        });
-
-        materialCalendarView.addDecorators(new DayViewDecorator() {
-            @Override
-            public boolean shouldDecorate(CalendarDay day) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                QueryEnumerator result = DecorDays();
-                HashSet<Calendar> dates = new HashSet<>(20);
-                for(Iterator<QueryRow> it = result; it.hasNext();) {
-                    com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) it.next().getDocumentId());
-                    String cdday = currentdoc.getProperty("TaskScheduledStartDate").toString();
-                    try {
-                        Date dd = formatter.parse(cdday);
-                        Calendar cd = Calendar.getInstance();
-                        cd.setTime(dd);
-                        dates.add(cd);
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
-
-                return true;
-            }
-
-            @Override
-            public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(Color.RED));
             }
         });
 
