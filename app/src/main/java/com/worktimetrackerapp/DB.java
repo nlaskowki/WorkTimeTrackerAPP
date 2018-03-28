@@ -440,6 +440,20 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return document;
     }
 
+    public boolean UpdateJob(Document doc, String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception{
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.putAll(doc.getProperties());
+        properties.put("jobcompany", jobCompany);
+        properties.put("jobtype", jobType);
+        properties.put("jobtitle", jobTitle);
+        properties.put("jobemployer", jobEmployer);
+        properties.put("jobwage", jobWage);
+        properties.put("jobavehours", jobAveHours);
+
+        doc.putProperties(properties);
+        return true;
+    }
+
     public Document NewTask(String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime) throws Exception {
         DB app = (DB) getApplicationContext();
 
