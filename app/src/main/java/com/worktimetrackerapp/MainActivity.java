@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (jobs[i] != null) {
                 System.out.println(jobs[i]);
                 menujobinterface.put(i, jobs[i].toString());
+                //get job from db
                 com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
                 menu.add(R.id.menu_jobgroup, i, i + 100, currentdoc.getProperty("jobtitle").toString());
                 System.out.println(i);

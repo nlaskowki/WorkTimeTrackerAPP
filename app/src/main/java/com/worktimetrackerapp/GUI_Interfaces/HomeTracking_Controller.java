@@ -93,7 +93,7 @@ public class HomeTracking_Controller extends Fragment {
         app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
 
-        hourlyWage = (Double) currentdoc.getProperty("taskwage");
+        hourlyWage = Double.parseDouble(currentdoc.getProperty("taskwage").toString());
 
         System.out.println("Hourlywage = " + hourlyWage);
 
