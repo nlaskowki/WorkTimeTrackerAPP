@@ -42,7 +42,7 @@ public class Finance_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.finance, container, false);
 
-        ListView lstFinances = (ListView) currentView.findViewById(R.id.lstFinances);
+        ListView lstFinances = currentView.findViewById(R.id.lstFinances);
 
         FinanceListAdapter adapter = new FinanceListAdapter();
         lstFinances.setAdapter(adapter);
@@ -77,70 +77,57 @@ public class Finance_Controller extends Fragment {
             TextView thisQuarter = view.findViewById(R.id.amtThisQuarter);
             thisQuarter.setText(currentFinance.getAmtThisQuarter());
 
-            try {
-                GetFinances();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-                //get current month first and last day
-                    Calendar cal = Calendar.getInstance();
-                    cal.set(Calendar.DATE, 1);
-                    String firstDay = formatter.format(cal.getTime());
-                    cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    String LastDay = formatter.format(cal.getTime());
-
-                System.out.println("Total: " + TotalAllJobs(firstDay, LastDay));
-            }catch (Exception e){
-                System.out.println(e);
-            }
 
             return view;
         }
     }
 
+    //Determine the finance object details and add them to the list adapter
     private void addFinances() {
 
+        try { // Initialize the database variables
+            GetFinances();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        //Initialize storage arrays for the values of the finance objects
+        Object[] jobs = app.getAllJobs();
         String[] jobTitles = new String[10];
-        String[] today = new String[10];
-        String[] thisWeek = new String[10];
-        String[] thisMonth = new String[10];
-        String[] thisQuarter = new String[10];
 
-        //Grab data from DB, currently just using hard coded data
-        jobTitles[0] = "Total";
-        jobTitles[1] = "Job1";
-        jobTitles[2] = "Job2";
-        //jobTitles[3] = "Job3";
-        today[0] = "$ 234.56";
-        today[1] = "$ 234.56";
-        today[2] = "$ 0";
-        //today[3] = "$ 0";
-        thisWeek[0] = "$ 1527.23";
-        thisWeek[1] = "$ 1000.23";
-        thisWeek[2] = "$ 527.00";
-        //thisWeek[0] = "$ 1727.23";
-        //thisWeek[3] = "$ 200.00";
-        thisMonth[0] = "$ 6500.00";
-        thisMonth[1] = "$ 3500.00";
-        thisMonth[2] = "$ 3000.00";
-        //thisMonth[0] = "$ 7500.00";
-        //thisMonth[3] = "$ 1000.00";
-        thisQuarter[0] = "$ 18000.00";
-        thisQuarter[1] = "$ 11000.00";
-        thisQuarter[2] = "$ 7000.00";
-        //thisQuarter[0] = "$ 21000.00";
-        //thisQuarter[3] = "$ 3000.00";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+        //get current month first and last day
+        Calendar cal = Calendar.getInstance();
+        String currentDay = formatter.format(cal.getTime());
+        cal.set(Calendar.DAY_OF_WEEK, 1);
+        String firstDayW = formatter.format(cal.getTime());
+        cal.set(Calendar.DATE, 1);
+        String firstDayM = formatter.format(cal.getTime());
 
+        String firstDayQ = formatter.format(cal.getTime());
+
+        finances.add(new Finances("Total", totalAllJobs(currentDay, currentDay) + "", totalAllJobs(firstDayW, currentDay) + "",
+                totalAllJobs(firstDayM, currentDay) + "", totalAllJobs(firstDayQ, currentDay) + ""));
 
         int i = 0;
-        while (jobTitles[i] != null) {
-            finances.add(new Finances(jobTitles[i], today[i], thisWeek[i], thisMonth[i], thisQuarter[i]));
+        while (jobs[i] != null) {
+            jobTitles[i] = jobs[i].toString();
             i++;
+        }
+
+        int j = 0;
+        while (jobTitles[j] != null) {
+            finances.add(new Finances(jobTitles[j], totalThisJob(currentDay, currentDay, jobTitles[j]) + "",
+                    totalThisJob(firstDayW, currentDay, jobTitles[j]) + "", totalThisJob(firstDayM, currentDay, jobTitles[j]) + "",
+                    totalThisJob(firstDayQ, currentDay, jobTitles[j]) + ""));
+            j++;
         }
     }
 
     protected void GetFinances() throws Exception {
-        DB app = (DB) getActivity().getApplication();
+        app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
         financeView = mydb.getView("FinanceView");
@@ -158,7 +145,7 @@ public class Finance_Controller extends Fragment {
 
     }
 
-    private Double TotalAllJobs(String firstDay, String LastDay){
+    private Double totalAllJobs(String firstDay, String LastDay){
         Double total = 0.0;
         QueryEnumerator result = null;
         Query query = financeView.createQuery();
@@ -173,14 +160,38 @@ public class Finance_Controller extends Fragment {
         int i = 0;
         for(Iterator<QueryRow> it = result; it.hasNext();) {
             QueryRow itnow = it.next();
-                com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
-                if(currentdoc.getProperty("TaskEarnings") != null) {
+            com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
+            if(currentdoc.getProperty("TaskEarnings") != null) {
+                total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
+            }
+        }
+        return total;
+    }
+
+    private Double totalThisJob(String firstDay, String LastDay, String jobTitle){
+        Double total = 0.0;
+        QueryEnumerator result = null;
+        Query query = financeView.createQuery();
+        query.setDescending(true);
+        query.setStartKey(LastDay);//last day you want
+        query.setEndKey(firstDay); //first day you want
+        try {
+            result = query.run();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        int i = 0;
+        for(Iterator<QueryRow> it = result; it.hasNext();) {
+            QueryRow itnow = it.next();
+            com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
+            if(currentdoc.getProperty("TaskEarnings") != null) {
+                if(currentdoc.getProperty("JobTitle") == jobTitle) {
                     total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
                 }
+            }
         }
         return total;
     }
 
 
 }
-
