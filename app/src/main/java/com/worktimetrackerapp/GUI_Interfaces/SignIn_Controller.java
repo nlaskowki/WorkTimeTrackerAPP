@@ -42,6 +42,7 @@ public class SignIn_Controller extends AppCompatActivity  {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -84,9 +85,12 @@ public class SignIn_Controller extends AppCompatActivity  {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String idToken = account.getIdToken();
-
+            String email = account.getEmail();
+            String profile = account.getDisplayName();
             if(idToken != null) {
                 DB app = (DB) getApplication();
+                app.setUserEmail(email);
+                app.setUserProfileName(profile);
                 app.loginWithGoogleSignIn(idToken);
             }
 

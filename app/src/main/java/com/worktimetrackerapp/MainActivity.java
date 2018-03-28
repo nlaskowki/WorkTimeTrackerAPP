@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
@@ -46,7 +48,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        View headerView = navigationView.getHeaderView(0);
+        TextView username = headerView.findViewById(R.id.nav_header_username);
+        TextView useremail = headerView.findViewById(R.id.nav_header_useremail);
+        username.setText(app.getUserProfileName());
+        useremail.setText(app.getUserEmail());
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
             if(app.getTracking()){
