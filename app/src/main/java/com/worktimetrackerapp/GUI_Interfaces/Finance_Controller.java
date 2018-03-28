@@ -105,16 +105,18 @@ public class Finance_Controller extends Fragment {
         String firstDayW = formatter.format(cal.getTime());
         cal.set(Calendar.DATE, 1);
         String firstDayM = formatter.format(cal.getTime());
-
+        cal.set(Calendar.MONTH, getQuarter(cal));
         String firstDayQ = formatter.format(cal.getTime());
 
         finances.add(new Finances("Total", totalAllJobs(currentDay, currentDay) + "", totalAllJobs(firstDayW, currentDay) + "",
                 totalAllJobs(firstDayM, currentDay) + "", totalAllJobs(firstDayQ, currentDay) + ""));
 
-        int i = 0;
-        while (jobs[i] != null) {
-            jobTitles[i] = jobs[i].toString();
-            i++;
+        for (int i = 0; i < 10; i++) {
+            if (jobs[i] != null) {
+                com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
+                jobTitles[i] = currentdoc.getProperty("jobtitle").toString();
+                System.out.println(i);
+            }
         }
 
         int j = 0;
@@ -145,6 +147,28 @@ public class Finance_Controller extends Fragment {
 
     }
 
+    public int getQuarter(Calendar cal) {
+        Calendar Q1 = Calendar.getInstance();
+        Q1.set(Calendar.MONTH, 3);
+        Calendar Q2 = Calendar.getInstance();
+        Q1.set(Calendar.MONTH, 6);
+        Calendar Q3 = Calendar.getInstance();
+        Q1.set(Calendar.MONTH, 9);
+
+        if(cal.before(Q1)) {
+            return 0;
+        }
+        else if (cal.before(Q2)) {
+            return 3;
+        }
+        else if (cal.before(Q3)) {
+            return 6;
+        }
+        else {
+            return 9;
+        }
+    }
+
     private Double totalAllJobs(String firstDay, String LastDay){
         Double total = 0.0;
         QueryEnumerator result = null;
@@ -157,7 +181,6 @@ public class Finance_Controller extends Fragment {
         }catch (Exception e){
             System.out.println(e);
         }
-        int i = 0;
         for(Iterator<QueryRow> it = result; it.hasNext();) {
             QueryRow itnow = it.next();
             com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
@@ -180,12 +203,11 @@ public class Finance_Controller extends Fragment {
         }catch (Exception e){
             System.out.println(e);
         }
-        int i = 0;
         for(Iterator<QueryRow> it = result; it.hasNext();) {
             QueryRow itnow = it.next();
             com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
             if(currentdoc.getProperty("TaskEarnings") != null) {
-                if(currentdoc.getProperty("JobTitle") == jobTitle) {
+                if(currentdoc.getProperty("jobtitle").equals(jobTitle)) {
                     total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
                 }
             }
