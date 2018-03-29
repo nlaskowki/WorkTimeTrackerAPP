@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
-import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
@@ -35,11 +34,6 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
     private JobArrayAdapter jaa;
     private Database mydb;
     DB app;
-    boolean ended;
-    com.couchbase.lite.View joblistview;
-    public static final String designDocJobTitle = "jobTitle";
-    public static final String designDocHourlyWage = "hourlywage";
-    HashMap<Integer, String> settingsjobinterface = new HashMap<>();
 
 
     @Nullable
@@ -81,52 +75,33 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
         //View JobList;
          app = (DB) getActivity().getApplication();
          mydb = app.getMydb();
-        Object[] jobs = app.getAllJobs();
-        String[] jobTitles = new String[10];
+        com.couchbase.lite.View JobView;
 
-        //JobList = mydb.getView("JobView");
-
-
-        if(jobs[0] != null) {
-            for (int i = 0; i < 10; i++) {
-                if (jobs[i] != null) {
-                    System.out.println(jobs[i]);
-                    settingsjobinterface.put(i, jobs[i].toString());
-                    //get job from db
-                    com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
-                    jobTitles[i] = currentdoc.getProperty("jobtitle").toString();
-                    System.out.println(i);
-
-                }
-
-            }
-
-        }
-
-
-
- /*       com.couchbase.lite.View viewItemsByDate = mydb.getView(String.format("%s/%s", designDocJobTitle, designDocHourlyWage));
-
-        if (viewItemsByDate.getMap() == null) {
-            viewItemsByDate.setMap(new Mapper() {
-                @Override
-                public void map(Map<String, Object> document, Emitter emitter) {
-                    Object createdAt = document.get("created_at");
-                    if(document.get("type").equals("jobtitle")) {
-                        if (createdAt != null) {
-                            emitter.emit(createdAt.toString(), null);
-                        }
-                    }
-                }
-            }, "2");
-        }
-*/
         initItemListAdapter();
+        //JobList = mydb.getView("JobView");
+        JobView = mydb.getView("settingjobs");
+        JobView.setMap(new Mapper(){
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter){
+                if(document.get("type").equals("UserInfo")) {
+                    if(document.get("jobtitle") != null) {
+                        String date = (String) document.get("jobtitle");
+                        emitter.emit(date.toString(), null);
+                    }
+                }//end if
+            }
+        },"1");
+
+        Query MyQuery = JobView.createQuery();
+        MyQuery.setDescending(true);
+        QueryEnumerator result = MyQuery.run();
+        int i = 0;
+        for(Iterator<QueryRow> it = result; it.hasNext();) {
+            jaa.add(it.next());
+            i++;
+        }
 
     }
-
-
-
 
     private void initItemListAdapter() {
         DB app = (DB) getActivity().getApplicationContext();

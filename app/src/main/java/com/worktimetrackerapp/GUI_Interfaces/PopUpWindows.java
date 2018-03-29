@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -33,7 +34,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-class PopUpWindows {
+public class PopUpWindows{
     private boolean ended;
     private View layout;
     private DB app;
@@ -89,7 +90,7 @@ class PopUpWindows {
 
 
 
-    void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
+    public void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
         layout = inflater.inflate(R.layout.loghistory_pop, null);
@@ -270,6 +271,7 @@ class PopUpWindows {
 //set up touch closing outside of pop-up
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pw.getBackground().setAlpha(128);
+
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -282,6 +284,8 @@ class PopUpWindows {
             }
         });
         pw.setOutsideTouchable(true);
+        pw.setFocusable(true);
+        pw.setTouchable(true);
         pw.showAtLocation(layout, Gravity.CENTER, 0,0);
     }
 
