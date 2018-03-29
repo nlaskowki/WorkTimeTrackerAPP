@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/txt_welcome_msg"
                 android:layout_width="wrap_content"
@@ -21,7 +22,7 @@
                 android:layout_gravity="center_horizontal"
                 android:paddingBottom="15dp"
                 android:paddingTop="5dp"
-                android:text="Add or edit a job"
+                android:text="Add/Editing Job"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:visibility="visible" />
             <TextView
@@ -112,13 +113,26 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/popup_btn_Delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete" />
+
+        <Button
+            android:id="@+id/popup_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" />
+
+        <Button
             android:id="@+id/popup_btn_next"
             android:layout_width="145dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
             android:onClick="dialogevent"
             android:text="Save"
-            android:visibility="visible"
-            android:layout_gravity="bottom|right"
-            />
+            android:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

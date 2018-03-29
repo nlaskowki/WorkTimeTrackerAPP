@@ -48,4 +48,8 @@
     <string name="average_hours_optional">Average Hours (optional)</string>
     <string name="Yes" />
     <string name="No" />
+    <string name="Settings">\Settings</string>
+    <string name="delete_all_jobs">Delete All jobs</string>
+    <string name="settings_page">Settings</string>
+    <string name="no_jobs_available">No jobs available to display</string>
 </resources>

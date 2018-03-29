@@ -26,6 +26,7 @@ public class SignUp_Controller extends AppCompatActivity {
     TextView avghours;
     public Button btn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

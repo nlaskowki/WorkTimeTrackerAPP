@@ -78,8 +78,8 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
-        com.couchbase.lite.View viewItemsByDate =
-                mydb.getView(String.format("%s/%s", designDocName, byDateViewName));
+        com.couchbase.lite.View viewItemsByDate = mydb.getView(String.format("%s/%s", designDocName, byDateViewName));
+
         if (viewItemsByDate.getMap() == null) {
             viewItemsByDate.setMap(new Mapper() {
                 @Override

@@ -1,7 +1,6 @@
 package com.worktimetrackerapp;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +19,6 @@ import com.worktimetrackerapp.GUI_Interfaces.HomeNotTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
 import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
-
-import org.w3c.dom.Document;
 
 import java.util.HashMap;
 
@@ -78,27 +75,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         Object[] jobs = app.getAllJobs();
-    if(jobs[0] != null) {
-        for (int i = 0; i < 10; i++) {
-            if (jobs[i] != null) {
-                System.out.println(jobs[i]);
-                menujobinterface.put(i, jobs[i].toString());
-                //get job from db
-                com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
-                menu.add(R.id.menu_jobgroup, i, i + 100, currentdoc.getProperty("jobtitle").toString());
-                System.out.println(i);
+        if(jobs[0] != null) {
+            for (int i = 0; i < 10; i++) {
+                if (jobs[i] != null) {
+                    System.out.println(jobs[i]);
+                    menujobinterface.put(i, jobs[i].toString());
+                    //get job from db
+                    com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
+                    menu.add(R.id.menu_jobgroup, i, i + 100, currentdoc.getProperty("jobtitle").toString());
+                    System.out.println(i);
+                }
             }
+            menu.setGroupCheckable(R.id.menu_jobgroup, true, true);
+            menu.getItem(0).setChecked(true);
+            //set title bar
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            String doc = menujobinterface.get(0);
+            String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
+            toolbar.setTitle(jobname);
+            app.setCurrentJob(doc);
+            getMenuInflater().inflate(R.menu.wttapplication, menu);
         }
-        menu.setGroupCheckable(R.id.menu_jobgroup, true, true);
-        menu.getItem(0).setChecked(true);
-        //set title bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        String doc = menujobinterface.get(0);
-        String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
-        toolbar.setTitle(jobname);
-        app.setCurrentJob(doc);
-        getMenuInflater().inflate(R.menu.wttapplication, menu);
-    }
         return true;
     }
 
@@ -174,9 +171,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Agenda_Controller()).commit();
         } else if (id == R.id.nav_settings) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
-            try {
-
-            }catch (Exception e){}
         } else if (id == R.id.nav_LogOut) {
             //log out
             db.logout();
