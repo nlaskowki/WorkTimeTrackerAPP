@@ -1,18 +1,21 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
-
+        import android.annotation.SuppressLint;
         import android.app.Activity;
         import android.app.AlertDialog;
         import android.app.DatePickerDialog;
+        import android.app.Dialog;
         import android.app.DialogFragment;
         import android.app.Fragment;
         import android.app.TimePickerDialog;
         import android.content.DialogInterface;
+        import android.content.DialogInterface.OnClickListener;
         import android.os.Bundle;
         import android.os.CountDownTimer;
         import android.os.SystemClock;
         import android.support.annotation.Nullable;
         import android.text.Layout;
+        import android.view.ContextThemeWrapper;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
@@ -24,12 +27,11 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.widget.EditText;
         import android.widget.TextView;
         import android.widget.TimePicker;
+        import android.widget.Toast;
         import android.widget.ToggleButton;
-
         import com.couchbase.lite.Document;
         import com.worktimetrackerapp.DB;
         import com.worktimetrackerapp.R;
-
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.time.Period;
@@ -37,17 +39,13 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import java.util.Date;
         import java.util.Locale;
 
-
+        import static android.R.style.Theme_DeviceDefault_Light_Dialog;
+        import static android.view.View.INVISIBLE;
+        import static java.lang.Double.*;
 
 public class HomeTracking_Controller extends Fragment {
 
-    //Calendar currentTime;
-    //int hour;
-    //int minute;
-    private Calendar myCalendar;
-    private Date updatedEndDate = null;
-
-
+    public Button submitUpdateWageButton;
     //Variables from task settings
     public double hourlyWage;
     public double numberOfHoursWorked;
@@ -58,9 +56,11 @@ public class HomeTracking_Controller extends Fragment {
     private ToggleButton ClockInOutToggleBtn;
     private ToggleButton TakeBreakToggleBtn;
     private TextView TaskViewName;
+    private TextView OverTimeEarnedTextView;
 
     //Wage calculations variables
     private TextView WageTextView;
+    private TextView overTimeWageCount;
     private double count123;
     private double wagePerHour = hourlyWage / 3600;
     Thread t;
@@ -82,13 +82,15 @@ public class HomeTracking_Controller extends Fragment {
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
     Date startDateFormat = null;
     Date EndDateFormat = null;
+    private Calendar myCalendar;
+    private Date updatedEndDate = null;
 
     View currentView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        currentView = inflater.inflate(R.layout.home_tracking, container, false);
+        View currentView = inflater.inflate(R.layout.home_tracking, container, false);
 
         Date_To_Decimal_Converter convertTime = new Date_To_Decimal_Converter();
 
@@ -97,7 +99,7 @@ public class HomeTracking_Controller extends Fragment {
         app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
 
-        hourlyWage = Double.parseDouble(currentdoc.getProperty("taskwage").toString());
+        hourlyWage = parseDouble(currentdoc.getProperty("taskwage").toString());
 
         System.out.println("Hourlywage = " + hourlyWage);
 
@@ -125,13 +127,19 @@ public class HomeTracking_Controller extends Fragment {
         System.out.println("difference in millis " + TimeLeftInMillisecs);
 
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
+        overTimeWageCount = (TextView) currentView.findViewById(R.id.overTimeWageTV);
+        OverTimeEarnedTextView = (TextView) currentView.findViewById(R.id.textView6);
         ClockInOutToggleBtn = (ToggleButton) currentView.findViewById(R.id.clockIn_OutToggleBtn);
         workChronometer = (Chronometer) currentView.findViewById(R.id.workChrono);
         TakeBreakToggleBtn = (ToggleButton) currentView.findViewById((R.id.breakToggleBtn));
         WageTextView = (TextView) currentView.findViewById(R.id.wageEarnedTxtVw);
         TxtOutputTimer = (TextView) currentView.findViewById(R.id.TimeUntilTaskDoneTimertxtvw);
+        submitUpdateWageButton= (Button) currentView.findViewById(R.id.UpdateWageSubmitBtn);
         TaskViewName.setText(taskName);
-        TakeBreakToggleBtn.setVisibility(View.INVISIBLE);
+        TakeBreakToggleBtn.setVisibility(INVISIBLE);
+
+        overTimeWageCount.setVisibility(INVISIBLE);
+        OverTimeEarnedTextView.setVisibility(INVISIBLE);
 
 
         ClockInOutToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -145,7 +153,6 @@ public class HomeTracking_Controller extends Fragment {
                     }catch(Exception e){
                         System.out.println(e);
                     }
-                    //resetTimer();
                     continueThread = true;
                     count123 = 0;
                     workChronometer.setBase(SystemClock.elapsedRealtime());
@@ -161,7 +168,7 @@ public class HomeTracking_Controller extends Fragment {
                     workChronometer.stop();
                     continueThread = false;
                     pauseTimer();
-                    TakeBreakToggleBtn.setVisibility(View.INVISIBLE);
+                    TakeBreakToggleBtn.setVisibility(INVISIBLE);
 
                     if (TakeBreakToggleBtn.isChecked()){
 
@@ -187,9 +194,6 @@ public class HomeTracking_Controller extends Fragment {
 
             }
         });
-
-        //Line can be used for auto clock in when task is started
-        //ClockInOutToggleBtn.setChecked(true);
 
         TakeBreakToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -306,7 +310,7 @@ public class HomeTracking_Controller extends Fragment {
 
         String timeTxt = userHoursInput.getText().toString();
 
-        double timeD = Double.parseDouble(timeTxt);
+        double timeD = parseDouble(timeTxt);
 
         System.out.println(timeD);
 
@@ -324,7 +328,7 @@ public class HomeTracking_Controller extends Fragment {
 
         String wageTxt = userWageInput.getText().toString();
 
-        double wageD = Double.parseDouble(wageTxt);
+        double wageD = parseDouble(wageTxt);
 
         System.out.println(hourlyWage);
         hourlyWage = wageD;
@@ -351,51 +355,111 @@ public class HomeTracking_Controller extends Fragment {
     public void showAlert(){
 
         AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
-        myAlert.setMessage("Your time has run out. Would you like to continue working or clock out?")
-                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        showContinueAddWageAlert();
-                    }
-                })
-                .setNegativeButton("Clock out", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        ClockInOutToggleBtn.setChecked(false);
+        myAlert.setMessage("Your time has run out. Would you like to continue working or clock out?");
+        myAlert.setPositiveButton("Continue", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                overTimeWageCount.setVisibility(View.VISIBLE);
+                OverTimeEarnedTextView.setVisibility(View.VISIBLE);
+                showContinueAddWageAlert();
+            }
+        });
+        myAlert.setNegativeButton("Clock out", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                ClockInOutToggleBtn.setChecked(false);
 
-                    }
-                })
-                .create();
+            }
+        });
+        myAlert.create();
         myAlert.show();
 
     }
 
+
     public void showContinueAddWageAlert(){
 
-        final AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
-        myAlert.setMessage("Update your current hourly wage $" + hourlyWage+ " or type the same wage to keep it the same.");
-
-        userWageInput = new EditText(this.getContext());
-        myAlert.setView(userWageInput);
-
-        myAlert.setPositiveButton("Next", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        updateWageValue();
-
-                        showContinueAddedHoursAlert();
-
-                        dialog.dismiss();
 
 
+        boolean flag = false;
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setCancelable(false);
+        String hourlyWageString = Double.toString(hourlyWage);
 
-                    }
-                })
-                .create();
-        myAlert.show();
+        View view  = getActivity().getLayoutInflater().inflate(R.layout.home_tracking_dialog, null);
+        dialog.setContentView(view);
+
+        final TextView textViewUpdateWageTitle = (TextView) view.findViewById(R.id.UpdateWageDialogTitle);
+        final EditText editTextWageupdate = (EditText) view.findViewById(R.id.UpdateWageEditText);
+        editTextWageupdate.setText(hourlyWageString);
+        Button submitBtn = (Button) view.findViewById(R.id.UpdateWageSubmitBtn);
+
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String stringWageInput = editTextWageupdate.getText().toString();
+
+                if (editTextWageupdate.getText().toString().isEmpty()){
+
+                    editTextWageupdate.setError("Field cannot be empty");
+
+                    editTextWageupdate.requestFocus();
+
+                    return;
+
+                }
+
+//                if (!stringWageInput.matches("^\\d{0,9}\\.\\d{1,4}$")){
+//
+//                    editTextWageupdate.setError("Field input is invalid");
+//
+//                    editTextWageupdate.requestFocus();
+//
+//                    return;
+//
+//                }
+
+                final Double doubleWageInput = parseDouble(stringWageInput);
+
+                System.out.println(doubleWageInput);
+
+                if (doubleWageInput < 0){
+
+                   editTextWageupdate.setError("Field cannot be less than 0");
+
+                    editTextWageupdate.requestFocus();
+
+                    return;
+
+                }
+
+                if (doubleWageInput > 300){
+
+                    editTextWageupdate.setError("Field cannot be greater than $300");
+
+                    editTextWageupdate.requestFocus();
+
+                    return;
+
+                }
+
+                else {
+
+                    showContinueAddedHoursAlert();
+                    dialog.dismiss();
+
+
+
+                }
+            }
+        });
+
+        dialog.show();
+
+        //updateWageValue();
 
     }
 
@@ -423,7 +487,7 @@ public class HomeTracking_Controller extends Fragment {
             }
         });
 
-        myAlert.setPositiveButton("Finish", new DialogInterface.OnClickListener() {
+        myAlert.setPositiveButton("Finish", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -442,9 +506,6 @@ public class HomeTracking_Controller extends Fragment {
                 long newTimeInMillis = convert.getDateTime(EndDateFormat,updatedEndDate);
 
                 TimeLeftInMillisecs = newTimeInMillis;
-
-                //resetTimer();
-                //updateTimerValue();
 
                 continueThread = true;
                 wageTrack();
@@ -496,6 +557,8 @@ public class HomeTracking_Controller extends Fragment {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
     }
+
+
 
     }
 
