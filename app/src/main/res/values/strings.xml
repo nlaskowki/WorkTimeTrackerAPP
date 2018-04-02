@@ -52,4 +52,7 @@
     <string name="delete_all_jobs">Delete All jobs</string>
     <string name="settings_page">Settings</string>
     <string name="no_jobs_available">No jobs available to display</string>
+    <string name="success_it_worked">It worked!</string>
+    <string name="empty_fields">Please fill in empty field</string>
+    <string name="submit_button">Submit</string>
 </resources>

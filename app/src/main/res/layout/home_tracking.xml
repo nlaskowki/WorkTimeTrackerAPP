@@ -28,10 +28,11 @@
         android:id="@+id/workChrono"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView4"
+        android:layout_alignEnd="@+id/textView3"
         android:layout_below="@+id/textView4"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="11dp" />
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:textSize="18sp" />
 
     <ToggleButton
         android:id="@+id/clockIn_OutToggleBtn"
@@ -42,7 +43,8 @@
         android:layout_marginBottom="29dp"
         android:text="ToggleButton"
         android:textOff="Clock In"
-        android:textOn="Clock Out" />
+        android:textOn="Clock Out"
+        android:textSize="18sp" />
 
     <ToggleButton
         android:id="@+id/breakToggleBtn"
@@ -52,7 +54,8 @@
         android:layout_alignTop="@+id/clockIn_OutToggleBtn"
         android:text="ToggleButton"
         android:textOff="Take Break"
-        android:textOn="End Break" />
+        android:textOn="End Break"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/wageEarnedTxtVw"
@@ -61,8 +64,9 @@
         android:layout_alignBaseline="@+id/workChrono"
         android:layout_alignBottom="@+id/workChrono"
         android:layout_alignStart="@+id/textView5"
-        android:layout_marginStart="11dp"
-        android:text="$0.00" />
+        android:text="$0.00"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView4"
@@ -70,8 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/clockIn_OutToggleBtn"
         android:layout_below="@+id/analogClock"
-        android:layout_marginTop="35dp"
-        android:text="Time Worked" />
+        android:layout_marginTop="12dp"
+        android:text="Time Worked"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -79,7 +85,9 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/breakToggleBtn"
         android:layout_alignTop="@+id/textView4"
-        android:text="Wage Earned" />
+        android:text="Wage Earned"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -88,15 +96,39 @@
         android:layout_alignStart="@+id/textView4"
         android:layout_below="@+id/wageEarnedTxtVw"
         android:layout_marginTop="18dp"
-        android:text="Time Left" />
+        android:text="Time Left"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/TimeUntilTaskDoneTimertxtvw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3"
         android:layout_below="@+id/textView3"
-        android:layout_marginTop="14dp"
-        android:text="00:00" />
+        android:layout_marginTop="12dp"
+        android:text="00:00"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_alignTop="@+id/textView3"
+        android:text="OverTime Earned"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/overTimeWageTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_alignTop="@+id/TimeUntilTaskDoneTimertxtvw"
+        android:text="$0.00"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
 </RelativeLayout>

@@ -17,17 +17,16 @@ import java.util.List;
 public class JobArrayAdapter extends ArrayAdapter<QueryRow>{
     private List<QueryRow> historylist;
     private final Context context;
-    //String displayjobinfo = "empty";
-   // String displayjobwage = "empty";
+    String strtaskinfo = "empty";
 
-    public JobArrayAdapter(Context context, int resource, int jobTitleResourceId, int hourlywageResourceId , List<QueryRow> objects){
-        super(context, resource, jobTitleResourceId, objects);
+    public JobArrayAdapter(Context context, int resource, int tasknameResourceId, int taskinfoResourceId , List<QueryRow> objects){
+        super(context, resource, tasknameResourceId, objects);
         this.context = context;
     }
 
     private static class ViewHolder{
-        TextView jobTitle;
-        TextView hourlywage;
+        TextView taskname;
+        TextView taskinfo;
     }
 
     @Override
@@ -36,24 +35,22 @@ public class JobArrayAdapter extends ArrayAdapter<QueryRow>{
             LayoutInflater vi = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             itemView = vi.inflate(R.layout.agenda_row_layout, null);
             ViewHolder vh = new ViewHolder();
-            vh.jobTitle = itemView.findViewById(R.id.agenda_row_task_name);
-            vh.hourlywage = itemView.findViewById(R.id.agenda_row_task_info);
+            vh.taskname = (TextView) itemView.findViewById(R.id.agenda_row_task_name);
+            vh.taskinfo = (TextView) itemView.findViewById(R.id.agenda_row_task_info);
             itemView.setTag(vh);
         }
 
         try {
-            TextView jobTitle = ((ViewHolder)itemView.getTag()).jobTitle;
-            TextView hourlywage = ((ViewHolder)itemView.getTag()).hourlywage;
+            TextView taskname = ((ViewHolder)itemView.getTag()).taskname;
+            TextView taskinfo = ((ViewHolder)itemView.getTag()).taskinfo;
 
             QueryRow row = getItem(position);
             SavedRevision currentRevision = row.getDocument().getCurrentRevision();
 
-            String displayjobinfo = (String) currentRevision.getProperty("jobTitle");
-            jobTitle.setText(displayjobinfo);
-
-            String displayjobwage = (String)currentRevision.getProperty("hourlywage");
-            hourlywage.setText(displayjobwage);
-
+            String strtaskname = (String) currentRevision.getProperty("jobtitle");
+            taskname.setText(strtaskname);
+            String strtaskinfo = (String) currentRevision.getProperty("jobcompany");
+            taskinfo.setText(strtaskinfo);
 
         } catch (Exception e){
             e.printStackTrace();
