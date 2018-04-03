@@ -2,6 +2,8 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.couchbase.lite.Database;
@@ -28,12 +33,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Settings_Controller extends Fragment implements AdapterView.OnItemClickListener{
     View currentView;
     private ListView joblist;
     private JobArrayAdapter jaa;
     private Database mydb;
     DB app;
+    private static final String PREFS_NAME = "prefs";
+    private static final String PREF_DARK_THEME = "dark_theme";
 
 
     @Nullable
@@ -65,11 +74,25 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             }
         });
 
+        final CheckBox darktheme = (CheckBox) currentView.findViewById( R.id.darkthemeChk );
+        darktheme.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View currentView)
+            {
+                if ( darktheme.isChecked() )
+                {
+                    app.setTheme(android.R.style.Theme_Material);
+                }
+                else{
+                    app.setTheme(android.R.style.Theme_Material_Light);
+                }
+            }
+        });
+
+
         return currentView;
     }
-
-
-
 
     protected void ShowJobList() throws Exception {
         //View JobList;

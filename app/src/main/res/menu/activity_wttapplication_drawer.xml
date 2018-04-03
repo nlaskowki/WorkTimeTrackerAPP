@@ -5,20 +5,24 @@
 
     <item
         android:id="@+id/nav_home"
-        android:title="Home" />
+        android:title="Home"
+        android:icon="@drawable/ic_menu_home"/>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_finances"
-            android:title="Finances" />
+            android:title="Finances"
+            android:icon="@drawable/ic_menu_finances"/>
         <item
             android:id="@+id/nav_loghistory"
-            android:title="Log History" />
+            android:title="Log History"
+            android:icon="@drawable/ic_menu_loghistory"/>
         <item
             android:id="@+id/nav_agenda"
-            android:title="Agenda" />
+            android:title="Agenda"
+            android:icon="@drawable/ic_menu_calendar"/>
     </group>
 
-    <item android:title="others">
+    <item android:title="Management">
         <menu>
             <item
                 android:id="@+id/nav_settings"
@@ -26,7 +30,7 @@
                 android:title="Settings" />
             <item
                 android:id="@+id/nav_LogOut"
-                android:icon="@mipmap/ic_launcher_new_round"
+                android:icon="@drawable/ic_menu_logout"
                 android:title="Sign-out" />
         </menu>
     </item>
