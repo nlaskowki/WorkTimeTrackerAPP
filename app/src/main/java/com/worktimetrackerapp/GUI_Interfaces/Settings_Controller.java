@@ -64,8 +64,8 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             @Override
             public void onClick(View view) {
                 try {
-                   // JobSettingsPopUp ipp = new JobSettingsPopUp();
-                   // ipp.showInfoPopup(null, getActivity(),false, null);
+                   JobSettingsPopUp ipp = new JobSettingsPopUp();
+                    ipp.showJobInfoPopup(null, getActivity(),false, null);
 
                 }catch (Exception e){
                     System.out.println(e);
