@@ -84,6 +84,7 @@ public class HomeTracking_Controller extends Fragment {
     Date EndDateFormat = null;
     private Calendar myCalendar;
     private Date updatedEndDate = null;
+    private Double ExtraCosts;
 
     View currentView;
 
@@ -179,10 +180,12 @@ public class HomeTracking_Controller extends Fragment {
                         pauseTimer();
                     }
 
+                    showExtraCostsPopup();
+
                     //This is were wage info gets sent to DB
 
                     app.setTracking(false);
-                    Double Extracosts = 0.0;
+                    Double Extracosts = ExtraCosts;
                     Double TaskEarnings = totalWageEarned;
                     try {
                         app.EndTask(currentdoc, Extracosts, TaskEarnings);
@@ -381,9 +384,6 @@ public class HomeTracking_Controller extends Fragment {
 
     public void showContinueAddWageAlert(){
 
-
-
-        boolean flag = false;
         final Dialog dialog = new Dialog(getActivity());
         dialog.setCancelable(false);
         String hourlyWageString = Double.toString(hourlyWage);
@@ -555,6 +555,39 @@ public class HomeTracking_Controller extends Fragment {
             }
         },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+    }
+
+    public void showExtraCostsPopup(){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setCancelable(false);
+
+        View view  = getActivity().getLayoutInflater().inflate(R.layout.extra_costs_dialog, null);
+        dialog.setContentView(view);
+
+        final TextView extraCostTitle = (TextView) view.findViewById(R.id.extraCostsTitle);
+        final EditText extraCostEditText = (EditText) view.findViewById(R.id.extraCostsEditTxt);
+        Button extraCostSubmitBtn = (Button) view.findViewById(R.id.extraCostsSubmitButton);
+
+        extraCostSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ExtraCosts = Double.parseDouble(extraCostEditText.getText().toString());
+
+
+                dialog.dismiss();
+
+
+
+            }
+        });
+        dialog.show();
+
+
+
+
+
 
     }
 
