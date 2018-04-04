@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
+import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
@@ -41,6 +42,7 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
     private ListView joblist;
     private JobArrayAdapter jaa;
     private Database mydb;
+    private LiveQuery liveQuery;
     DB app;
 
 
@@ -98,13 +100,25 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             }
         },"1");
 
-        Query MyQuery = JobView.createQuery();
-        MyQuery.setDescending(true);
-        QueryEnumerator result = MyQuery.run();
-        int i = 0;
-        for(Iterator<QueryRow> it = result; it.hasNext();) {
-            jaa.add(it.next());
-            i++;
+
+        if (liveQuery == null) {
+            liveQuery = JobView.createQuery().toLiveQuery();
+            liveQuery.setDescending(true);
+            liveQuery.addChangeListener(new LiveQuery.ChangeListener() {
+                public void changed(final LiveQuery.ChangeEvent event) {
+                    app.runOnUiThread(new Runnable() {
+                        public void run() {
+                            jaa.clear();
+                            for (Iterator<QueryRow> it = event.getRows(); it.hasNext(); ) {
+                                jaa.add(it.next());
+                            }
+                            jaa.notifyDataSetChanged();
+                        }
+                    });
+                }
+            });
+
+            liveQuery.start();
         }
 
     }
