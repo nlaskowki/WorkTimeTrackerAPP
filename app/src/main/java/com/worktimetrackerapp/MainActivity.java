@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     HashMap<Integer, String> menujobinterface = new HashMap<>();
     static Fragment HomeTrackingFragment;
     static Fragment CurrentFragment = null;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         TextView username = headerView.findViewById(R.id.nav_header_username);
@@ -191,9 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_LogOut) {
             db.logout();
-            this.onDestroy();
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
