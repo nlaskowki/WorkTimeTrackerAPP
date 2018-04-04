@@ -10,6 +10,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark</item>
         <item name="android:textColorSecondaryInverse">@color/secondary_text_material_dark</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
