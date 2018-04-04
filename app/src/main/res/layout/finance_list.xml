@@ -4,25 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="19dp"
+        tools:layout_editor_absoluteY="9dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_conversion_absoluteWidth="120dp" />
+
+    <TextView
+        android:id="@+id/titleOfJobs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="150dp"
+        android:paddingRight="150dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        tools:layout_conversion_absoluteHeight="32dp"
+        tools:layout_conversion_absoluteWidth="100dp"
+        tools:layout_editor_absoluteX="120dp"
+        tools:layout_editor_absoluteY="9dp" />
+
     <TableRow>
 
         <TextView
-            android:id="@+id/titleOfJobs"
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
+            android:layout_margin="10dp"
+            android:text="Regular"
             android:textColor="@android:color/black"
-            android:textSize="24sp"
-            tools:layout_editor_absoluteX="156dp"
-            tools:layout_editor_absoluteY="16dp" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="OverTime"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Total"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </TableRow>
+
     <TableRow>
+
         <TextView
             android:id="@+id/lblToday"
-            android:layout_width="wrap_content"
+            android:layout_width="91dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Today:"
@@ -33,7 +79,7 @@
 
         <TextView
             android:id="@+id/amtToday"
-            android:layout_width="275dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="TextView"
@@ -41,12 +87,31 @@
             android:textSize="18sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="62dp" />
+
+        <TextView
+            android:id="@+id/overTimeToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/totalToday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </TableRow>
 
     <TableRow>
+
         <TextView
             android:id="@+id/lblThisWeek"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="This Week:"
@@ -65,12 +130,31 @@
             android:textSize="18sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="98dp" />
+
+        <TextView
+            android:id="@+id/overTimeThisWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/totalThisWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </TableRow>
 
     <TableRow>
+
         <TextView
             android:id="@+id/lblThisMonth"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="This Month:"
@@ -89,12 +173,31 @@
             android:textSize="18sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="135dp" />
+
+        <TextView
+            android:id="@+id/overTimeThisMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/totalThisMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </TableRow>
 
     <TableRow>
+
         <TextView
             android:id="@+id/lblThisQuarter"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="This Quarter:"
@@ -113,5 +216,23 @@
             android:textSize="18sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="173dp" />
+
+        <TextView
+            android:id="@+id/overTimeThisQuarter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/totalThisQuarter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
     </TableRow>
 </TableLayout>
