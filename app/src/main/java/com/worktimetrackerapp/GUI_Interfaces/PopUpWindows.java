@@ -43,7 +43,7 @@ public class PopUpWindows{
     private boolean editing;
     private static boolean FromMain;
     private Calendar myCalendar;
-    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
     private PopupWindow pw;
     private Activity globalActivity;
     //variables
@@ -180,6 +180,43 @@ public class PopUpWindows{
                     }
                 }
             });
+
+            wage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("Editing");
+                double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                TaskEarnings.setText(String.format("%.2f", result));
+            }
+            });
+            WageExtraTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("Editing");
+                double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                TaskEarnings.setText(String.format("%.2f", result));
+            }
+        });
             TaskExtraCost.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -198,6 +235,8 @@ public class PopUpWindows{
                     TaskEarnings.setText(String.format("%.2f", result));
                 }
             });
+
+
             btnEdit.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
                     if(btnEdit.getText().equals("Edit")) {
@@ -508,7 +547,7 @@ public class PopUpWindows{
                         TaskEarnings.setText(String.format("%.2f", result));
 
                     }
-                }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
+                }, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true).show();
             }
         },myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
