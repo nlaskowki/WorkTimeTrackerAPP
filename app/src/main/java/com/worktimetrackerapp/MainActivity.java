@@ -1,5 +1,6 @@
 package com.worktimetrackerapp;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static String mCurrentUserId;
     DB app;
     HashMap<Integer, String> menujobinterface = new HashMap<>();
+    static Fragment HomeTrackingFragment;
+    static Fragment CurrentFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         useremail.setText(app.getUserEmail());
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
+            HomeTrackingFragment = new HomeTracking_Controller();
             if(app.getTracking()){
-                fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, HomeTrackingFragment).commit();
             }else{
                 fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
             }
@@ -154,35 +158,109 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
         DB db = (DB) getApplication();
-        Bundle bundle = new Bundle();
-
 
         if (id == R.id.nav_home) {
+            System.out.println(app.getTracking());
+
             if(app.getTracking()){
-                fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                if(CurrentFragment != null) {
+                    fragmentManager.beginTransaction()
+                            .show(HomeTrackingFragment)
+                            .detach(CurrentFragment)
+                            .commit();
+                    CurrentFragment = null;
+                }else{
+                    fragmentManager.beginTransaction()
+                            .show(HomeTrackingFragment)
+                            .commit();
+                }
             }else{
                 fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
             }
         } else if (id == R.id.nav_finances) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new Finance_Controller()).commit();
+            ScreenPicker(new Finance_Controller());
+
         } else if (id == R.id.nav_loghistory) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new LogHistory_Controller()).commit();
+            ScreenPicker(new LogHistory_Controller());
+
         } else if (id == R.id.nav_agenda) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new Agenda_Controller()).commit();
+            ScreenPicker(new Agenda_Controller());
+
         } else if (id == R.id.nav_settings) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new Settings_Controller()).commit();
+            ScreenPicker(new Settings_Controller());
+
         } else if (id == R.id.nav_LogOut) {
-            //log out
             db.logout();
+            this.onDestroy();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    //get classes
+    public void ScreenPicker(Fragment NewFrag){
+        FragmentManager fragmentManager = getFragmentManager();
+
+            if (app.getTracking()) {
+                if(CurrentFragment == null) {
+                    fragmentManager.beginTransaction()
+                            .add(R.id.content_frame, NewFrag)
+                            .hide(HomeTrackingFragment)
+                            .commit();
+                    CurrentFragment = NewFrag;
+                }else{
+                    if(CurrentFragment != NewFrag){
+                        fragmentManager.beginTransaction()
+                                .detach(CurrentFragment)
+                                .add(R.id.content_frame, NewFrag)
+                                .hide(HomeTrackingFragment)
+                                .commit();
+                        CurrentFragment = NewFrag;
+                    }
+                }
+            } else {
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, NewFrag).commit();
+                    CurrentFragment = null;
+            }
+    }
 
 
+
+    public static Fragment GetHTFragment(){
+        return HomeTrackingFragment;
+    }
+    public static void setHTFragment(Fragment HT){
+        HomeTrackingFragment = HT;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("Pause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("resume");
+        // resume tasks
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
 }

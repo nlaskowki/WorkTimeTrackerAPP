@@ -24,6 +24,7 @@ import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryRow;
 import com.worktimetrackerapp.DB;
+import com.worktimetrackerapp.MainActivity;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
 
@@ -145,7 +146,7 @@ public class HomeNotTracking_Controller extends Fragment {
                                     DB app = (DB) getActivity().getApplication();
                                     app.setTaskDoc(document);
                                     FragmentManager FM = getFragmentManager();
-                                    FM.beginTransaction().replace(R.id.content_frame, new HomeTracking_Controller()).commit();
+                                    FM.beginTransaction().replace(R.id.content_frame, MainActivity.GetHTFragment()).commit();
                                 }
                             })
 

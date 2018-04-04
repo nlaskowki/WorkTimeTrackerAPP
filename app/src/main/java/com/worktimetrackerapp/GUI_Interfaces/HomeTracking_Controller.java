@@ -101,11 +101,11 @@ public class HomeTracking_Controller extends Fragment {
 
         hourlyWage = parseDouble(currentdoc.getProperty("taskwage").toString());
 
-        System.out.println("Hourlywage = " + hourlyWage);
+        //System.out.println("Hourlywage = " + hourlyWage);
 
         wagePerHour = hourlyWage / 3600;
 
-        System.out.println("Wage Per hour = " + wagePerHour);
+        //System.out.println("Wage Per hour = " + wagePerHour);
 
 
         taskName = (String) currentdoc.getProperty("taskname");
@@ -124,7 +124,7 @@ public class HomeTracking_Controller extends Fragment {
 
         TimeLeftInMillisecs = timeInMillis;
 
-        System.out.println("difference in millis " + TimeLeftInMillisecs);
+        //System.out.println("difference in millis " + TimeLeftInMillisecs);
 
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         overTimeWageCount = (TextView) currentView.findViewById(R.id.overTimeWageTV);
@@ -242,9 +242,9 @@ public class HomeTracking_Controller extends Fragment {
 
                                 count123 += wagePerHour;
 
-                                System.out.println("Count123  = " + count123);
+                                //System.out.println("Count123  = " + count123);
 
-                                System.out.println("wagePerHour = " + wagePerHour);
+                                //System.out.println("wagePerHour = " + wagePerHour);
 
                                 totalWageEarned += count123;
 

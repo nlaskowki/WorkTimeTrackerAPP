@@ -66,6 +66,8 @@ public class SignIn_Controller extends AppCompatActivity  {
         super.onDestroy();
     }
 
+
+
     //*************************************************** Google Sign in *******************************
     private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
