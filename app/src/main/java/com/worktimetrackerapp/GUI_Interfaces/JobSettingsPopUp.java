@@ -2,16 +2,9 @@ package com.worktimetrackerapp.GUI_Interfaces;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.FragmentManager;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,38 +12,32 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 
-public class JobSettingsPopUp extends AppCompatActivity {
-    private boolean editing;
+public class JobSettingsPopUp {
     private Database mydb;
     private View layout;
     private DB app;
     private PopupWindow pw;
     private Activity globalActivity;
-    Spinner spinner;
-    TextView company;
-    TextView jobTitle;
-    TextView employer;
-    TextView hourlywage;
-    TextView avghours;
-    public Button btnDelete;
-    public Button btnDone;
-    public Button btnEdit;
+    private Spinner spinner;
+    private TextView company;
+    private TextView jobTitle;
+    private TextView employer;
+    private TextView hourlywage;
+    private TextView avghours;
+    private  Button btnDelete;
+    private  Button btnDone;
+    private  Button btnEdit;
 
     //DB input values
     private String DBjobCompany = null;
@@ -61,28 +48,25 @@ public class JobSettingsPopUp extends AppCompatActivity {
     private double DBjobAveHours = 0.0;
 
 
-    void showJobInfoPopup(final Document currentdoc, Activity myActif, final FragmentManager FM) throws Exception {
+    void showJobInfoPopup(final Document currentdoc, Activity myActif) throws Exception {
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
         layout = inflater.inflate(R.layout.jobsetting_popup, null);
         float density =myActif.getResources().getDisplayMetrics().density;
         pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
-      /*  spinner = layout.findViewById(R.id.popup_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);*/
+
         mydb = app.getMydb();
         globalActivity = myActif;
+
         setAllFields(layout);
 
         DisableAllFields();
 
         LoadTaskInfo(currentdoc);
 
-        if(currentdoc == null){
+        if(currentdoc == null) {
             EnableAllFields();
-
+        }
         btnEdit.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 if(btnEdit.getText().equals("Edit")) {
@@ -107,7 +91,6 @@ public class JobSettingsPopUp extends AppCompatActivity {
                 if(btnDelete.getText().toString().equals("Delete")) {
                     Document job = (Document) mydb.getDocument(currentdoc.getId());
                     try {
-                        editing = false;
                         job.delete();
                         pw.dismiss();
                     } catch (Exception e) {
@@ -131,26 +114,18 @@ public class JobSettingsPopUp extends AppCompatActivity {
 
             }
         });
-
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pw.getBackground().setAlpha(128);
         pw.setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //if(event.getAction() == 0){
-                //System.out.println("Test");
-                // pw.dismiss();
-                // return true;
-                //}
                 return false;
             }
         });
         pw.setOutsideTouchable(true);
         pw.showAtLocation(layout, Gravity.CENTER, 0,0);
     }
-    }
     private void DisableAllFields(){
-        editing = false;
         company.setFocusable(false);
         jobTitle.setFocusable(false);
         employer.setFocusable(false);
@@ -159,7 +134,6 @@ public class JobSettingsPopUp extends AppCompatActivity {
     }//done
 
     private void EnableAllFields(){
-        editing = true;
         company.setFocusableInTouchMode(true);
         jobTitle.setFocusableInTouchMode(true);
         employer.setFocusableInTouchMode(true);
@@ -173,13 +147,11 @@ public class JobSettingsPopUp extends AppCompatActivity {
             if(currentdoc.getProperty("jobcompany") != null) {
                 company.setText(currentdoc.getProperty("jobcompany").toString());
             }
-            if(currentdoc.getProperty("jobtitle")  != null || currentdoc.getProperty("jobtitle") != null){
-                String startTask = currentdoc.getProperty("jobtitle").toString();
-                jobTitle.setText(startTask);
+            if(currentdoc.getProperty("jobtitle")  != null){
+                jobTitle.setText(currentdoc.getProperty("jobtitle").toString());
             }
-            if(currentdoc.getProperty("jobemployer")  != null || currentdoc.getProperty("jobemployer") != null){
-                String endTask = currentdoc.getProperty("jobemployer").toString() + " - " + currentdoc.getProperty("jobemployer");
-                employer.setText(endTask);
+            if(currentdoc.getProperty("jobemployer")  != null){
+                employer.setText(currentdoc.getProperty("jobemployer").toString());
             }
             if(currentdoc.getProperty("jobwage") != null){
                 hourlywage.setText(currentdoc.getProperty("jobwage").toString());
@@ -219,7 +191,6 @@ public class JobSettingsPopUp extends AppCompatActivity {
 
                 return doc;
             }
-
         }
         return doc;
     }
@@ -237,7 +208,7 @@ public class JobSettingsPopUp extends AppCompatActivity {
         hourlywage = layout.findViewById(R.id.popup_txt_hourly_wage);
         avghours = layout.findViewById(R.id.popup_txt_avg_hours);
         spinner = layout.findViewById(R.id.popup_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(globalActivity.getApplicationContext(),
                 R.array.spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -301,7 +272,6 @@ public class JobSettingsPopUp extends AppCompatActivity {
         if (!company.getText().toString().isEmpty()) {
             DBjobCompany = company.getText().toString();
         }
-
 
         if (reqFields.equals("Following fields are required: ")) {
             return true;

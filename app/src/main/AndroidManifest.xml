@@ -20,7 +20,6 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".GUI_Interfaces.SignUp_Controller" />
 
-        <service android:name=".util.BackgroundTask" />
     </application>
 
 </manifest>
