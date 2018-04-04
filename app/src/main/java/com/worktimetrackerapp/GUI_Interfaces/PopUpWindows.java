@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.worktimetrackerapp.DB;
+import com.worktimetrackerapp.MainActivity;
 import com.worktimetrackerapp.R;
 
 import java.text.SimpleDateFormat;
@@ -250,7 +251,7 @@ public class PopUpWindows{
                             if(doc !=null) {
                                 try {
                                     app.setTaskDoc(doc);
-                                    FM.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
+                                    FM.beginTransaction().replace(R.id.content_frame, MainActivity.GetHTFragment()).commit();
                                     pw.dismiss();
                                 } catch (Exception e) {
                                     System.out.println(e);

@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WorkTimeTrackerAPP.iml" filepath="$PROJECT_DIR$/WorkTimeTrackerAPP.iml" />
       <module fileurl="file://C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP5\WorkTimeTrackerAPP.iml" filepath="C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP5\WorkTimeTrackerAPP.iml" />
       <module fileurl="file://C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP.iml" filepath="C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WorkTimeTrackerAPP2.iml" filepath="$PROJECT_DIR$/WorkTimeTrackerAPP2.iml" />
       <module fileurl="file://C:\WorkTimeTrackerAPP\WorkTimeTrackerAPP2\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" filepath="C:\WorkTimeTrackerAPP\WorkTimeTrackerAPP2\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" />
       <module fileurl="file://C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP5.iml" filepath="C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP5.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

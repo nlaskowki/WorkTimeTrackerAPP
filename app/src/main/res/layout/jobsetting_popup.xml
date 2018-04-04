@@ -34,6 +34,7 @@
                 android:layout_marginTop="14dp"
                 android:text="@string/choose_job"
                 android:textStyle="bold" />
+
             <Spinner
                 android:id="@+id/popup_spinner"
                 android:layout_width="218dp"
@@ -41,6 +42,18 @@
                 android:layout_marginEnd="190dp"
                 android:layout_marginStart="3dp"
                 android:background="@android:drawable/btn_dropdown" />
+
+            <EditText
+                android:id="@+id/popup_txt_company"
+                android:layout_width="401dp"
+                android:layout_height="51dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="60dp"
+                android:ems="10"
+                android:hint="@string/company_name_self_employed_only"
+                android:inputType="textPersonName"
+                android:text="@string/company" />
 
             <EditText
                 android:id="@+id/popup_txt_job_title"
@@ -79,7 +92,7 @@
                 android:text="@string/hourly_wage" />
 
             <EditText
-                android:id="@+id/txt_avg_hours"
+                android:id="@+id/popup_txt_avg_hours"
                 android:layout_width="401dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -89,18 +102,6 @@
                 android:hint="@string/average_hours_optional"
                 android:inputType="textPersonName"
                 android:text="@string/avg_hours" />
-
-            <EditText
-                android:id="@+id/popup_txt_company"
-                android:layout_width="401dp"
-                android:layout_height="51dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="60dp"
-                android:ems="10"
-                android:hint="@string/company_name_self_employed_only"
-                android:inputType="textPersonName"
-                android:text="@string/company" />
 
         </LinearLayout>
     </ScrollView>
@@ -113,26 +114,27 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/popup_btn_Delete"
+            android:id="@+id/popup_btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Delete" />
 
         <Button
-            android:id="@+id/popup_btn_cancel"
+            android:id="@+id/popup_btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="Edit" />
 
         <Button
-            android:id="@+id/popup_btn_next"
+            android:id="@+id/popup_btn_done"
             android:layout_width="145dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:onClick="dialogevent"
-            android:text="Save"
+            android:text="Done"
             android:visibility="visible" />
     </LinearLayout>
+
 </RelativeLayout>

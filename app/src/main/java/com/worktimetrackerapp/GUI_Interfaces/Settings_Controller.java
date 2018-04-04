@@ -64,31 +64,14 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             @Override
             public void onClick(View view) {
                 try {
-                   // JobSettingsPopUp ipp = new JobSettingsPopUp();
-                   // ipp.showInfoPopup(null, getActivity(),false, null);
+                   JobSettingsPopUp ipp = new JobSettingsPopUp();
+                    ipp.showJobInfoPopup(null, getActivity(),false, null);
 
                 }catch (Exception e){
                     System.out.println(e);
                 }
             }
         });
-
-        final CheckBox darktheme = (CheckBox) currentView.findViewById( R.id.darkthemeChk );
-        darktheme.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View currentView)
-            {
-                if ( darktheme.isChecked() )
-                {
-                    app.setTheme(R.style.Theme_Dark);
-                }
-                else{
-                    app.setTheme(R.style.Theme_Light);
-                }
-            }
-        });
-
 
         return currentView;
     }
