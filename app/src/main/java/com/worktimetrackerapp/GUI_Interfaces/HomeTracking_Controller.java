@@ -180,10 +180,10 @@ public class HomeTracking_Controller extends Fragment {
                     }
 
                     //This is were wage info gets sent to DB
-                    totalWageEarned = 0;
+
                     app.setTracking(false);
                     Double Extracosts = 0.0;
-                    Double TaskEarnings = 0.0;
+                    Double TaskEarnings = totalWageEarned;
                     try {
                         app.EndTask(currentdoc, Extracosts, TaskEarnings);
                     }catch(Exception e){
