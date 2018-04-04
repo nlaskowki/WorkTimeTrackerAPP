@@ -13,4 +13,5 @@
     <color name="secondary_text_inverse">#b3000000</color>
     <color name="secondary_text_material_dark">#b3000000</color>
     <color name="primary_dark_material_light">#494949</color>
+    <color name="header">#FF7D7D7D</color>
 </resources>
