@@ -84,7 +84,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="62dp" />
 
@@ -95,7 +95,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/totalToday"
@@ -104,7 +104,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </TableRow>
 
     <TableRow>
@@ -127,7 +127,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="98dp" />
 
@@ -138,7 +138,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/totalThisWeek"
@@ -147,7 +147,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </TableRow>
 
     <TableRow>
@@ -170,7 +170,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="135dp" />
 
@@ -181,7 +181,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/totalThisMonth"
@@ -190,7 +190,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </TableRow>
 
     <TableRow>
@@ -213,7 +213,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="247dp"
             tools:layout_editor_absoluteY="173dp" />
 
@@ -224,7 +224,7 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/totalThisQuarter"
@@ -233,6 +233,6 @@
             android:layout_margin="10dp"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </TableRow>
 </TableLayout>
