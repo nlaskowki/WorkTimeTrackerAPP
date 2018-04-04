@@ -73,23 +73,6 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             }
         });
 
-        final CheckBox darktheme = (CheckBox) currentView.findViewById( R.id.darkthemeChk );
-        darktheme.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View currentView)
-            {
-                if ( darktheme.isChecked() )
-                {
-                    app.setTheme(R.style.Theme_Dark);
-                }
-                else{
-                    app.setTheme(R.style.Theme_Light);
-                }
-            }
-        });
-
-
         return currentView;
     }
 
