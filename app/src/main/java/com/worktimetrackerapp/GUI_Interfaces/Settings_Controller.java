@@ -65,8 +65,9 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             public void onClick(View view) {
                 try {
                    JobSettingsPopUp ipp = new JobSettingsPopUp();
-                    ipp.showJobInfoPopup(null, getActivity(),false, null);
-
+                   System.out.println("Test1");
+                    ipp.showJobInfoPopup(null, getActivity());
+                    System.out.println("Test1");
                 }catch (Exception e){
                     System.out.println(e);
                 }
@@ -122,40 +123,13 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
 
     }
 
-
-       /* Button DeleteAllJobs = currentView.findViewById(R.id.settings_deletejobs);
-
-        DeleteAllJobs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DB app = (DB) getActivity().getApplication();
-                Object[] jobs = app.getAllJobs();
-                for (int i = 0; i < 10; i++) {
-                    if (jobs[i] != null) {
-                        com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
-                        try {
-                            currentdoc.delete();
-                        }catch (Exception e){
-                            System.out.println(e);
-                        }
-                    }
-                }
-                //app.logout();
-            }
-        });*/
-
-
-
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
         Document document = row.getDocument();
-        Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
-
         try {
             JobSettingsPopUp ipp = new JobSettingsPopUp();
-           // ipp.showInfoPopup(document, getActivity(),false, null);
+            ipp.showJobInfoPopup(document, getActivity());
 
         }catch (Exception e){
             System.out.println(e);
