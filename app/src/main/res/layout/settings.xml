@@ -45,12 +45,5 @@
 
     </FrameLayout>
 
-    <CheckBox
-        android:id="@+id/darkthemeChk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:text="Dark Theme" />
-
 
 </LinearLayout>
