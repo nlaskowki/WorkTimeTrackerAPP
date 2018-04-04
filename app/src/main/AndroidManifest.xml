@@ -19,9 +19,8 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".GUI_Interfaces.SignUp_Controller" />
-        <activity android:name=".GUI_Interfaces.PopUpWindows" />
 
-
+        <service android:name=".util.BackgroundTask" />
     </application>
 
 </manifest>
