@@ -19,4 +19,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.Dark" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="Theme.Light" parent="android:Theme.Light" />
+
 </resources>

@@ -4,6 +4,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.RelativeDateTimeFormatter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -41,8 +42,6 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
     private JobArrayAdapter jaa;
     private Database mydb;
     DB app;
-    private static final String PREFS_NAME = "prefs";
-    private static final String PREF_DARK_THEME = "dark_theme";
 
 
     @Nullable
@@ -82,10 +81,10 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
             {
                 if ( darktheme.isChecked() )
                 {
-                    app.setTheme(android.R.style.Theme_Material);
+                    app.setTheme(R.style.Theme_Dark);
                 }
                 else{
-                    app.setTheme(android.R.style.Theme_Material_Light);
+                    app.setTheme(R.style.Theme_Light);
                 }
             }
         });
