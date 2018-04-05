@@ -1,10 +1,13 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,9 +26,8 @@ import com.worktimetrackerapp.R;
 
 
 
-public class JobSettingsPopUp {
+class JobSettingsPopUp {
     private Database mydb;
-    private View layout;
     private DB app;
     private PopupWindow pw;
     private Activity globalActivity;
@@ -48,10 +50,15 @@ public class JobSettingsPopUp {
     private double DBjobAveHours = 0.0;
 
 
+    //************************************************************************************
+        //call this function to reload the menu, I put it at some places so I could test if it works
+        // app.reloadMenu();
+    //**************************************************************************************
+
     void showJobInfoPopup(final Document currentdoc, Activity myActif) throws Exception {
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
-        layout = inflater.inflate(R.layout.jobsetting_popup, null);
+        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.jobsetting_popup, null);
         float density =myActif.getResources().getDisplayMetrics().density;
         pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
 
@@ -68,6 +75,7 @@ public class JobSettingsPopUp {
             EnableAllFields();
         }
         btnEdit.setOnClickListener(new View.OnClickListener(){
+            @SuppressLint("SetTextI18n")
             public void onClick(View v){
                 if(btnEdit.getText().equals("Edit")) {
                     btnEdit.setVisibility(View.INVISIBLE);
@@ -76,9 +84,11 @@ public class JobSettingsPopUp {
                     btnDone.getText();
                     //enable textfields
                     EnableAllFields();
+                    app.reloadMenu();
                 }else {//button is equal to save
 
                     SendToDB(currentdoc);
+                    app.reloadMenu();
                     btnDone.setText("Done");
                     btnDelete.setVisibility(View.VISIBLE);
                     btnDone.setVisibility(View.VISIBLE);
@@ -89,14 +99,17 @@ public class JobSettingsPopUp {
         btnDelete.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 if(btnDelete.getText().toString().equals("Delete")) {
-                    Document job = (Document) mydb.getDocument(currentdoc.getId());
+                    assert currentdoc != null;
+                    Document job = mydb.getDocument(currentdoc.getId());
                     try {
                         job.delete();
+                        app.reloadMenu();
                         pw.dismiss();
                     } catch (Exception e) {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }else{
+                    app.reloadMenu();
                     pw.dismiss();
                 }
             }
@@ -106,7 +119,8 @@ public class JobSettingsPopUp {
         btnDone.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 if(btnDone.getText().toString().equals("Done")) {
-                    if (SendToDB(null) !=null);{
+                    if (SendToDB(null) !=null){
+                        app.reloadMenu();
                         pw.dismiss();
                     }
 
@@ -172,7 +186,7 @@ public class JobSettingsPopUp {
                 try {
                     app.UpdateJob(currentdoc, DBjobCompany, DBjobType,  DBjobTitle, DBjobEmployer, DBjobWage, DBjobAveHours);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             } else { //create new job
                 //final DB app = (DB) getApplication();
@@ -185,9 +199,9 @@ public class JobSettingsPopUp {
                     if(!company.getText().toString().isEmpty()){
                         cmp = company.getText().toString();
                     }
-                    System.out.println(hourlywage.getText().toString());
+                    //System.out.println(hourlywage.getText().toString());
                     app.AddJob(cmp, spinner.getSelectedItem().toString(), jobTitle.getText().toString(), employer.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), dblavghours);
-                }catch(Exception e){System.out.println(e);}
+                }catch(Exception e){e.printStackTrace();}
 
                 return doc;
             }

@@ -1,6 +1,7 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -54,7 +55,7 @@ public class HomeNotTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_not_tracking, container, false);
 
-        StartTaskButton = (Button) currentView.findViewById(R.id.StartTaskHomeNotButton);
+        StartTaskButton = currentView.findViewById(R.id.StartTaskHomeNotButton);
 
         StartTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,15 +65,15 @@ public class HomeNotTracking_Controller extends Fragment {
                     PopUpWindows ipp = new PopUpWindows();
                     ipp.showInfoPopup(null, getActivity(),true, getFragmentManager());
                 }catch (Exception e){
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
 
             }
         });
 
         //List
-            HNTList = (ListView) currentView.findViewById(R.id.homenottracking_list_view);
-            TextView emptyText = (TextView) currentView.findViewById(R.id.empty_homenottrackinglist);
+            HNTList = currentView.findViewById(R.id.homenottracking_list_view);
+            TextView emptyText = currentView.findViewById(R.id.empty_homenottrackinglist);
             HNTList.setEmptyView(emptyText);
             app = (DB) getActivity().getApplication();
             agendaheader = new TextView(getContext());
@@ -80,6 +81,7 @@ public class HomeNotTracking_Controller extends Fragment {
 
             try {
                 Calendar calendar = Calendar.getInstance();
+                @SuppressLint("SimpleDateFormat")
                 SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
                 String selectedDay = today.format(calendar.getTime());
                 agendaheader.setText(selectedDay);
@@ -106,7 +108,7 @@ public class HomeNotTracking_Controller extends Fragment {
                         if(document.get("jobtitle").equals(jobname)) {
                             if(document.get("TaskEndDateTime") == null) {
                                 String date = (String) document.get("TaskScheduledStartDate");
-                                emitter.emit(date.toString(), null);
+                                emitter.emit(date, null);
                             }
                         }
                     }
@@ -134,7 +136,6 @@ public class HomeNotTracking_Controller extends Fragment {
                 if (position != 0) {
                     QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
                     final Document document = row.getDocument();
-                    Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
 
                     AlertDialog.Builder btnStart = new AlertDialog.Builder(getActivity());
 
@@ -146,7 +147,7 @@ public class HomeNotTracking_Controller extends Fragment {
                                     DB app = (DB) getActivity().getApplication();
                                     app.setTaskDoc(document);
                                     FragmentManager FM = getFragmentManager();
-                                    FM.beginTransaction().replace(R.id.content_frame, MainActivity.GetHTFragment()).commit();
+                                    FM.beginTransaction().replace(R.id.content_frame, app.getHTFragment()).commit();
                                 }
                             })
 
