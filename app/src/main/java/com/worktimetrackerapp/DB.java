@@ -1,21 +1,23 @@
 package com.worktimetrackerapp;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.widget.TextView;
 import android.widget.Toast;
-//import android.widget.Toolbar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseOptions;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
-//import com.couchbase.lite.LiveQuery;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 import com.couchbase.lite.replicator.Replication;
@@ -34,7 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -75,6 +76,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Document currentTask;
     private String UserEmail;
     private String UserProfileName;
+    private Activity mainactivity;
+    private Fragment HTFragment;
 
     public Object getcurrentJob(){
         return currentJob;
@@ -109,27 +112,23 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     public String getUserProfileName(){
         return UserProfileName;
     }
-
+    public void setMainactivity(Activity mn){
+        mainactivity = mn;
+    }
+    public void setHTFragment(Fragment HT){
+        HTFragment = HT;
+    }
+    public Fragment getHTFragment(){
+        return HTFragment;
+    }
 
     public void completeLogin() {
-        //for testing
-       /* runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //change again later
-                                Intent intent = new Intent(getApplicationContext(), SignUp_Controller.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                        });
-*/
         boolean synccomplete = false;
         while (!synccomplete) {
             if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
                 synccomplete = true;
                 try {
                     Jobs = getJobs();
-                    //System.out.println(Jobs[0]);
 
                     if (Jobs[0] == null) {//create new user
 
@@ -157,9 +156,16 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
                     }
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void reloadMenu(){
+        System.out.println("Reload menu");
+        if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
+            ActivityCompat.invalidateOptionsMenu(mainactivity);
         }
     }
 
@@ -184,7 +190,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                     System.out.println("Succes");
                     Type type = new TypeToken<Map<String, Object>>(){}.getType();
                     Map<String, Object> session = gson.fromJson(response.body().charStream(), type);
-                    Map<String, Object> userInfo = (Map<String, Object>) session.get("userCtx");
+                    Map<String, Object> userInfo;
+                    userInfo = (Map<String, Object>) session.get("userCtx");
                     final String username = (userInfo != null ? (String) userInfo.get("name") : null);
                     System.out.println(username);
                     final List<Cookie> cookies = Cookie.parseAll(HttpUrl.get(new URL("http://wttuser.axelvh.com/wttdb/")), response.headers());
@@ -243,7 +250,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 return false;
         }
 
-        Map<String, Object> userInfo = new HashMap<String, Object>();
+        Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", username);
         try {
             Mydb.putLocalDocument(USER_LOCAL_DOC_ID, userInfo);
@@ -336,6 +343,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         if (error != syncError) {
             syncError = error;
+            assert syncError != null;
             showErrorMessage(syncError.getMessage(), null);
         }
     }
@@ -390,7 +398,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 if(document.get("type").equals("UserInfo")) {
                     if(document.get("jobtitle") != null) {
                         String date = (String) document.get("jobtitle");
-                        emitter.emit(date.toString(), null);
+                        emitter.emit(date, null);
                     }
                 }//end if
             }
@@ -400,18 +408,18 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         MyQuery.setDescending(true);
         QueryEnumerator result = MyQuery.run();
         int i = 0;
-        for(Iterator<QueryRow> it = result; it.hasNext();) {
-            jobs[i] = it.next().getDocumentId();
+        for(; result.hasNext();) {
+            jobs[i] = result.next().getDocumentId();
             i++;
         }
 
         return jobs;
     }
 
-    public Document AddJob(String jobType, String jobCompany, String jobTitle, String jobEmployer, double jobWage, Double jobAveHours) throws Exception {
+    public void AddJob(String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, Double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         UUID uuid = UUID.randomUUID();
         Calendar calendar = GregorianCalendar.getInstance();
         long currentTime = calendar.getTimeInMillis();
@@ -420,14 +428,14 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         String id = currentTime + "-" + uuid.toString();
 
         Document document = getMydb().createDocument();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("_id", id);
         properties.put("type", "UserInfo");
         properties.put("owner", app.getUsername());
         properties.put("created_at", currentTimeString);
 
-        properties.put("jobtype", jobType);
         properties.put("jobcompany", jobCompany);
+        properties.put("jobtype", jobType);
         properties.put("jobtitle", jobTitle);
         properties.put("jobemployer", jobEmployer);
         properties.put("jobwage", jobWage);
@@ -437,11 +445,10 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Log.d(TAG, "Created new user item with id: %s", document.getId());
 
-        return document;
     }
 
-    public Boolean UpdateJob(Document doc, String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception{
-        Map<String, Object> properties = new HashMap<String, Object>();
+    public void UpdateJob(Document doc, String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception{
+        Map<String, Object> properties = new HashMap<>();
         properties.putAll(doc.getProperties());
         properties.put("jobcompany", jobCompany);
         properties.put("jobtype", jobType);
@@ -453,13 +460,12 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
 
         doc.putProperties(properties);
-        return true;
     }
 
     public Document NewTask(String TaskName, String JobTitle ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate, String EndTime) throws Exception {
         DB app = (DB) getApplicationContext();
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         UUID uuid = UUID.randomUUID();
         Calendar calendar = GregorianCalendar.getInstance();
         long currentTime = calendar.getTimeInMillis();
@@ -468,7 +474,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         String id = currentTime + "-" + uuid.toString();
 
         Document document = getMydb().createDocument();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("_id", id);
         properties.put("type", "Task");
         properties.put("owner", app.getUsername());
@@ -495,15 +501,15 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return document;
     }
 
-    public Boolean StartTask(Document TaskDoc) throws Exception {
+    public void StartTask(Document TaskDoc) throws Exception {
 
         //get date format
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
         String StartTime = dateFormatter.format(calendar.getTime());
 
         Document document = getMydb().getDocument(TaskDoc.getId());
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.putAll(TaskDoc.getProperties());
 
         properties.put("TaskStartDateTime", StartTime);
@@ -512,18 +518,17 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Log.d(TAG, "Started task item with id: %s", document.getId());
 
-        return true;
     }
 
     public Boolean StartTaskOvertime(Document TaskDoc, Double TaskWageOvertime) throws Exception {
 
         //get date format
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
         String StartTime = dateFormatter.format(calendar.getTime());
 
         Document document = getMydb().getDocument(TaskDoc.getId());
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.putAll(TaskDoc.getProperties());
 
         properties.put("TaskStartOvertimeDateTime", StartTime);
@@ -536,15 +541,15 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return true;
     }
 
-    public Boolean EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
+    public void EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
         Calendar calendar = GregorianCalendar.getInstance();
         String TaskEndTime = dateFormatter.format(calendar.getTime());
 
 
         Document doc = getMydb().getDocument(taskdocument.getId());
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
             properties.putAll(doc.getProperties());
 
             properties.put("TaskEndDateTime", TaskEndTime);
@@ -559,12 +564,11 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Log.d(TAG, "Ended task item with id: %s", taskdocument.getId());
 
-        return true;
     }
 
-    public Boolean UpdateTask(Document taskdocument, boolean ended, String TaskName ,Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
-                                   String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings, Double TaskWageOvertime, String StartOverTimeDateTime) throws Exception{
-        Map<String, Object> properties = new HashMap<String, Object>();
+    public void UpdateTask(Document taskdocument, boolean ended, String TaskName , Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
+                           String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings, Double TaskWageOvertime, String StartOverTimeDateTime) throws Exception{
+        Map<String, Object> properties = new HashMap<>();
         properties.putAll(taskdocument.getProperties());
         properties.put("taskname", TaskName);
         properties.put("taskwage", TaskWage);
@@ -590,7 +594,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         taskdocument.putProperties(properties);
 
-        return true;
     }
 
     //**************************************************** logout *******************************************************
@@ -615,7 +618,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
             }
         }
     }
-
 
     //******logging********
 

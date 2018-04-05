@@ -1,8 +1,11 @@
 package com.worktimetrackerapp;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,11 +29,11 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG = "WorkTimeTracker";
-    public static String mCurrentUserId;
     DB app;
+    @SuppressLint("UseSparseArrays")
     HashMap<Integer, String> menujobinterface = new HashMap<>();
-    static Fragment HomeTrackingFragment;
-    static Fragment CurrentFragment = null;
+    private Fragment HomeTrackingFragment;
+    private Fragment CurrentFragment = null;
     NavigationView navigationView;
 
     @Override
@@ -38,25 +41,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wttapplication);
         app = (DB) getApplication();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         TextView username = headerView.findViewById(R.id.nav_header_username);
         TextView useremail = headerView.findViewById(R.id.nav_header_useremail);
         username.setText(app.getUserProfileName());
         useremail.setText(app.getUserEmail());
+        app.setMainactivity(this);
         //first frame
             FragmentManager fragmentManager = getFragmentManager();
             HomeTrackingFragment = new HomeTracking_Controller();
+            app.setHTFragment(HomeTrackingFragment);
             if(app.getTracking()){
                 fragmentManager.beginTransaction().replace(R.id.content_frame, HomeTrackingFragment).commit();
             }else{
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -94,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             menu.setGroupCheckable(R.id.menu_jobgroup, true, true);
             menu.getItem(0).setChecked(true);
             //set title bar
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar);
             String doc = menujobinterface.get(0);
             String jobname = app.getMydb().getDocument(doc).getProperty("jobtitle").toString();
             toolbar.setTitle(jobname);
@@ -107,10 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        String doc = "";
+        String doc;
         int id = item.getItemId();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        String jobname = "";
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        String jobname;
 
         switch(id) {
             case 0:
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
         DB db = (DB) getApplication();
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             db.logout();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -225,14 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
     }
 
-
-
-    public static Fragment GetHTFragment(){
-        return HomeTrackingFragment;
-    }
-    public static void setHTFragment(Fragment HT){
-        HomeTrackingFragment = HT;
-    }
 
     @Override
     protected void onDestroy() {

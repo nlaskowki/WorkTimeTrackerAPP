@@ -1,15 +1,14 @@
 package com.worktimetrackerapp.GUI_Interfaces;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -18,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.GridLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -32,10 +30,9 @@ import com.worktimetrackerapp.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 
-public class PopUpWindows{
+class PopUpWindows{
     private boolean ended;
     private View layout;
     private DB app;
@@ -43,6 +40,7 @@ public class PopUpWindows{
     private boolean editing;
     private static boolean FromMain;
     private Calendar myCalendar;
+    @SuppressLint("SimpleDateFormat")
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
     private PopupWindow pw;
     private Activity globalActivity;
@@ -91,12 +89,14 @@ public class PopUpWindows{
 
 
 
-    public void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
+    @SuppressLint({"InflateParams", "SetTextI18n"})
+    void showInfoPopup(final Document currentdoc, Activity myActif, final Boolean frommain, final FragmentManager FM) throws Exception{
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
         layout = inflater.inflate(R.layout.loghistory_pop, null);
         float density =myActif.getResources().getDisplayMetrics().density;
         pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
+
         ended = false;
         mydb = app.getMydb();
         FromMain = frommain;
@@ -123,7 +123,7 @@ public class PopUpWindows{
 
             }else{
                 btnDone.setText("Add");
-                ShowLoadOtherInfo(currentdoc);
+                ShowLoadOtherInfo(null);
             }
 
         }else{
@@ -192,6 +192,7 @@ public class PopUpWindows{
 
             }
 
+            @SuppressLint("DefaultLocale")
             @Override
             public void afterTextChanged(Editable s) {
                 System.out.println("Editing");
@@ -210,6 +211,7 @@ public class PopUpWindows{
 
             }
 
+            @SuppressLint("DefaultLocale")
             @Override
             public void afterTextChanged(Editable s) {
                 System.out.println("Editing");
@@ -228,6 +230,7 @@ public class PopUpWindows{
 
                 }
 
+                @SuppressLint("DefaultLocale")
                 @Override
                 public void afterTextChanged(Editable s) {
                     System.out.println("Editing");
@@ -260,13 +263,14 @@ public class PopUpWindows{
             btnDelete.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View v){
                     if(btnDelete.getText().toString().equals("Delete")) {
-                        Document task = (Document) mydb.getDocument(currentdoc.getId());
+                        assert currentdoc != null;
+                        Document task = mydb.getDocument(currentdoc.getId());
                         try {
                             editing = false;
                             task.delete();
                             pw.dismiss();
                         } catch (Exception e) {
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }else{
                         pw.dismiss();
@@ -290,10 +294,10 @@ public class PopUpWindows{
                             if(doc !=null) {
                                 try {
                                     app.setTaskDoc(doc);
-                                    FM.beginTransaction().replace(R.id.content_frame, MainActivity.GetHTFragment()).commit();
+                                    FM.beginTransaction().replace(R.id.content_frame, app.getHTFragment()).commit();
                                     pw.dismiss();
                                 } catch (Exception e) {
-                                    System.out.println(e);
+                                    e.printStackTrace();
 
                                 }
                             }
@@ -313,13 +317,9 @@ public class PopUpWindows{
         pw.getBackground().setAlpha(128);
 
         pw.setTouchInterceptor(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //if(event.getAction() == 0){
-                //System.out.println("Test");
-                // pw.dismiss();
-                // return true;
-                //}
                 return false;
             }
         });
@@ -430,28 +430,28 @@ public class PopUpWindows{
     private Document SendToDB(Document currentdoc){
         Document doc = null;
 
-        if(CheckInputs(currentdoc)) {
+        if(CheckInputs()) {
 
             if (currentdoc != null) { //update doc
                 try {
                     app.UpdateTask(currentdoc, ended, DBTaskName, DBTaskWage, DBClient, DBCAddress, DBStartDate, DBStartTime, DBEndDate, DBEndTime,
                             DBStartDateTime, DBEndDateTime, DBExtraCosts, DBEarnings, DBTaskWageOvertime, DBStartOverTimeDateTime);
                 } catch (Exception e) {
-                    System.out.println(e);
+                   e.printStackTrace();
                 }
             } else { //create new document
                 try {
                     String jobTitle = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
                     doc = app.NewTask(DBTaskName, jobTitle, DBTaskWage, DBClient, DBCAddress, DBStartDate, DBStartTime, DBEndDate, DBEndTime);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
                 if (!FromMain) {
                     try {
                         app.UpdateTask(doc, true, DBTaskName, DBTaskWage, DBClient, DBCAddress, DBStartDate, DBStartTime, DBEndDate, DBEndTime,
                                 DBStartDateTime, DBEndDateTime, DBExtraCosts, DBEarnings, DBTaskWageOvertime, DBStartOverTimeDateTime);
                     } catch (Exception e) {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }
             }
@@ -516,7 +516,7 @@ public class PopUpWindows{
         }
     }
 
-    private void DateTimeSetter(final TextView v, String dateTime){
+    private void DateTimeSetter(final TextView v, final String dateTime){
         myCalendar = Calendar.getInstance();
         try {
             if(!dateTime.isEmpty()) {
@@ -526,7 +526,7 @@ public class PopUpWindows{
                 myCalendar = Calendar.getInstance();
             }
         }catch(Exception e){
-
+            e.printStackTrace();
         }
         new DatePickerDialog(layout.getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -537,15 +537,35 @@ public class PopUpWindows{
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
                 new TimePickerDialog(layout.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @SuppressLint("DefaultLocale")
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         myCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
-                        v.setText(dateFormatter.format(myCalendar.getTime()));
+                        try{
+                        if(CheckStartEndTime(myCalendar, v)) {
+                            v.setText(dateFormatter.format(myCalendar.getTime()));
 
-                        double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
-                        TaskEarnings.setText(String.format("%.2f", result));
+                            double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                            TaskEarnings.setText(String.format("%.2f", result));
+                        }else{
+                            AlertDialog.Builder btnStart = new AlertDialog.Builder(globalActivity);
 
+                            btnStart.setMessage("Date picked is not possible").setCancelable(false)
+                                    .setPositiveButton("close", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DateTimeSetter(v, dateTime);
+                                            dialog.cancel();
+                                        }
+                                    });
+                            AlertDialog alert = btnStart.create();
+                            alert.setTitle("WTT");
+                            alert.show();
+                        }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 }, myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE), true).show();
             }
@@ -554,20 +574,20 @@ public class PopUpWindows{
 
     }
 
-    private Boolean CheckInputs(Document currentdoc) {
-        SimpleDateFormat dateFormatterday = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat dateFormatterTime = new SimpleDateFormat("HH:mm");
+    private Boolean CheckInputs() {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatterday = new SimpleDateFormat("yyyy-MM-dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatterTime = new SimpleDateFormat("HH:mm");
         String reqFields = "Following fields are required: ";
 
         if (!taskName.getText().toString().isEmpty()) {
             DBTaskName = taskName.getText().toString();
         } else {
-            reqFields = reqFields + " ,taskName";
+            reqFields = reqFields + "taskName, ";
         }
         if (!wage.getText().toString().isEmpty()) {
             DBTaskWage = Double.parseDouble(wage.getText().toString());
         } else {
-            reqFields = reqFields + " ,wage";
+            reqFields = reqFields + "wage,";
         }
         if (!clientName.getText().toString().isEmpty()) {
             DBClient = clientName.getText().toString();
@@ -591,7 +611,7 @@ public class PopUpWindows{
                 reqFields = reqFields + "end, ";
             }
         } catch (Exception e) {
-            System.out.println(e);
+           e.printStackTrace();
             reqFields = reqFields + "start, end, ";
         }
 
@@ -610,11 +630,12 @@ public class PopUpWindows{
             }
         }
         if (!TaskExtraCost.getText().toString().isEmpty()) {
-            DBExtraCosts = Double.parseDouble(TaskExtraCost.getText().toString());
+                DBExtraCosts = Double.parseDouble(TaskExtraCost.getText().toString());
         }
         if (!TaskEarnings.getText().toString().isEmpty()) {
             DBEarnings = Double.parseDouble(TaskEarnings.getText().toString());
         }
+
         if (!WageExtraTime.getText().toString().isEmpty()) {
             DBTaskWageOvertime = Double.parseDouble(WageExtraTime.getText().toString());
         } else {
@@ -631,6 +652,7 @@ public class PopUpWindows{
         }else{
             //show message
             reqFields = reqFields + "!!!";
+
             AlertDialog.Builder btnStart = new AlertDialog.Builder(globalActivity);
 
             btnStart.setMessage(reqFields).setCancelable(false)
@@ -641,7 +663,7 @@ public class PopUpWindows{
                         }
                     });
             AlertDialog alert = btnStart.create();
-            alert.setTitle("WTT");
+            alert.setTitle("Input error");
             alert.show();
             return false;
         }
@@ -665,9 +687,11 @@ public class PopUpWindows{
                     startovertimeFormat = dateFormatter.parse(startovertime);
                     EndDateFormat = dateFormatter.parse(endtime);
                 } catch (Exception e) {
-                    System.out.println(e);
+                   e.printStackTrace();
                 }
+                assert startovertimeFormat != null;
                 long differenceReg = startovertimeFormat.getTime() - startDateFormat.getTime();//milliseconds
+                assert EndDateFormat != null;
                 long differenceOVTime = EndDateFormat.getTime() - startovertimeFormat.getTime();//milliseconds
 
                 double earningReg = differenceReg * (dblregWage / 3600000);
@@ -685,8 +709,10 @@ public class PopUpWindows{
                     startDateFormat = dateFormatter.parse(startime);
                     EndDateFormat = dateFormatter.parse(endtime);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
+                assert EndDateFormat != null;
+                assert startDateFormat != null;
                 long differenceReg = EndDateFormat.getTime() - startDateFormat.getTime();//milliseconds
 
                 double earningReg = differenceReg * (dblregWage / 3600000);
@@ -699,6 +725,92 @@ public class PopUpWindows{
             }
         }
         return earnings;
+    }
+
+    private boolean CheckStartEndTime(Calendar cal, TextView v) throws Exception{
+        Boolean Correct = false;
+
+       if(v == startTaskInfo){
+           if(!endTaskInfo.getText().toString().isEmpty()) {
+               Date dd = dateFormatter.parse(endTaskInfo.getText().toString());
+               Correct = CheckDates(cal.getTime(), dd);
+           }else{
+               Correct = true;
+           }
+       }
+       if(v == endTaskInfo){
+           if(!endTaskInfo.getText().toString().isEmpty()) {
+               Date dd = dateFormatter.parse(startTaskInfo.getText().toString());
+               Correct = CheckDates(dd, cal.getTime());
+           }else{
+               Correct = true;
+           }
+       }
+       if(v == otherInfoStartedTask){
+           Date dateEnd = null;
+           Date dateOver = null;
+
+           if(!otherInfoOvertimeStartedTask.getText().toString().isEmpty()) {
+                dateOver = dateFormatter.parse(otherInfoOvertimeStartedTask.getText().toString());
+           }
+           if(!otherInfoEndedTask.getText().toString().isEmpty()){
+               dateEnd = dateFormatter.parse(otherInfoEndedTask.getText().toString());
+           }
+           if(dateEnd != null){
+               if(dateOver != null){
+                   //check over
+                   Correct = CheckDates(cal.getTime(), dateOver);
+               }else{
+                   //only check start vs end
+                   Correct = CheckDates(cal.getTime(), dateEnd);
+               }
+           }else {
+               //check start vs overtime
+               Correct = dateOver == null || CheckDates(cal.getTime(), dateOver);
+           }
+
+       }
+       if(v == otherInfoOvertimeStartedTask){
+           Date dateEnd = null;
+           Date dateStart = dateFormatter.parse(otherInfoStartedTask.getText().toString());
+           if(!otherInfoEndedTask.getText().toString().isEmpty()){
+               dateEnd = dateFormatter.parse(otherInfoEndedTask.getText().toString());
+           }
+           if(dateEnd != null){
+               Correct = CheckDates(dateStart, cal.getTime()) && CheckDates(cal.getTime(), dateEnd);
+           }else{
+               Correct = CheckDates(dateStart, cal.getTime());
+           }
+
+       }
+       if(v == otherInfoEndedTask){
+           Date dateStart = dateFormatter.parse(otherInfoStartedTask.getText().toString());
+           Date dateOver = null;
+           if(!otherInfoOvertimeStartedTask.getText().toString().isEmpty()) {
+               dateOver = dateFormatter.parse(otherInfoOvertimeStartedTask.getText().toString());
+           }
+           if(dateOver != null){
+               Correct = CheckDates(dateOver, cal.getTime());
+           }else{
+               Correct = CheckDates(dateStart, cal.getTime());
+           }
+       }
+        return Correct;
+    }
+
+    private boolean CheckDates(Date calStart, Date calEnd){
+        boolean Correct = false;
+
+        long diff = calEnd.getTime() - calStart.getTime();
+
+        if(diff <= 0){
+            Correct = false;
+        }
+        if(diff > 0){
+            Correct = true;
+        }
+
+        return Correct;
     }
 
 }
