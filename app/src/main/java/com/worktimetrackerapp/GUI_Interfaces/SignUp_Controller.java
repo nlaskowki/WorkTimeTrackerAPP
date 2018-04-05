@@ -46,6 +46,7 @@ public class SignUp_Controller extends AppCompatActivity {
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position ==0) {
@@ -54,6 +55,7 @@ public class SignUp_Controller extends AppCompatActivity {
                     employer.setVisibility(View.INVISIBLE);
                     hourlywage.setVisibility(View.INVISIBLE);
                     avghours.setVisibility(View.INVISIBLE);
+
                 }
                 else if (position == 1){
                     company.setVisibility(View.VISIBLE);
@@ -69,7 +71,7 @@ public class SignUp_Controller extends AppCompatActivity {
                     hourlywage.setVisibility(View.VISIBLE);
                     avghours.setVisibility(View.VISIBLE);
                 }
-                //Toast.makeText(SignUp_Controller.this, parent.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                String spinner = parent.getItemAtPosition(position).toString();
             }
 
             @Override

@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
@@ -21,7 +21,6 @@ import com.couchbase.lite.QueryRow;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.JobArrayAdapter;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,7 +33,9 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
     private Database mydb;
     private LiveQuery liveQuery;
     DB app;
-
+    private Button btnDelete;
+    private  Button btnDone;
+    private  Button btnEdit;
 
     @Nullable
     @Override
@@ -55,11 +56,11 @@ public class Settings_Controller extends Fragment implements AdapterView.OnItemC
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                    JobSettingsPopUp ipp = new JobSettingsPopUp();
-                   System.out.println("Test1");
-                    ipp.showJobInfoPopup(null, getActivity());
-                    System.out.println("Test1");
+                   ipp.showJobInfoPopup2(null, getActivity());
+
                 }catch (Exception e){
                     System.out.println(e);
                 }

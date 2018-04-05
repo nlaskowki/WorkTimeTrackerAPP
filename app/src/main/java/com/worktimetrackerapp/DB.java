@@ -408,7 +408,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return jobs;
     }
 
-    public Document AddJob(String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, Double jobAveHours) throws Exception {
+    public Document AddJob(String jobType, String jobCompany, String jobTitle, String jobEmployer, double jobWage, Double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -426,8 +426,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         properties.put("owner", app.getUsername());
         properties.put("created_at", currentTimeString);
 
-        properties.put("jobcompany", jobCompany);
         properties.put("jobtype", jobType);
+        properties.put("jobcompany", jobCompany);
         properties.put("jobtitle", jobTitle);
         properties.put("jobemployer", jobEmployer);
         properties.put("jobwage", jobWage);

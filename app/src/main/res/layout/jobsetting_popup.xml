@@ -115,21 +115,21 @@
 
         <Button
             android:id="@+id/popup_btn_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Delete" />
 
         <Button
             android:id="@+id/popup_btn_edit"
-            android:layout_width="wrap_content"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Edit" />
 
         <Button
             android:id="@+id/popup_btn_done"
-            android:layout_width="145dp"
+            android:layout_width="133dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:onClick="dialogevent"
