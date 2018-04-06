@@ -87,7 +87,7 @@ public class Agenda_Controller extends Fragment {
                 instance2.set(instance2.get(Calendar.YEAR) + 2, Calendar.OCTOBER, 31);
 
                 materialCalendarView.state().edit()
-                        .setFirstDayOfWeek(Calendar.MONDAY)
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
                         .setMinimumDate(CalendarDay.from(1900, 1, 1))
                         .setMaximumDate(CalendarDay.from(2100, 12, 31))
                         .setCalendarDisplayMode(CalendarMode.MONTHS)
