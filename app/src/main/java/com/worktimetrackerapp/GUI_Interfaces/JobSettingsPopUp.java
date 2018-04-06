@@ -1,13 +1,12 @@
 package com.worktimetrackerapp.GUI_Interfaces;
-
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v4.app.ActivityCompat;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.couchbase.lite.Database;
@@ -26,12 +26,14 @@ import com.worktimetrackerapp.R;
 
 
 
-class JobSettingsPopUp {
+public class JobSettingsPopUp {
     private Database mydb;
+    private View layout;
     private DB app;
     private PopupWindow pw;
     private Activity globalActivity;
     private Spinner spinner;
+    private TextView jobinspinner;
     private TextView company;
     private TextView jobTitle;
     private TextView employer;
@@ -42,26 +44,109 @@ class JobSettingsPopUp {
     private  Button btnEdit;
 
     //DB input values
-    private String DBjobCompany = null;
     private String DBjobType = null;
+    private String DBjobCompany = null;
     private String DBjobTitle = null;
     private String DBjobEmployer = null;
     private double DBjobWage = 0.0;
     private double DBjobAveHours = 0.0;
 
 
-    //************************************************************************************
-        //call this function to reload the menu, I put it at some places so I could test if it works
-        // app.reloadMenu();
-    //**************************************************************************************
+    void showJobInfoPopup2(final Document currentdoc, Activity myActif) throws Exception {
+        app = (DB) myActif.getApplication();
+        LayoutInflater inflater = myActif.getLayoutInflater();
+        layout = inflater.inflate(R.layout.jobsetting_popup, null);
+        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.jobsetting_popup, null);
+        float density =myActif.getResources().getDisplayMetrics().density;
+        pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
+        mydb = app.getMydb();
+        globalActivity = myActif;
+        setAllFields(layout);
+
+        DisableAllFields();
+
+
+        if(currentdoc == null) {
+            EnableAllFields();
+            btnEdit.setVisibility(View.INVISIBLE);
+            btnDelete.setText("Cancel");
+            btnDone.setText("Save");
+        }
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (btnDelete.getText().toString().equals("Cancel")) {
+                    pw.dismiss();
+                }
+            }
+        });
+
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (btnDone.getText().toString().equals("Save")) {
+                    SendToDB(currentdoc); // update the job info
+                    pw.dismiss();
+                } else if (btnDone.getText().toString().equals("Done")) {
+                    pw.dismiss();
+                }
+
+
+            }
+        });
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    company.setVisibility(View.INVISIBLE);
+                    jobTitle.setVisibility(View.INVISIBLE);
+                    employer.setVisibility(View.INVISIBLE);
+                    hourlywage.setVisibility(View.INVISIBLE);
+                    avghours.setVisibility(View.INVISIBLE);
+                } else if (position == 1) {
+                    company.setVisibility(View.VISIBLE);
+                    jobTitle.setVisibility(View.VISIBLE);
+                    employer.setVisibility(View.VISIBLE);
+                    hourlywage.setVisibility(View.VISIBLE);
+                    avghours.setVisibility(View.VISIBLE);
+                } else {
+                    company.setText(null);
+                    company.setVisibility(View.INVISIBLE);
+                    jobTitle.setVisibility(View.VISIBLE);
+                    employer.setVisibility(View.VISIBLE);
+                    hourlywage.setVisibility(View.VISIBLE);
+                    avghours.setVisibility(View.VISIBLE);
+                }
+
+                //Toast.makeText(SignUp_Controller.this, parent.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pw.getBackground().setAlpha(128);
+        pw.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        pw.setOutsideTouchable(true);
+        pw.showAtLocation(layout, Gravity.CENTER, 0,0);
+    }
+
 
     void showJobInfoPopup(final Document currentdoc, Activity myActif) throws Exception {
         app = (DB) myActif.getApplication();
         LayoutInflater inflater = myActif.getLayoutInflater();
-        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.jobsetting_popup, null);
+        layout = inflater.inflate(R.layout.jobsetting_popup, null);
         float density =myActif.getResources().getDisplayMetrics().density;
         pw = new PopupWindow(layout, (int)density*400, (int)density*600,true);
-
         mydb = app.getMydb();
         globalActivity = myActif;
 
@@ -78,19 +163,16 @@ class JobSettingsPopUp {
             @SuppressLint("SetTextI18n")
             public void onClick(View v){
                 if(btnEdit.getText().equals("Edit")) {
+                    spinner.setEnabled(true);
+                    EnableAllFields();
                     btnEdit.setVisibility(View.INVISIBLE);
                     btnDone.setText("Save");
                     btnDelete.setText("Cancel");
-                    btnDone.getText();
-                    //enable textfields
-                    EnableAllFields();
-                    app.reloadMenu();
-                }else {//button is equal to save
 
-                    SendToDB(currentdoc);
-                    app.reloadMenu();
+                }else {
                     btnDone.setText("Done");
                     btnDelete.setVisibility(View.VISIBLE);
+                    btnEdit.setVisibility(View.VISIBLE);
                     btnDone.setVisibility(View.VISIBLE);
                     DisableAllFields();
                 }
@@ -100,7 +182,7 @@ class JobSettingsPopUp {
             public void onClick(View v){
                 if(btnDelete.getText().toString().equals("Delete")) {
                     assert currentdoc != null;
-                    Document job = mydb.getDocument(currentdoc.getId());
+                    Document job = (Document) mydb.getDocument(currentdoc.getId());
                     try {
                         job.delete();
                         app.reloadMenu();
@@ -118,16 +200,19 @@ class JobSettingsPopUp {
 
         btnDone.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if(btnDone.getText().toString().equals("Done")) {
+                if (btnDone.getText().toString().equals("Save")) {
                     if (SendToDB(null) !=null){
-                        app.reloadMenu();
+                        app.reloadMenu();}
                         pw.dismiss();
-                    }
-
                 }
+                else if (btnDone.getText().toString().equals("Done")) {
+                    pw.dismiss();
+                }
+
 
             }
         });
+
         pw.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pw.getBackground().setAlpha(128);
         pw.setTouchInterceptor(new View.OnTouchListener() {
@@ -140,6 +225,8 @@ class JobSettingsPopUp {
         pw.showAtLocation(layout, Gravity.CENTER, 0,0);
     }
     private void DisableAllFields(){
+        spinner.setFocusable(false);
+        spinner.setEnabled(false);
         company.setFocusable(false);
         jobTitle.setFocusable(false);
         employer.setFocusable(false);
@@ -148,6 +235,8 @@ class JobSettingsPopUp {
     }//done
 
     private void EnableAllFields(){
+        spinner.setFocusableInTouchMode(true);
+        spinner.setEnabled(true);
         company.setFocusableInTouchMode(true);
         jobTitle.setFocusableInTouchMode(true);
         employer.setFocusableInTouchMode(true);
@@ -158,6 +247,13 @@ class JobSettingsPopUp {
 
     private void LoadTaskInfo(Document currentdoc){
         if(currentdoc != null) {
+            if (currentdoc.getProperty("jobtype") != null) {
+                spinner.getItemAtPosition(1).equals("Self-Employed");
+                spinner.setSelection(1);
+            } else {
+                spinner.getItemAtPosition(2).equals("Employee");
+                spinner.setSelection(2);
+            }
             if(currentdoc.getProperty("jobcompany") != null) {
                 company.setText(currentdoc.getProperty("jobcompany").toString());
             }
@@ -174,7 +270,7 @@ class JobSettingsPopUp {
                 avghours.setText(currentdoc.getProperty("jobavehours").toString());
             }
         }
-    } //done
+    }//done
 
 
     private Document SendToDB(Document currentdoc){
@@ -233,39 +329,6 @@ class JobSettingsPopUp {
     private Boolean CheckInputs(Document currentdoc) {
         String reqFields = "Following fields are required: ";
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position ==0) {
-                    company.setVisibility(View.INVISIBLE);
-                    jobTitle.setVisibility(View.INVISIBLE);
-                    employer.setVisibility(View.INVISIBLE);
-                    hourlywage.setVisibility(View.INVISIBLE);
-                    avghours.setVisibility(View.INVISIBLE);
-                }
-                else if (position == 1){
-                    company.setVisibility(View.VISIBLE);
-                    jobTitle.setVisibility(View.VISIBLE);
-                    employer.setVisibility(View.VISIBLE);
-                    hourlywage.setVisibility(View.VISIBLE);
-                    avghours.setVisibility(View.VISIBLE);
-                } else {
-                    company.setText(null);
-                    company.setVisibility(View.INVISIBLE);
-                    jobTitle.setVisibility(View.VISIBLE);
-                    employer.setVisibility(View.VISIBLE);
-                    hourlywage.setVisibility(View.VISIBLE);
-                    avghours.setVisibility(View.VISIBLE);
-                }
-                //Toast.makeText(SignUp_Controller.this, parent.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         if (!jobTitle.getText().toString().isEmpty()) {
             DBjobTitle = jobTitle.getText().toString();
