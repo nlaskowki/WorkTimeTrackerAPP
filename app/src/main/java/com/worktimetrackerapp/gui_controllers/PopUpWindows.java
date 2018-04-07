@@ -212,7 +212,6 @@ class PopUpWindows{
             @SuppressLint("DefaultLocale")
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println("Editing");
                 if(WageExtraTime.getText() != null) {
                     double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
                     TaskEarnings.setText(String.format("%.2f", result));
@@ -233,7 +232,6 @@ class PopUpWindows{
                 @SuppressLint("DefaultLocale")
                 @Override
                 public void afterTextChanged(Editable s) {
-                    System.out.println("Editing");
                     double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
                     TaskEarnings.setText(String.format("%.2f", result));
                 }
@@ -681,7 +679,10 @@ class PopUpWindows{
         if(!startime.isEmpty() && !endtime.isEmpty()) {
             if (!startovertime.isEmpty() || !ovWage.isEmpty()) {
                 double dblregWage = Double.parseDouble(regWage);
-                double dblOVwage = Double.parseDouble(ovWage);
+                double dblOVwage = 0.0;
+                if(!ovWage.isEmpty()) {
+                    dblOVwage = Double.parseDouble(ovWage);
+                }
                 try {
                     startDateFormat = dateFormatter.parse(startime);
                     startovertimeFormat = dateFormatter.parse(startovertime);
@@ -696,13 +697,10 @@ class PopUpWindows{
 
                 double earningReg = differenceReg * (dblregWage / 3600000);
                 double earningOVTime = differenceOVTime * (dblOVwage / 3600000);
-                System.out.println("Reg earnings: " + earningReg);
-                System.out.println("OV earnings: " + earningOVTime);
                 earnings = earningReg + earningOVTime + dblExtra;
                 if (earnings < 0) {
                     earnings = 0.0;
                 }
-                System.out.println("Total: " + earnings);
             } else {
                 double dblregWage = Double.parseDouble(regWage);
                 try {
@@ -720,8 +718,6 @@ class PopUpWindows{
                 if (earnings < 0) {
                     earnings = 0.0;
                 }
-                System.out.println("reg earnings: " + earningReg);
-                System.out.println("Total: " + earnings);
             }
         }
         return earnings;
