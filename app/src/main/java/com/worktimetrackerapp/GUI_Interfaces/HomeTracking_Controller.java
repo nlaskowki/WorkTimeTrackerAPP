@@ -7,6 +7,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.app.Dialog;
         import android.app.DialogFragment;
         import android.app.Fragment;
+        import android.app.FragmentManager;
         import android.app.TimePickerDialog;
         import android.content.DialogInterface;
         import android.content.DialogInterface.OnClickListener;
@@ -14,6 +15,7 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import android.os.CountDownTimer;
         import android.os.SystemClock;
         import android.support.annotation.Nullable;
+        import android.text.Html;
         import android.text.Layout;
         import android.view.ContextThemeWrapper;
         import android.view.LayoutInflater;
@@ -32,6 +34,9 @@ package com.worktimetrackerapp.GUI_Interfaces;
         import com.couchbase.lite.Document;
         import com.worktimetrackerapp.DB;
         import com.worktimetrackerapp.R;
+
+        import java.math.BigDecimal;
+        import java.text.DecimalFormat;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.time.Period;
@@ -66,6 +71,7 @@ public class HomeTracking_Controller extends Fragment {
     Thread t;
     boolean continueThread;
     private double totalWageEarned;
+    private double ExtraCosts;
     private long holdLastPause;
 
     //Count down timer variables
@@ -76,15 +82,18 @@ public class HomeTracking_Controller extends Fragment {
     private long TimeLeftInMillisecs = START_TIME_IN_MILLISECONDS;
 
     //Popup box variables
-    private EditText userWageInput;
-    private EditText userHoursInput;
+    private String userWageInput = " ";
+    private double overTimeWageEarned;
+    private double overTimeCounter;
+
+
     DB app;
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm", Locale.US);
     Date startDateFormat = null;
     Date EndDateFormat = null;
     private Calendar myCalendar;
     private Date updatedEndDate = null;
-    private Double ExtraCosts;
+    private static DecimalFormat df2 = new DecimalFormat(".##");
 
     View currentView;
 
@@ -100,13 +109,14 @@ public class HomeTracking_Controller extends Fragment {
         app = (DB) getActivity().getApplication();
         final Document currentdoc = app.getTaskDoc();
 
+
         hourlyWage = parseDouble(currentdoc.getProperty("taskwage").toString());
 
-        //System.out.println("Hourlywage = " + hourlyWage);
+        System.out.println("Hourlywage1231213 = " + hourlyWage);
 
         wagePerHour = hourlyWage / 3600;
 
-        //System.out.println("Wage Per hour = " + wagePerHour);
+        System.out.println("Wage Per hour1232124 = " + wagePerHour);
 
 
         taskName = (String) currentdoc.getProperty("taskname");
@@ -125,8 +135,6 @@ public class HomeTracking_Controller extends Fragment {
 
         TimeLeftInMillisecs = timeInMillis;
 
-        //System.out.println("difference in millis " + TimeLeftInMillisecs);
-
         TaskViewName = (TextView) currentView.findViewById(R.id.TaskNametxtVw);
         overTimeWageCount = (TextView) currentView.findViewById(R.id.overTimeWageTV);
         OverTimeEarnedTextView = (TextView) currentView.findViewById(R.id.textView6);
@@ -135,13 +143,12 @@ public class HomeTracking_Controller extends Fragment {
         TakeBreakToggleBtn = (ToggleButton) currentView.findViewById((R.id.breakToggleBtn));
         WageTextView = (TextView) currentView.findViewById(R.id.wageEarnedTxtVw);
         TxtOutputTimer = (TextView) currentView.findViewById(R.id.TimeUntilTaskDoneTimertxtvw);
-        submitUpdateWageButton= (Button) currentView.findViewById(R.id.UpdateWageSubmitBtn);
+        submitUpdateWageButton = (Button) currentView.findViewById(R.id.UpdateWageSubmitBtn);
+
         TaskViewName.setText(taskName);
         TakeBreakToggleBtn.setVisibility(INVISIBLE);
-
         overTimeWageCount.setVisibility(INVISIBLE);
         OverTimeEarnedTextView.setVisibility(INVISIBLE);
-
 
         ClockInOutToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -171,6 +178,7 @@ public class HomeTracking_Controller extends Fragment {
                     pauseTimer();
                     TakeBreakToggleBtn.setVisibility(INVISIBLE);
 
+
                     if (TakeBreakToggleBtn.isChecked()){
 
                         TakeBreakToggleBtn.setChecked(false);
@@ -180,19 +188,12 @@ public class HomeTracking_Controller extends Fragment {
                         pauseTimer();
                     }
 
+
+                    System.out.println("Before popup extra costs " + totalWageEarned);
+
                     showExtraCostsPopup();
 
-                    //This is were wage info gets sent to DB
-
-                    app.setTracking(false);
-                    Double Extracosts = ExtraCosts;
-                    Double TaskEarnings = totalWageEarned;
-                    try {
-                        app.EndTask(currentdoc, Extracosts, TaskEarnings);
-                    }catch(Exception e){
-                        System.out.println(e);
-                    }
-
+                    System.out.println("After popup extra costs " + totalWageEarned);
                 }
 
             }
@@ -231,6 +232,8 @@ public class HomeTracking_Controller extends Fragment {
 
     public void wageTrack(){
 
+        totalWageEarned = 0.0;
+
         t = new Thread(){
             @Override
             public void run(){
@@ -245,15 +248,28 @@ public class HomeTracking_Controller extends Fragment {
 
                                 count123 += wagePerHour;
 
-                                //System.out.println("Count123  = " + count123);
+                                System.out.println("Count123  = " + count123);
 
-                                //System.out.println("wagePerHour = " + wagePerHour);
+                                System.out.println("wagePerHour = " + wagePerHour);
 
-                                totalWageEarned += count123;
+                                totalWageEarned += wagePerHour;
 
                                 String.valueOf(count123);
 
                                 WageTextView.setText(String.format("$ %.2f", count123));
+
+                                if (overTimeWageCount.isShown()){
+
+                                    overTimeCounter += overTimeWageEarned;
+
+                                    overTimeWageCount.setText(String.format("$ %.2f", overTimeCounter));
+
+                                    System.out.println("OverTime wage value " + overTimeCounter);
+
+
+
+                                }
+
 
                             }
                         });
@@ -309,35 +325,34 @@ public class HomeTracking_Controller extends Fragment {
 
     }
 
-    private void updateTimerValue(){
-
-        String timeTxt = userHoursInput.getText().toString();
-
-        double timeD = parseDouble(timeTxt);
-
-        System.out.println(timeD);
-
-        numberOfHoursWorked = timeD;
-
-        START_TIME_IN_MILLISECONDS = (long) (numberOfHoursWorked * 3600000);
-
-        TimeLeftInMillisecs = START_TIME_IN_MILLISECONDS;
-        updateCountDownText();
-
-
-    }
-
     private void updateWageValue(){
 
-        String wageTxt = userWageInput.getText().toString();
+        String wageTxt = userWageInput;
 
         double wageD = parseDouble(wageTxt);
 
-        System.out.println(hourlyWage);
+        BigDecimal OverTimeAmountDiff = new BigDecimal(wageD).subtract(new BigDecimal(hourlyWage));
+
+        System.out.println("Old houldy wage " + hourlyWage);
         hourlyWage = wageD;
-        System.out.println(hourlyWage);
+        System.out.println("New hourly wage "+ hourlyWage);
+
+        overTimeWageEarned = OverTimeAmountDiff.doubleValue();
+
+        if (overTimeWageEarned <= 0 ){
+
+            overTimeWageCount.setVisibility(INVISIBLE);
+            OverTimeEarnedTextView.setVisibility(INVISIBLE);
+
+        }
+
+        System.out.println("Overtime Wage earened amount ++++++++++++++++" + overTimeWageEarned);
 
         wagePerHour = hourlyWage / 3600;
+
+        overTimeWageEarned = overTimeWageEarned / 3600;
+
+
 
     }
 
@@ -388,10 +403,11 @@ public class HomeTracking_Controller extends Fragment {
         dialog.setCancelable(false);
         String hourlyWageString = Double.toString(hourlyWage);
 
+        final double overtimevalue;
+
         View view  = getActivity().getLayoutInflater().inflate(R.layout.home_tracking_dialog, null);
         dialog.setContentView(view);
 
-        final TextView textViewUpdateWageTitle = (TextView) view.findViewById(R.id.UpdateWageDialogTitle);
         final EditText editTextWageupdate = (EditText) view.findViewById(R.id.UpdateWageEditText);
         editTextWageupdate.setText(hourlyWageString);
         Button submitBtn = (Button) view.findViewById(R.id.UpdateWageSubmitBtn);
@@ -400,11 +416,11 @@ public class HomeTracking_Controller extends Fragment {
             @Override
             public void onClick(View view) {
 
-                final String stringWageInput = editTextWageupdate.getText().toString();
+                userWageInput = editTextWageupdate.getText().toString();
 
                 if (editTextWageupdate.getText().toString().isEmpty()){
 
-                    editTextWageupdate.setError("Field cannot be empty");
+                    editTextWageupdate.setError(Html.fromHtml("<font color='#ffffff'>Field cannot be empty</font>"));
 
                     editTextWageupdate.requestFocus();
 
@@ -412,33 +428,22 @@ public class HomeTracking_Controller extends Fragment {
 
                 }
 
-//                if (!stringWageInput.matches("^\\d{0,9}\\.\\d{1,4}$")){
-//
-//                    editTextWageupdate.setError("Field input is invalid");
-//
-//                    editTextWageupdate.requestFocus();
-//
-//                    return;
-//
-//                }
+                if (!userWageInput.matches("^[1-9]\\d*(\\.\\d+)?$")){
 
-                final Double doubleWageInput = parseDouble(stringWageInput);
-
-                System.out.println(doubleWageInput);
-
-                if (doubleWageInput < 0){
-
-                   editTextWageupdate.setError("Field cannot be less than 0");
+                    editTextWageupdate.setError(Html.fromHtml("<font color='#ffffff'>Field input is invalid</font>"));
 
                     editTextWageupdate.requestFocus();
 
                     return;
 
-                }
+               }
+
+                final Double doubleWageInput = parseDouble(userWageInput);
+
 
                 if (doubleWageInput > 300){
 
-                    editTextWageupdate.setError("Field cannot be greater than $300");
+                    editTextWageupdate.setError(Html.fromHtml("<font color='#ffffff'>Field cannot be greater than $300</font>"));
 
                     editTextWageupdate.requestFocus();
 
@@ -449,6 +454,7 @@ public class HomeTracking_Controller extends Fragment {
                 else {
 
                     showContinueAddedHoursAlert();
+                    updateWageValue();
                     dialog.dismiss();
 
 
@@ -459,41 +465,46 @@ public class HomeTracking_Controller extends Fragment {
 
         dialog.show();
 
-        //updateWageValue();
+
 
     }
 
     public void showContinueAddedHoursAlert(){
 
-        AlertDialog.Builder myAlert = new AlertDialog.Builder(this.getContext());
-        myAlert.setMessage("Update Time Added to Task:");
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setCancelable(false);
 
-        System.out.println("This is working");
+        View view  = getActivity().getLayoutInflater().inflate(R.layout.overtime_popup_dialog_home_tracking, null);
+        dialog.setContentView(view);
 
-        userHoursInput = new EditText(this.getContext());
-        myAlert.setView(userHoursInput);
+        final EditText newEndDateValue = view.findViewById(R.id.newEndDateEditTxt);
+        Button newEndDateSubmitBtn = view.findViewById(R.id.newEndDateSubmitBtn);
 
-        userHoursInput.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
-        userHoursInput.setOnClickListener(new View.OnClickListener() {
+        newEndDateValue.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
-                DateTimeSetter(userHoursInput, (String) userHoursInput.getText().toString());
-
-
-
+                DateTimeSetter(newEndDateValue, (String) newEndDateValue.getText().toString());
 
             }
         });
 
-        myAlert.setPositiveButton("Finish", new OnClickListener() {
+        newEndDateSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View view) {
 
-                dialog.dismiss();
+                if (newEndDateValue.getText().toString().isEmpty()){
 
-                String overTime = userHoursInput.getText().toString();
+                    newEndDateValue.setError(Html.fromHtml("<font color='#ffffff'>Field cannot be empty</font>"));
+
+                    newEndDateValue.requestFocus();
+
+                    return;
+
+                }
+
+                String overTime = newEndDateValue.getText().toString();
 
                 try {
                     updatedEndDate = dateFormatter.parse(overTime);
@@ -505,23 +516,39 @@ public class HomeTracking_Controller extends Fragment {
 
                 long newTimeInMillis = convert.getDateTime(EndDateFormat,updatedEndDate);
 
-                TimeLeftInMillisecs = newTimeInMillis;
+                System.out.println("Date in miliis is " + newTimeInMillis);
 
-                continueThread = true;
-                wageTrack();
+                if (newTimeInMillis <= 0){
 
-                startTimer();
-                workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
-                workChronometer.start();
+                    newEndDateValue.setError(Html.fromHtml("<font color='#ffffff'>Time is before your current end time</font>"));
+
+                    newEndDateValue.requestFocus();
+
+                    return;
+
+                } else {
+
+                    dialog.dismiss();
+                    TimeLeftInMillisecs = newTimeInMillis;
+                    continueThread = true;
+                    wageTrack();
+                    startTimer();
+                    workChronometer.setBase(workChronometer.getBase() + SystemClock.elapsedRealtime() - holdLastPause);
+                    workChronometer.start();
+
+                }
 
             }
-     }).create();
-        myAlert.show();
+        });
+        dialog.show();
+
+
 
     }
 
     public void DateTimeSetter(final TextView v, String dateTime){
         myCalendar = Calendar.getInstance();
+
         try {
             if(!dateTime.isEmpty()) {
                 Date date = dateFormatter.parse(dateTime);
@@ -547,9 +574,6 @@ public class HomeTracking_Controller extends Fragment {
                         myCalendar.set(Calendar.MINUTE, selectedMinute);
                         v.setText(dateFormatter.format(myCalendar.getTime()));
 
-                        //double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
-                        //TaskEarnings.setText(String.format("%.2f", result));
-
                     }
                 }, myCalendar.get(Calendar.HOUR), myCalendar.get(Calendar.MINUTE), true).show();
             }
@@ -573,27 +597,77 @@ public class HomeTracking_Controller extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ExtraCosts = Double.parseDouble(extraCostEditText.getText().toString());
+                final String stringExtraCostInput = extraCostEditText.getText().toString();
+
+                if (extraCostEditText.getText().toString().isEmpty()){
+
+                    extraCostEditText.setError(Html.fromHtml("<font color='#ffffff'>Field cannot be empty</font>"));
+
+                    extraCostEditText.requestFocus();
+
+                    return;
+
+                }
+
+                if (!stringExtraCostInput.matches("^[1-9]\\d*(\\.\\d+)?$")){
+
+                    extraCostEditText.setError(Html.fromHtml("<font color='#ffffff'>Field input is invalid</font>"));
+
+                    extraCostEditText.requestFocus();
+
+                    return;
+
+                } else {
+
+                    ExtraCosts = Double.parseDouble(extraCostEditText.getText().toString());
+
+                    System.out.println("Extra costs here 1234123 " + ExtraCosts);
+
+                    final Document currentdoc = app.getTaskDoc();
+
+                    dialog.dismiss();
+
+                    double Extracosts = ExtraCosts;
+                    double TaskEarnings = totalWageEarned;
+
+                    app.setTracking(false);
+
+                    System.out.println("Extra costs value  = " + df2.format(Extracosts));
+                    System.out.println("TaskEarnings value = " + df2.format(TaskEarnings));
+
+                    try {
+                        app.EndTask(currentdoc, Double.valueOf(df2.format(Extracosts)), Double.valueOf(df2.format(TaskEarnings)));
+
+                        System.out.println("OverTIme sent to DB " + overTimeCounter);
+
+                        if (overTimeWageEarned <= 0){
+
+                            overTimeCounter = 0;
+
+                        }
+
+                        app.StartTaskOvertime(currentdoc,Double.valueOf(df2.format(overTimeCounter)));
+
+                    }catch(Exception e){
+                        System.out.println(e);
+                    }
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeNotTracking_Controller()).commit();
 
 
-                dialog.dismiss();
 
 
+                }
 
             }
         });
         dialog.show();
 
 
-
-
-
-
     }
 
-
-
-    }
+}
 
 
 

@@ -4,22 +4,22 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/extraCostsTitle"
+        android:id="@+id/overTimeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="What extra costs would you like to add to this task?"
+        android:text="Please update your new end time."
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/extraCostsEditTxt"
+        android:id="@+id/newEndDateEditTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/extraCostsSubmitButton"
+        android:id="@+id/newEndDateSubmitBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Submit" />
