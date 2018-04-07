@@ -194,7 +194,6 @@ class PopUpWindows{
             @SuppressLint("DefaultLocale")
             @Override
             public void afterTextChanged(Editable s) {
-                System.out.println("Editing");
                 double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
                 TaskEarnings.setText(String.format("%.2f", result));
             }
@@ -214,8 +213,10 @@ class PopUpWindows{
             @Override
             public void afterTextChanged(Editable s) {
                 System.out.println("Editing");
-                double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
-                TaskEarnings.setText(String.format("%.2f", result));
+                if(WageExtraTime.getText() != null) {
+                    double result = CalculateTaskEarnings(otherInfoStartedTask.getText().toString(), otherInfoOvertimeStartedTask.getText().toString(), otherInfoEndedTask.getText().toString(), wage.getText().toString(), WageExtraTime.getText().toString(), TaskExtraCost.getText().toString());
+                    TaskEarnings.setText(String.format("%.2f", result));
+                }
             }
         });
             TaskExtraCost.addTextChangedListener(new TextWatcher() {

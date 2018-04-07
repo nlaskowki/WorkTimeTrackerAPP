@@ -1,6 +1,7 @@
 package com.worktimetrackerapp.gui_controllers;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -24,6 +25,7 @@ import com.worktimetrackerapp.util.Finances;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,7 @@ public class Finance_Controller extends Fragment {
 
     private class FinanceListAdapter extends ArrayAdapter<Finances> {
 
-        public FinanceListAdapter() {
+        FinanceListAdapter() {
             super(getActivity(), finance_list, finances);
         }
 
@@ -123,8 +125,8 @@ public class Finance_Controller extends Fragment {
 
         //Initialize storage arrays for the values of the finance objects
         Object[] jobs = app.getAllJobs();
-        String[] jobTitles = new String[10];
 
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         //get current month first and last day
@@ -141,24 +143,17 @@ public class Finance_Controller extends Fragment {
         finances.add(new Finances("Total", amtToday, amtThisWeek, amtThisMonth, amtThisQuarter, otToday,
                 otThisWeek, otThisMonth, otThisQuarter, totalToday, totalThisWeek, totalThisMonth, totalThisQuarter));
 
-        for (int i = 0; i < 10; i++) {
-            if (jobs[i] != null) {
-                com.couchbase.lite.Document currentdoc = app.getMydb().getDocument((String) jobs[i]);
-                jobTitles[i] = currentdoc.getProperty("jobtitle").toString();
-                System.out.println(i);
-            }
-        }
-
         int j = 0;
-        while (jobTitles[j] != null) {
-            setJobData(currentDay, firstDayW, firstDayM, firstDayQ, jobTitles[j]);
-            finances.add(new Finances(jobTitles[j], amtToday, amtThisWeek, amtThisMonth, amtThisQuarter, otToday,
+        while (jobs[j] != null) {
+            setJobData(currentDay, firstDayW, firstDayM, firstDayQ, jobs[j]);
+            String jt = app.getMydb().getDocument(jobs[j].toString()).getProperty("jobtitle").toString();
+            finances.add(new Finances(jt, amtToday, amtThisWeek, amtThisMonth, amtThisQuarter, otToday,
                     otThisWeek, otThisMonth, otThisQuarter, totalToday, totalThisWeek, totalThisMonth, totalThisQuarter));
             j++;
         }
     }
 
-    protected void GetFinances() throws Exception {
+    protected void GetFinances(){
         app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
 
@@ -169,7 +164,7 @@ public class Finance_Controller extends Fragment {
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
                         String date = (String) document.get("TaskScheduledStartDate");
-                        emitter.emit(date.toString(), null);
+                        emitter.emit(date, null);
                     }
                 }//end if
             }
@@ -206,12 +201,14 @@ public class Finance_Controller extends Fragment {
         totalAllJobs(firstDayQ, today, 3);
     }
 
+    @SuppressLint("DefaultLocale")
     private void totalAllJobs(String firstDay, String LastDay, int type){
         Double total = 0.0;
         Double overTime = 0.0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Long date1 = (long) 0;
-        Long date2 = (long) 0;
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        Date date1;
+        Date date2;
         QueryEnumerator result = null;
         Query query = financeView.createQuery();
         query.setDescending(true);
@@ -220,8 +217,9 @@ public class Finance_Controller extends Fragment {
         try {
             result = query.run();
         }catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
+
         for(Iterator<QueryRow> it = result; it.hasNext();) {
             QueryRow itnow = it.next();
             com.couchbase.lite.Document currentdoc = mydb.getDocument(itnow.getDocumentId());
@@ -229,49 +227,54 @@ public class Finance_Controller extends Fragment {
                 total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
                 if(currentdoc.getProperty("TaskStartOvertimeDateTime") != null) {
                     try {
-                        date1 = formatter.parse(currentdoc.getProperty("TaskStartOvertimeDateTime").toString()).getTime();
-                        date2 = formatter.parse(currentdoc.getProperty("TaskEndDateTime").toString()).getTime();
+                        date1 = dateFormatter.parse(currentdoc.getProperty("TaskStartOvertimeDateTime").toString());
+                        date2 = dateFormatter.parse(currentdoc.getProperty("TaskEndDateTime").toString());
+                        float OTTime = (date2.getTime() - date1.getTime());
+                        double WageOVer = Double.parseDouble(currentdoc.getProperty("taskwageovertime").toString()) / 3600000;
+                        overTime = overTime + OTTime * WageOVer;
                     } catch(Exception e) {
                         e.printStackTrace();
                     }
-                    overTime = (date2 - date1) * Double.parseDouble(currentdoc.getProperty("taskwageovertime").toString());
+
                 }
             }
         }
         if (type == 0) {
             totalToday = total + "";
-            otToday = overTime + "";
-            amtToday = (total - overTime) + "";
+            otToday = String.format("%.2f", overTime) + "";
+            amtToday = String.format("%.2f", (total - overTime)) + "";
         }
         else if (type == 1) {
             totalThisWeek = total + "";
-            otThisWeek = overTime + "";
-            amtThisWeek = (total - overTime) + "";
+            otThisWeek = String.format("%.2f", overTime) + "";
+            amtThisWeek = String.format("%.2f", (total - overTime)) + "";
         }
         else if (type == 2) {
             totalThisMonth = total + "";
-            otThisMonth = overTime + "";
-            amtThisMonth = (total - overTime) + "";
+            otThisMonth = String.format("%.2f", overTime) + "";
+            amtThisMonth = String.format("%.2f", (total - overTime)) + "";
         }
         else {
             totalThisQuarter = total + "";
-            otThisQuarter = overTime + "";
-            amtThisQuarter = (total - overTime) + "";
+            otThisQuarter = String.format("%.2f", overTime) + "";
+            amtThisQuarter = String.format("%.2f", (total - overTime)) + "";
         }
     }
 
-    private void setJobData(String today, String firstDayW, String firstDayM, String firstDayQ, String jobTitle) {
-        totalThisJob(today, today, jobTitle, 0);
-        totalThisJob(firstDayW, today, jobTitle, 1);
-        totalThisJob(firstDayM, today, jobTitle, 2);
-        totalThisJob(firstDayQ, today, jobTitle, 3);
+    private void setJobData(String today, String firstDayW, String firstDayM, String firstDayQ, Object job) {
+        totalThisJob(today, today, job, 0);
+        totalThisJob(firstDayW, today, job, 1);
+        totalThisJob(firstDayM, today, job, 2);
+        totalThisJob(firstDayQ, today, job, 3);
     }
-    private void totalThisJob(String firstDay, String LastDay, String jobTitle, int type){
+    @SuppressLint("DefaultLocale")
+    private void totalThisJob(String firstDay, String LastDay, Object jobTitle, int type){
         Double total = 0.0;
         Double overTime = 0.0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Long date1 = (long) 0;
-        Long date2 = (long) 0;
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
+        Date date1;
+        Date date2;
         QueryEnumerator result = null;
         Query query = financeView.createQuery();
         query.setDescending(true);
@@ -280,7 +283,7 @@ public class Finance_Controller extends Fragment {
         try {
             result = query.run();
         }catch (Exception e){
-            System.out.println(e);
+           e.printStackTrace();;
         }
         for(Iterator<QueryRow> it = result; it.hasNext();) {
             QueryRow itnow = it.next();
@@ -290,35 +293,37 @@ public class Finance_Controller extends Fragment {
                     total = total + Double.parseDouble(currentdoc.getProperty("TaskEarnings").toString());
                     if(currentdoc.getProperty("TaskStartOvertimeDateTime") != null) {
                         try {
-                            date1 = formatter.parse(currentdoc.getProperty("TaskStartOvertimeDateTime").toString()).getTime();
-                            date2 = formatter.parse(currentdoc.getProperty("TaskEndDateTime").toString()).getTime();
+                            date1 = dateFormatter.parse(currentdoc.getProperty("TaskStartOvertimeDateTime").toString());
+                            date2 = dateFormatter.parse(currentdoc.getProperty("TaskEndDateTime").toString());
+                            float OTTime = (date2.getTime() - date1.getTime());
+                            double WageOVer = Double.parseDouble(currentdoc.getProperty("taskwageovertime").toString()) / 3600000;
+                            overTime = overTime + OTTime * WageOVer;
                         } catch(Exception e) {
                             e.printStackTrace();
                         }
-                        overTime = (date2 - date1) * Double.parseDouble(currentdoc.getProperty("taskwageovertime").toString());
                     }
                 }
             }
         }
         if (type == 0) {
             totalToday = total + "";
-            otToday = overTime + "";
-            amtToday = (total - overTime) + "";
+            otToday = String.format("%.2f", overTime) + "";
+            amtToday = String.format("%.2f", (total - overTime)) + "";
         }
         else if (type == 1) {
             totalThisWeek = total + "";
-            otThisWeek = overTime + "";
-            amtThisWeek = (total - overTime) + "";
+            otThisWeek = String.format("%.2f", overTime) + "";
+            amtThisWeek = String.format("%.2f", (total - overTime)) + "";
         }
         else if (type == 2) {
             totalThisMonth = total + "";
-            otThisMonth = overTime + "";
-            amtThisMonth = (total - overTime) + "";
+            otThisMonth = String.format("%.2f", overTime) + "";
+            amtThisMonth = String.format("%.2f", (total - overTime)) + "";
         }
         else {
             totalThisQuarter = total + "";
-            otThisQuarter = overTime + "";
-            amtThisQuarter = (total - overTime) + "";
+            otThisQuarter = String.format("%.2f", overTime) + "";
+            amtThisQuarter = String.format("%.2f", (total - overTime)) + "";
         }
     }
 

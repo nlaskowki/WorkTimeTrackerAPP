@@ -525,7 +525,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     }
 
-    public Boolean StartTaskOvertime(Document TaskDoc, Double TaskWageOvertime) throws Exception {
+    public void StartTaskOvertime(Document TaskDoc, Double TaskWageOvertime) throws Exception {
 
         //get date format
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
@@ -543,9 +543,9 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         Log.d(TAG, "Started task item with id: %s", document.getId());
 
-        return true;
     }
 
+    @SuppressLint("DefaultLocale")
     public void EndTask(Document taskdocument, Double ExtraCosts, Double TaskEarnings) throws Exception {
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd - HH:mm");
@@ -558,8 +558,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
             properties.putAll(doc.getProperties());
 
             properties.put("TaskEndDateTime", TaskEndTime);
-            properties.put("extracost", ExtraCosts);
-            properties.put("TaskEarnings", TaskEarnings);
+            properties.put("extracost", String.format("%.2f", ExtraCosts));
+            properties.put("TaskEarnings", String.format("%.2f", TaskEarnings));
 
         try {
             doc.putProperties(properties);
@@ -571,10 +571,10 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     }
 
+    @SuppressLint("DefaultLocale")
     public void UpdateTask(Document taskdocument, boolean ended, String TaskName , Double TaskWage, String Client, String CAddress, String StartDate, String StartTime, String EndDate,
                            String EndTime, String StartDateTime, String EndDateTime, Double ExtraCosts, Double TaskEarnings, Double TaskWageOvertime, String StartOverTimeDateTime) throws Exception{
-        Map<String, Object> properties = new HashMap<>();
-        properties.putAll(taskdocument.getProperties());
+        Map<String, Object> properties = new HashMap<>(taskdocument.getProperties());
         properties.put("taskname", TaskName);
         properties.put("taskwage", TaskWage);
 
@@ -589,8 +589,8 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         if(ended) {
             properties.put("TaskStartDateTime", StartDateTime);
             properties.put("TaskEndDateTime", EndDateTime);
-            properties.put("extracost", ExtraCosts);
-            properties.put("TaskEarnings", TaskEarnings);
+            properties.put("extracost", String.format("%.2f", ExtraCosts));
+            properties.put("TaskEarnings", String.format("%.2f", TaskEarnings));
             if(TaskEarnings != null){
                 properties.put("TaskStartOvertimeDateTime", StartOverTimeDateTime);
                 properties.put("taskwageovertime", TaskWageOvertime);

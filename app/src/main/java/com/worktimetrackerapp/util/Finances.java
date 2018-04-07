@@ -6,19 +6,19 @@ package com.worktimetrackerapp.util;
 
 public class Finances {
 
-    private String title = "0";
-    private String amtToday = "0";
-    private String amtThisWeek = "0";
-    private String amtThisMonth = "0";
-    private String amtThisQuarter = "0";
-    private String otToday = "0";
-    private String otThisWeek = "0";
-    private String otThisMonth = "0";
-    private String otThisQuarter = "0";
-    private String totalToday = "0";
-    private String totalThisWeek = "0";
-    private String totalThisMonth = "0";
-    private String totalThisQuarter = "0";
+    private String title;
+    private String amtToday;
+    private String amtThisWeek;
+    private String amtThisMonth;
+    private String amtThisQuarter;
+    private String otToday;
+    private String otThisWeek;
+    private String otThisMonth;
+    private String otThisQuarter;
+    private String totalToday;
+    private String totalThisWeek;
+    private String totalThisMonth;
+    private String totalThisQuarter;
 
     public Finances(String title, String amtToday, String amtThisWeek, String amtThisMonth, String amtThisQuarter,
                     String otToday, String otThisWeek, String otThisMonth, String otThisQuarter, String totalToday,
