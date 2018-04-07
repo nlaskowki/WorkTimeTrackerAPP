@@ -26,6 +26,7 @@ import com.couchbase.lite.QueryRow;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
+import com.worktimetrackerapp.util.OnObjectChangeListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,12 +36,10 @@ import java.util.Map;
 
 public class HomeNotTracking_Controller extends Fragment {
 
-    private Button StartTaskButton;
     private ListView HNTList;
     private AgendaArrayAdapter aaa;
 
     private Database mydb;
-    private LiveQuery liveQuery;
     DB app;
     TextView agendaheader;
 
@@ -52,9 +51,9 @@ public class HomeNotTracking_Controller extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.home_not_tracking, container, false);
 
-        StartTaskButton = currentView.findViewById(R.id.StartTaskHomeNotButton);
+        Button startTaskButton = currentView.findViewById(R.id.StartTaskHomeNotButton);
 
-        StartTaskButton.setOnClickListener(new View.OnClickListener() {
+        startTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -89,29 +88,41 @@ public class HomeNotTracking_Controller extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
+        app.getcurrentJob().setOnObjectChangeListener(new OnObjectChangeListener() {
+            @Override
+            public void OnObjectChanged(Object newobj) {
+                try {
+                    Calendar calendar = Calendar.getInstance();
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String selectedDay = dateFormatter.format(calendar.getTime());
+                    startLiveQuery(selectedDay);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return currentView;
     }
 
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
-        final String jobname = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
         viewItemsByDate = mydb.getView("TaskScheduledStartDate");
         viewItemsByDate.setMap(new Mapper(){
             @Override
             public void map(Map<String, Object> document, Emitter emitter){
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
-                        if(document.get("jobtitle").equals(jobname)) {
                             if(document.get("TaskEndDateTime") == null) {
                                 String date = (String) document.get("TaskScheduledStartDate");
                                 emitter.emit(date, null);
                             }
-                        }
                     }
                 }//end if
             }
-        },"3");
+        },"1");
 
         initItemListAdapter();
     }
@@ -165,18 +176,22 @@ public class HomeNotTracking_Controller extends Fragment {
 
     private void startLiveQuery(String SelectedDay) throws Exception {
         final DB app = (DB) getActivity().getApplication();
+        final String jobname = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
         Query MyQuery = viewItemsByDate.createQuery();
         MyQuery.setDescending(true);
         MyQuery.setStartKey(SelectedDay);
         MyQuery.setEndKey(SelectedDay);
-        liveQuery = MyQuery.toLiveQuery();
+        LiveQuery liveQuery = MyQuery.toLiveQuery();
         liveQuery.addChangeListener(new LiveQuery.ChangeListener() {
             public void changed(final LiveQuery.ChangeEvent event) {
                 app.runOnUiThread(new Runnable() {
                     public void run() {
                         aaa.clear();
                         for (Iterator<QueryRow> it = event.getRows(); it.hasNext();) {
-                            aaa.add(it.next());
+                            QueryRow item = it.next();
+                            if(app.getMydb().getDocument(item.getDocumentId()).getProperty("jobtitle").equals(jobname)) {
+                                aaa.add(item);
+                            }
                         }
                         aaa.notifyDataSetChanged();
                     }

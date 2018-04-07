@@ -440,7 +440,7 @@ class PopUpWindows{
                 }
             } else { //create new document
                 try {
-                    String jobTitle = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
+                    String jobTitle = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
                     doc = app.NewTask(DBTaskName, jobTitle, DBTaskWage, DBClient, DBCAddress, DBStartDate, DBStartTime, DBEndDate, DBEndTime);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -491,7 +491,7 @@ class PopUpWindows{
         LabelTaskEarnings = layout.findViewById(R.id.popup_txtearnings);
 
         //load wage information
-            String jobTitle = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobwage").toString();
+            String jobTitle = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobwage").toString();
             wage.setText(jobTitle);
     }//done
 

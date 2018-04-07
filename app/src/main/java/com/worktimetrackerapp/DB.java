@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.worktimetrackerapp.gui_controllers.SignIn_Controller;
 import com.worktimetrackerapp.gui_controllers.SignUp_Controller;
+import com.worktimetrackerapp.util.CurrentJob;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -68,7 +69,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private String username;
 
     private Object[] Jobs = new Object[10];
-    private Object currentJob;
+    private CurrentJob currentJob = new CurrentJob();
     private Boolean Tracking = false;
     private Document currentTask;
     private String UserEmail;
@@ -76,15 +77,17 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private Activity mainactivity;
     private Fragment HTFragment;
 
-    public Object getcurrentJob(){
+    public CurrentJob getcurrentJob(){
         return currentJob;
     }
     public Object[] getAllJobs(){
             return Jobs;
     }
+
     public void setCurrentJob(Object CJ){
-        currentJob = CJ;
+        currentJob.setCurrentJob(CJ);
     }
+
     public void setTracking(Boolean tr){
         Tracking = tr;
     }
@@ -141,7 +144,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
                     } else {//already signed up for app redirect to home page
                         // set job first
-                        currentJob = Jobs[0];
+                        currentJob.setCurrentJob(Jobs[0]);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -166,7 +169,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
                 synccomplete = true;
                 try {
                     Jobs = getJobs();
-                    currentJob = Jobs[0];
+                    currentJob.setCurrentJob(Jobs[0]);
                     ActivityCompat.invalidateOptionsMenu(mainactivity);
                 }catch (Exception e){
                     e.printStackTrace();

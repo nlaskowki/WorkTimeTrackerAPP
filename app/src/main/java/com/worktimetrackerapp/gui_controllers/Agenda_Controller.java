@@ -28,6 +28,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 import com.worktimetrackerapp.util.AgendaArrayAdapter;
+import com.worktimetrackerapp.util.OnObjectChangeListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -129,27 +130,42 @@ public class Agenda_Controller extends Fragment {
                     }
                 }
             });
+
+            //change listener for job
+        app.getcurrentJob().setOnObjectChangeListener(new OnObjectChangeListener() {
+            @Override
+            public void OnObjectChanged(Object newobj) {
+                try {
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String selectedDay = dateFormatter.format(calendar.getTime());
+                    agendalist.removeHeaderView(agendaheader);
+                    agendaheader.setText(selectedDay);
+                    agendalist.addHeaderView(agendaheader);
+                    startLiveQuery(selectedDay);
+                } catch (Exception e) {
+                    app.showErrorMessage("Error initializing CBLite", e);
+                }
+            }
+        });
         return currentView;
     }
 
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
-        final String jobname = mydb.getDocument(app.getcurrentJob().toString()).getProperty("jobtitle").toString();
         viewItemsByDate = mydb.getView("TaskScheduledStartDate");
         viewItemsByDate.setMap(new Mapper(){
             @Override
             public void map(Map<String, Object> document, Emitter emitter){
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
-                        if(document.get("jobtitle").equals(jobname)) {
                             String date = (String) document.get("TaskScheduledStartDate");
                             emitter.emit(date.toString(), null);
-                        }
                     }
                 }//end if
             }
-        },"2");
+        },"1");
 
         initItemListAdapter();
     }
@@ -170,13 +186,11 @@ public class Agenda_Controller extends Fragment {
                 if(position != 0) {
                     QueryRow row = (QueryRow) adapterView.getItemAtPosition(position);
                     Document document = row.getDocument();
-                    Map<String, Object> newProperties = new HashMap<String, Object>(document.getProperties());
-
                     try {
                         PopUpWindows ipp = new PopUpWindows();
                         ipp.showInfoPopup(document, getActivity(), false, null);
                     } catch (Exception e) {
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }
             }
@@ -184,6 +198,7 @@ public class Agenda_Controller extends Fragment {
     }
 
     private void startLiveQuery(String SelectedDay) throws Exception {
+        final String jobname = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
         final DB app = (DB) getActivity().getApplication();
             Query MyQuery = viewItemsByDate.createQuery();
             MyQuery.setDescending(true);
@@ -196,7 +211,10 @@ public class Agenda_Controller extends Fragment {
                         public void run() {
                             aaa.clear();
                             for (Iterator<QueryRow> it = event.getRows(); it.hasNext();) {
-                                aaa.add(it.next());
+                                QueryRow item = it.next();
+                                if(app.getMydb().getDocument(item.getDocumentId()).getProperty("jobtitle").equals(jobname)) {
+                                    aaa.add(item);
+                                }
                             }
                             aaa.notifyDataSetChanged();
                         }
