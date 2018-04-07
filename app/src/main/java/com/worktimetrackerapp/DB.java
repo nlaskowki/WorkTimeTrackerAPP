@@ -160,9 +160,18 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     }
 
     public void reloadMenu(){
-        System.out.println("Reload menu");
-        if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
-            ActivityCompat.invalidateOptionsMenu(mainactivity);
+        boolean synccomplete = false;
+        while (!synccomplete) {
+            if (pull.getStatus() == Replication.ReplicationStatus.REPLICATION_IDLE) {
+                synccomplete = true;
+                try {
+                    Jobs = getJobs();
+                    currentJob = Jobs[0];
+                    ActivityCompat.invalidateOptionsMenu(mainactivity);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -413,7 +422,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         return jobs;
     }
 
-    public void AddJob(String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, Double jobAveHours) throws Exception {
+    public void AddJob(String jobCompany, String jobType, String jobTitle, double jobWage, Double jobAveHours) throws Exception {
         DB app = (DB) getApplicationContext();
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -434,7 +443,6 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         properties.put("jobcompany", jobCompany);
         properties.put("jobtype", jobType);
         properties.put("jobtitle", jobTitle);
-        properties.put("jobemployer", jobEmployer);
         properties.put("jobwage", jobWage);
         properties.put("jobavehours", jobAveHours);
 
@@ -444,17 +452,14 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
     }
 
-    public void UpdateJob(Document doc, String jobCompany, String jobType, String jobTitle, String jobEmployer, double jobWage, double jobAveHours) throws Exception{
+    public void UpdateJob(Document doc, String jobCompany, String jobType, String jobTitle, double jobWage, double jobAveHours) throws Exception{
         Map<String, Object> properties = new HashMap<>();
         properties.putAll(doc.getProperties());
         properties.put("jobcompany", jobCompany);
         properties.put("jobtype", jobType);
         properties.put("jobtitle", jobTitle);
-        properties.put("jobemployer", jobEmployer);
         properties.put("jobwage", jobWage);
         properties.put("jobavehours", jobAveHours);
-
-
 
         doc.putProperties(properties);
     }

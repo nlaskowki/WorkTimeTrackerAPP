@@ -7,10 +7,9 @@
 
     <TextView
         android:id="@+id/txt_welcome_msg"
-        android:layout_width="380dp"
-        android:layout_height="37dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginStart="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_marginTop="2dp"
         android:text="@string/welcome_msg"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -46,11 +45,11 @@
 
     <TextView
         android:id="@+id/tv_select_job"
-        android:layout_width="205dp"
-        android:layout_height="33dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="203dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="25dp"
         android:text="@string/choose_job"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,10 +59,10 @@
     <EditText
         android:id="@+id/txt_job_title"
         android:layout_width="401dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="@string/job_title_user"
         android:inputType="textPersonName"
@@ -73,34 +72,19 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_company" />
 
     <EditText
-        android:id="@+id/txt_employer"
-        android:layout_width="401dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="33dp"
-        android:ems="10"
-        android:hint="@string/employer_user"
-        android:inputType="textPersonName"
-        android:text="@string/employer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_job_title" />
-
-    <EditText
         android:id="@+id/txt_hourly_wage"
         android:layout_width="401dp"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="@string/hourly_wage_user"
-        android:inputType="textPersonName"
+        android:inputType="number|numberDecimal"
         android:text="@string/hourly_wage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_employer" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_job_title" />
 
     <EditText
         android:id="@+id/txt_avg_hours"
@@ -108,10 +92,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="@string/average_hours_optional"
-        android:inputType="textPersonName"
+        android:inputType="number|numberDecimal"
         android:text="@string/avg_hours"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +115,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
-
 
 
 </android.support.constraint.ConstraintLayout>
