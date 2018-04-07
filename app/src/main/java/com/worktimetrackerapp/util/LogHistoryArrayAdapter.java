@@ -10,18 +10,17 @@ import android.widget.TextView;
 
 import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.SavedRevision;
+import com.worktimetrackerapp.DB;
 import com.worktimetrackerapp.R;
 
 import java.util.List;
 
 public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
-    private List<QueryRow> historylist;
-    private final Context context;
-    String strtaskinfo = "empty";
+    private DB app;
 
     public LogHistoryArrayAdapter(Context context, int resource, int tasknameResourceId, int taskjobtitleResourceId, int taskinfoResourceId , List<QueryRow> objects){
         super(context, resource, tasknameResourceId, objects);
-        this.context = context;
+        app = (DB) (context);
     }
 
     private static class ViewHolder{
@@ -36,9 +35,9 @@ public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
             LayoutInflater vi = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             itemView = vi.inflate(R.layout.loghistory_row_layout, null);
             ViewHolder vh = new ViewHolder();
-            vh.taskname = (TextView) itemView.findViewById(R.id.loghistory_row_task_name);
-            vh.taskjob = (TextView) itemView.findViewById(R.id.loghistory_row_task_jobtitle);
-            vh.taskinfo = (TextView) itemView.findViewById(R.id.loghistory_row_task_info);
+            vh.taskname = itemView.findViewById(R.id.loghistory_row_task_name);
+            vh.taskjob =  itemView.findViewById(R.id.loghistory_row_task_jobtitle);
+            vh.taskinfo = itemView.findViewById(R.id.loghistory_row_task_info);
             itemView.setTag(vh);
         }
 
@@ -54,7 +53,8 @@ public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
             String strtaskname = (String) currentRevision.getProperty("taskname");
             taskname.setText(strtaskname);
 
-            String strtaskjob = (String) currentRevision.getProperty("jobtitle");
+            app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobtitle").toString();
+            String strtaskjob = app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobtitle").toString();
             taskjob.setText(strtaskjob);
 
             String TaskScheduledStartDate =(String) currentRevision.getProperty("TaskScheduledStartDate") ;
@@ -62,6 +62,7 @@ public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
             String TaskScheduledEndDate =(String) currentRevision.getProperty("TaskScheduledEndDate") ;
             String TaskScheduledEndTime =(String) currentRevision.getProperty("TaskScheduledEndTime") ;
             if(!TaskScheduledStartDate.isEmpty() && !TaskScheduledEndDate.isEmpty()) {
+                String strtaskinfo = "empty";
                 if (TaskScheduledStartDate.equals(TaskScheduledEndDate)) {
                     strtaskinfo = TaskScheduledStartDate + " - Time: " + TaskScheduledStartTime + " - " + TaskScheduledEndTime;
                 } else {

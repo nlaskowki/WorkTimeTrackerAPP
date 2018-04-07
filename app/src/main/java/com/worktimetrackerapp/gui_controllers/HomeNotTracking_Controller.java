@@ -174,9 +174,9 @@ public class HomeNotTracking_Controller extends Fragment {
         }) ;
     }
 
-    private void startLiveQuery(String SelectedDay) throws Exception {
+    private void startLiveQuery(String SelectedDay) {
         final DB app = (DB) getActivity().getApplication();
-        final String jobname = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
+        final String jobname = app.getcurrentJob().getcurrentJob().toString();
         Query MyQuery = viewItemsByDate.createQuery();
         MyQuery.setDescending(true);
         MyQuery.setStartKey(SelectedDay);

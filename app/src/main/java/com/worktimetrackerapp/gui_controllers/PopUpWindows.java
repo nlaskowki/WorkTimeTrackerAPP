@@ -440,7 +440,7 @@ class PopUpWindows{
                 }
             } else { //create new document
                 try {
-                    String jobTitle = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
+                    String jobTitle = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getId();
                     doc = app.NewTask(DBTaskName, jobTitle, DBTaskWage, DBClient, DBCAddress, DBStartDate, DBStartTime, DBEndDate, DBEndTime);
                 } catch (Exception e) {
                     e.printStackTrace();

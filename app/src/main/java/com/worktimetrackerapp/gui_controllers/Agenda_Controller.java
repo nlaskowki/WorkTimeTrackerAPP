@@ -197,8 +197,8 @@ public class Agenda_Controller extends Fragment {
         }) ;
     }
 
-    private void startLiveQuery(String SelectedDay) throws Exception {
-        final String jobname = mydb.getDocument(app.getcurrentJob().getcurrentJob().toString()).getProperty("jobtitle").toString();
+    private void startLiveQuery(String SelectedDay){
+        final String jobname = app.getcurrentJob().getcurrentJob().toString();
         final DB app = (DB) getActivity().getApplication();
             Query MyQuery = viewItemsByDate.createQuery();
             MyQuery.setDescending(true);
