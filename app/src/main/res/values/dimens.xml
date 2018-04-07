@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="listview_header">6sp</dimen>
     <dimen name="smalltype">1sp</dimen>
+    <dimen name="clocktext">20sp</dimen>
+    <dimen name="hometitle">26sp</dimen>
 </resources>

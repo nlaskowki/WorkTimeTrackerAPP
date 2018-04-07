@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_selectionColor="@color/colorAccent"
-        app:mcv_showOtherDates="all" />
+        app:mcv_showOtherDates="all"
+        app:mcv_dateTextAppearance="@color/colorPrimaryDark" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,7 +20,9 @@
         <ListView
             android:id="@+id/agenda_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="5dp"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/agendafab"
@@ -27,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:clickable="true"
             android:src="@android:drawable/ic_input_add"
             android:tint="@android:color/white" />

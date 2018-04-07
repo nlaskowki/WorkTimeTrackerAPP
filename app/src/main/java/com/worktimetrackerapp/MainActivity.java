@@ -1,7 +1,6 @@
 package com.worktimetrackerapp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -17,12 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.worktimetrackerapp.GUI_Interfaces.Agenda_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.Finance_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.HomeNotTracking_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.HomeTracking_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.LogHistory_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.Settings_Controller;
+import com.worktimetrackerapp.gui_controllers.Agenda_Controller;
+import com.worktimetrackerapp.gui_controllers.Finance_Controller;
+import com.worktimetrackerapp.gui_controllers.HomeNotTracking_Controller;
+import com.worktimetrackerapp.gui_controllers.HomeTracking_Controller;
+import com.worktimetrackerapp.gui_controllers.LogHistory_Controller;
+import com.worktimetrackerapp.gui_controllers.Settings_Controller;
 
 import java.util.HashMap;
 

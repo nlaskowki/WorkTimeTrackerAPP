@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -24,8 +23,8 @@ import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.worktimetrackerapp.GUI_Interfaces.SignIn_Controller;
-import com.worktimetrackerapp.GUI_Interfaces.SignUp_Controller;
+import com.worktimetrackerapp.gui_controllers.SignIn_Controller;
+import com.worktimetrackerapp.gui_controllers.SignUp_Controller;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -56,13 +55,11 @@ public class DB extends android.app.Application implements Replication.ChangeLis
     private static final String SYNC_URL_HTTP = "http://wttuser.axelvh.com/wttdb/_session";
     private static final String SYNC_URL_HTTP_Database= "http://wttuser.axelvh.com/wttdb/";
     private static final String USER_LOCAL_DOC_ID = "user";
-    private OkHttpClient httpClient = new OkHttpClient();
     private static final String DATABASE_NAME = "wttdb";
 
     private Manager dbManager = null;
     private Database Mydb = null;
     private final Gson gson = new Gson();
-    private AndroidContext context;
 
     private ReplicationChangeHandler changeHandler = null;
     private Replication pull;
@@ -179,7 +176,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.MINUTES).writeTimeout(5, TimeUnit.MINUTES).readTimeout(5, TimeUnit.MINUTES);
-        httpClient = builder.build();
+        OkHttpClient httpClient = builder.build();
         httpClient.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) {
                 showErrorMessage("Failed to create a new SGW session with IDToken : " + idToken, e);
@@ -359,7 +356,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
         enableLogging();
         if (dbManager == null) {
             try {
-                context = new AndroidContext(getApplicationContext());
+                AndroidContext context = new AndroidContext(getApplicationContext());
                 dbManager = new Manager(context, Manager.DEFAULT_OPTIONS);
             } catch (IOException e) {
                 android.util.Log.e(TAG, "Couldn't create manager object", e);

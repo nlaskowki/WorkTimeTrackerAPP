@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".GUI_Interfaces.SignIn_Controller"
+            android:name=".gui_controllers.SignIn_Controller"
             android:label="WTT">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".GUI_Interfaces.SignUp_Controller" />
+        <activity android:name=".gui_controllers.SignUp_Controller" />
 
     </application>
 

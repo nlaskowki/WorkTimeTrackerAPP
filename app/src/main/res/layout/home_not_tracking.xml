@@ -12,22 +12,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="10sp"
         android:text="Home"
         android:textColor="@android:color/black"
-        android:textSize="22sp"
+        android:textSize="@dimen/hometitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.worktimetrackerapp.GUI_Interfaces.AnalogClock
+    <com.worktimetrackerapp.gui_controllers.AnalogClock
         android:id="@+id/analogClock"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="335sp"
+        android:layout_height="335sp"
         android:layout_below="@+id/HomeNotTrackTitletxtvw"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="12sp" />
 
     <Button
         android:id="@+id/StartTaskHomeNotButton"
@@ -45,7 +45,9 @@
         <ListView
             android:id="@+id/homenottracking_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="5dp"/>
 
         <TextView
             android:id="@+id/empty_homenottrackinglist"
