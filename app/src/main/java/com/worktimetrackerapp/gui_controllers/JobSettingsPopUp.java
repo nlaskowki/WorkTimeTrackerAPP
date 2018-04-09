@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -224,17 +223,17 @@ public class JobSettingsPopUp {
         if(spinner.getSelectedItem() != null){
             DBjobType = spinner.getSelectedItem().toString();
         }else{
-            reqFields = reqFields + " Job Type";
+            reqFields = reqFields + "Job Type: (Drop Down)";
         }
         if (!jobTitle.getText().toString().isEmpty()) {
             DBjobTitle = jobTitle.getText().toString();
         } else {
-            reqFields = reqFields + " ,Job Title";
+            reqFields = reqFields + "Job Title";
         }
         if (!hourlywage.getText().toString().isEmpty()) {
             DBjobWage = Double.parseDouble(hourlywage.getText().toString());
         } else {
-            reqFields = reqFields + " ,Hourly Wage";
+            reqFields = reqFields + "Hourly Wage";
         }
         if (!avghours.getText().toString().isEmpty()) {
             DBjobAveHours = Double.parseDouble(avghours.getText().toString());
@@ -242,7 +241,7 @@ public class JobSettingsPopUp {
         if (!company.getText().toString().isEmpty()) {
             DBjobCompany = company.getText().toString();
         }else {
-            reqFields = reqFields + " ,Company";
+            reqFields = reqFields + "Company Name";
         }
 
         if (reqFields.equals("Following fields are required: ")) {

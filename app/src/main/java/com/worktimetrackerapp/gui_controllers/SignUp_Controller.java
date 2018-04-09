@@ -17,11 +17,11 @@ import com.worktimetrackerapp.R;
 
 public class SignUp_Controller extends AppCompatActivity {
 
-    Spinner spinner;
-    TextView company;
-    TextView jobTitle;
-    TextView hourlywage;
-    TextView avghours;
+    private Spinner spinner;
+    private TextView company;
+    private TextView jobTitle;
+    private TextView hourlywage;
+    private TextView avghours;
     public Button btn;
 
 
