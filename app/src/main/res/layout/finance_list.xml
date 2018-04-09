@@ -17,12 +17,12 @@
 
     <TextView
         android:id="@+id/titleOfJobs"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="150dp"
-        android:paddingRight="150dp"
+        android:gravity="center"
         android:text="TextView"
-        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
         android:textSize="24sp"
         tools:layout_conversion_absoluteHeight="32dp"
         tools:layout_conversion_absoluteWidth="100dp"

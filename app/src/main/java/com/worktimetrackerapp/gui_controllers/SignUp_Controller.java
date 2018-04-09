@@ -17,11 +17,11 @@ import com.worktimetrackerapp.R;
 
 public class SignUp_Controller extends AppCompatActivity {
 
-    private Spinner spinner;
-    private TextView company;
-    private TextView jobTitle;
-    private TextView hourlywage;
-    private TextView avghours;
+    Spinner spinner;
+    TextView company;
+    TextView jobTitle;
+    TextView hourlywage;
+    TextView avghours;
     public Button btn;
 
 
@@ -71,14 +71,9 @@ public class SignUp_Controller extends AppCompatActivity {
 
                                 spinner.setSelection(0);
                                 company.setText(null);
-                                company.setVisibility(View.VISIBLE);
                                 jobTitle.setText(null);
-                                jobTitle.setVisibility(View.VISIBLE);
                                 hourlywage.setText(null);
-                                hourlywage.setVisibility(View.VISIBLE);
                                 avghours.setText(null);
-                                avghours.setVisibility(View.VISIBLE);
-
 
                             }
                         })
@@ -96,7 +91,7 @@ public class SignUp_Controller extends AppCompatActivity {
                                         cmp = company.getText().toString();
                                     }
                                     app.AddJob(cmp, spinner.getSelectedItem().toString(), jobTitle.getText().toString(), Double.parseDouble(hourlywage.getText().toString()), dblavghours);
-                                }catch(Exception e){System.out.println(e);}
+                                }catch(Exception e){e.printStackTrace();}
 
                                 app.completeLogin();
                             }

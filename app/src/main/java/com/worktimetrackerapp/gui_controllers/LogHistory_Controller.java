@@ -74,7 +74,6 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
     }
 
     protected void startShowList() throws Exception {
-        DB app = (DB) getActivity().getApplication();
         mydb = app.getMydb();
         com.couchbase.lite.View viewItemsByDate = mydb.getView(String.format("%s/%s", designDocName, byDateViewName));
 
@@ -82,14 +81,14 @@ public class LogHistory_Controller extends Fragment implements AdapterView.OnIte
             viewItemsByDate.setMap(new Mapper() {
                 @Override
                 public void map(Map<String, Object> document, Emitter emitter) {
-                    Object createdAt = document.get("created_at");
+                    Object createdAt = document.get("TaskScheduledStartDate");
                     if(document.get("type").equals("Task")) {
                                 if (createdAt != null) {
                                     emitter.emit(createdAt.toString(), null);
                         }
                     }
                 }
-            }, "2");
+            }, "3");
         }
 
         initItemListAdapter();

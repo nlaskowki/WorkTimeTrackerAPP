@@ -72,7 +72,7 @@ class PopUpWindows{
 
     //DB input values
         private String DBTaskName = null;
-        private Double DBTaskWage = null;
+        private Double DBTaskWage = 0.0;
         private String DBClient = null;
         private String DBCAddress = null;
         private String DBStartDate = null;
@@ -81,9 +81,9 @@ class PopUpWindows{
         private String DBEndTime = null;
         private String DBStartDateTime = null;
         private String DBEndDateTime = null;
-        private Double DBExtraCosts = null;
-        private Double DBEarnings = null;
-        private Double DBTaskWageOvertime = null;
+        private Double DBExtraCosts = 0.0;
+        private Double DBEarnings = 0.0;
+        private Double DBTaskWageOvertime = 0.0;
         private String DBStartOverTimeDateTime = null;
 
 

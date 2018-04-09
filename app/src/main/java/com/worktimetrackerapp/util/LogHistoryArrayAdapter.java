@@ -52,9 +52,14 @@ public class LogHistoryArrayAdapter extends ArrayAdapter<QueryRow>{
 
             String strtaskname = (String) currentRevision.getProperty("taskname");
             taskname.setText(strtaskname);
-
-            app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobtitle").toString();
-            String strtaskjob = app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobtitle").toString();
+            String strtaskjob;
+            try {
+                String title = app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobtitle").toString();
+                String company = app.getMydb().getDocument(currentRevision.getProperty("jobtitle").toString()).getProperty("jobcompany").toString();
+                strtaskjob = title + " @ " + company;
+            }catch (Exception e){
+                strtaskjob = "Job removed!";
+            }
             taskjob.setText(strtaskjob);
 
             String TaskScheduledStartDate =(String) currentRevision.getProperty("TaskScheduledStartDate") ;
