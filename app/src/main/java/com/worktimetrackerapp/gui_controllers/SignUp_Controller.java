@@ -71,13 +71,13 @@ public class SignUp_Controller extends AppCompatActivity {
 
                                 spinner.setSelection(0);
                                 company.setText(null);
-                                company.setVisibility(View.INVISIBLE);
+                                company.setVisibility(View.VISIBLE);
                                 jobTitle.setText(null);
-                                jobTitle.setVisibility(View.INVISIBLE);
+                                jobTitle.setVisibility(View.VISIBLE);
                                 hourlywage.setText(null);
-                                hourlywage.setVisibility(View.INVISIBLE);
+                                hourlywage.setVisibility(View.VISIBLE);
                                 avghours.setText(null);
-                                avghours.setVisibility(View.INVISIBLE);
+                                avghours.setVisibility(View.VISIBLE);
 
 
                             }

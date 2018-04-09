@@ -2,19 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP6/WorkTimeTrackerAPP.iml" filepath="C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP6/WorkTimeTrackerAPP.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WorkTimeTrackerAPP.iml" filepath="$PROJECT_DIR$/WorkTimeTrackerAPP.iml" />
-      <module fileurl="file://C:/Users/Tyler/AndroidStudioProjects/WorkTimeTrackerAPP2/WorkTimeTrackerAPP.iml" filepath="C:/Users/Tyler/AndroidStudioProjects/WorkTimeTrackerAPP2/WorkTimeTrackerAPP.iml" />
-      <module fileurl="file://C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP5/WorkTimeTrackerAPP.iml" filepath="C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP5/WorkTimeTrackerAPP.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WorkTimeTrackerAPP-Final.iml" filepath="$PROJECT_DIR$/WorkTimeTrackerAPP-Final.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../WorkTimeTrackerAPP2/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" filepath="$PROJECT_DIR$/../WorkTimeTrackerAPP2/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" />
-      <module fileurl="file://C:/Users/Maximus/AndroidStudioProjects/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" filepath="C:/Users/Maximus/AndroidStudioProjects/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" />
-      <module fileurl="file://C:/Users/Thomas Dawson/AndroidStudioProjects/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" filepath="C:/Users/Thomas Dawson/AndroidStudioProjects/WorkTimeTrackerAPP/WorkTimeTrackerAPP2.iml" />
-      <module fileurl="file://C:/Users/Noah/Desktop/GitHub/WorkTimeTrackerAPP/.idea/WorkTimeTrackerAPP5.iml" filepath="C:/Users/Noah/Desktop/GitHub/WorkTimeTrackerAPP/.idea/WorkTimeTrackerAPP5.iml" />
-      <module fileurl="file://C:/Users/Noah/Desktop/GitHub/WorkTimeTrackerAPP/.idea/WorkTimeTrackerAPP6.iml" filepath="C:/Users/Noah/Desktop/GitHub/WorkTimeTrackerAPP/.idea/WorkTimeTrackerAPP6.iml" />
+      <module fileurl="file://C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP6\WorkTimeTrackerAPP.iml" filepath="C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP6\WorkTimeTrackerAPP.iml" />
+      <module fileurl="file://C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP.iml" filepath="C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP.iml" />
+      <module fileurl="file://C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP5\WorkTimeTrackerAPP.iml" filepath="C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP5\WorkTimeTrackerAPP.iml" />
+      <module fileurl="file://C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP-Final.iml" filepath="C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP-Final.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WorkTimeTrackerAPP2.iml" filepath="$PROJECT_DIR$/WorkTimeTrackerAPP2.iml" />
+      <module fileurl="file://C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" filepath="C:\Users\Tyler\AndroidStudioProjects\WorkTimeTrackerAPP2\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" />
+      <module fileurl="file://C:\Users\Maximus\AndroidStudioProjects\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" filepath="C:\Users\Maximus\AndroidStudioProjects\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" />
+      <module fileurl="file://C:\Users\Thomas Dawson\AndroidStudioProjects\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" filepath="C:\Users\Thomas Dawson\AndroidStudioProjects\WorkTimeTrackerAPP\WorkTimeTrackerAPP2.iml" />
+      <module fileurl="file://C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP5.iml" filepath="C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP5.iml" />
+      <module fileurl="file://C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP6.iml" filepath="C:\Users\Noah\Desktop\GitHub\WorkTimeTrackerAPP\.idea\WorkTimeTrackerAPP6.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP6/app/app.iml" filepath="C:/Users/scoob/AndroidStudioProjects/WorkTimeTrackerAPP6/app/app.iml" />
+      <module fileurl="file://C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP6\app\app.iml" filepath="C:\Users\scoob\AndroidStudioProjects\WorkTimeTrackerAPP6\app\app.iml" />
     </modules>
   </component>
 </project>
