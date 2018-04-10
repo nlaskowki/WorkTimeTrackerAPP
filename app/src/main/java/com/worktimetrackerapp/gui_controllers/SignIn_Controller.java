@@ -110,13 +110,8 @@ public class SignIn_Controller extends AppCompatActivity  {
 
     private void clearWebViewCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.removeAllCookies(null);
-            cookieManager.flush();
-        } else {
-            cookieManager.removeAllCookie();
-            CookieSyncManager.getInstance().sync();
-        }
+        cookieManager.removeAllCookies(null);
+        cookieManager.flush();
     }
 
 

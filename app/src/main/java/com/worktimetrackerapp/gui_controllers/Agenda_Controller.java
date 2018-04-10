@@ -1,6 +1,7 @@
 package com.worktimetrackerapp.gui_controllers;
 
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,12 +46,10 @@ public class Agenda_Controller extends Fragment {
     View currentView;
     private ListView agendalist;
     private AgendaArrayAdapter aaa;
-    boolean ended;
-
-    private Database mydb;
-    private LiveQuery liveQuery;
+    LiveQuery liveQuery;
     DB app;
     TextView agendaheader;
+    String selectedday;
 
     com.couchbase.lite.View viewItemsByDate;
 
@@ -88,12 +87,12 @@ public class Agenda_Controller extends Fragment {
 
         try {
             SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
-            String selectedDay = today.format(calendar.getTime());
-            agendaheader.setText(selectedDay);
+            selectedday = today.format(calendar.getTime());
+            agendaheader.setText(selectedday);
             agendalist.addHeaderView(agendaheader);
             agendaheader.setFocusable(false);
             startShowList();
-            startLiveQuery(selectedDay);
+            startLiveQuery(selectedday);
         } catch (Exception e) {
             app.showErrorMessage("Error initializing CBLite", e);
         }
@@ -104,11 +103,12 @@ public class Agenda_Controller extends Fragment {
                 // Toast.makeText(getActivity(), "" + date, Toast.LENGTH_SHORT).show();
                 try {
                     SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                    String selectedDay = dateFormatter.format(date.getDate());
+                    selectedday = dateFormatter.format(date.getDate());
                     agendalist.removeHeaderView(agendaheader);
-                    agendaheader.setText(selectedDay);
+                    agendaheader.setText(selectedday);
                     agendalist.addHeaderView(agendaheader);
-                    startLiveQuery(selectedDay);
+                    liveQuery.stop();
+                    startLiveQuery(selectedday);
                 } catch (Exception e) {
                     DB app = (DB) getContext();
                     app.showErrorMessage("Error initializing CBLite", e);
@@ -126,7 +126,7 @@ public class Agenda_Controller extends Fragment {
                         PopUpWindows ipp = new PopUpWindows();
                         ipp.showInfoPopup(null, getActivity(),false, null);
                     }catch (Exception e){
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }
             });
@@ -135,16 +135,16 @@ public class Agenda_Controller extends Fragment {
         app.getcurrentJob().setOnObjectChangeListener(new OnObjectChangeListener() {
             @Override
             public void OnObjectChanged(Object newobj) {
-                try {
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                    String selectedDay = dateFormatter.format(calendar.getTime());
-                    agendalist.removeHeaderView(agendaheader);
-                    agendaheader.setText(selectedDay);
-                    agendalist.addHeaderView(agendaheader);
-                    startLiveQuery(selectedDay);
-                } catch (Exception e) {
-                    app.showErrorMessage("Error initializing CBLite", e);
+                if(currentView != null) {
+                    try {
+                        agendalist.removeHeaderView(agendaheader);
+                        agendaheader.setText(selectedday);
+                        agendalist.addHeaderView(agendaheader);
+                        liveQuery.stop();
+                        startLiveQuery(selectedday);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -153,7 +153,7 @@ public class Agenda_Controller extends Fragment {
 
     protected void startShowList() throws Exception {
         DB app = (DB) getActivity().getApplication();
-        mydb = app.getMydb();
+        Database mydb = app.getMydb();
         viewItemsByDate = mydb.getView("TaskScheduledStartDate");
         viewItemsByDate.setMap(new Mapper(){
             @Override
@@ -161,11 +161,11 @@ public class Agenda_Controller extends Fragment {
                 if(document.get("type").equals("Task")) {
                     if(document.get("TaskScheduledStartDate") != null) {
                             String date = (String) document.get("TaskScheduledStartDate");
-                            emitter.emit(date.toString(), null);
+                            emitter.emit(date, null);
                     }
                 }//end if
             }
-        },"1");
+        },"4");
 
         initItemListAdapter();
     }
@@ -199,7 +199,9 @@ public class Agenda_Controller extends Fragment {
 
     private void startLiveQuery(String SelectedDay){
         final String jobname = app.getcurrentJob().getcurrentJob().toString();
+
         final DB app = (DB) getActivity().getApplication();
+            liveQuery = null;
             Query MyQuery = viewItemsByDate.createQuery();
             MyQuery.setDescending(true);
             MyQuery.setStartKey(SelectedDay);
@@ -212,6 +214,8 @@ public class Agenda_Controller extends Fragment {
                             aaa.clear();
                             for (Iterator<QueryRow> it = event.getRows(); it.hasNext();) {
                                 QueryRow item = it.next();
+                                System.out.println("jobtitle"+ app.getMydb().getDocument(item.getDocumentId()).getProperty("jobtitle"));
+                                System.out.println("jobname: " + jobname);
                                 if(app.getMydb().getDocument(item.getDocumentId()).getProperty("jobtitle").equals(jobname)) {
                                     aaa.add(item);
                                 }
@@ -224,17 +228,6 @@ public class Agenda_Controller extends Fragment {
             liveQuery.start();
     }
 
-    private QueryEnumerator DecorDays(){
-        QueryEnumerator result = null;
-        Query query = viewItemsByDate.createQuery();
-        query.setDescending(true);
-        try {
-            result = query.run();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-        return result;
-    }
 
 }
 

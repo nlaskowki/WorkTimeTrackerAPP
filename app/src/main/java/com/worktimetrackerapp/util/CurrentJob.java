@@ -12,6 +12,7 @@ public class CurrentJob {
     public Object getcurrentJob(){
         return this.CJ;
     }
+
     public void setCurrentJob(Object currentjob){
         this.CJ = currentjob;
 

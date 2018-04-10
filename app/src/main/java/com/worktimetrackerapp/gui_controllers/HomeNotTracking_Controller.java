@@ -42,6 +42,7 @@ public class HomeNotTracking_Controller extends Fragment {
     private Database mydb;
     DB app;
     TextView agendaheader;
+    String selectedDay;
 
     com.couchbase.lite.View viewItemsByDate;
     View currentView;
@@ -79,7 +80,7 @@ public class HomeNotTracking_Controller extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 @SuppressLint("SimpleDateFormat")
                 SimpleDateFormat today = new SimpleDateFormat("yyyy-MM-dd");
-                String selectedDay = today.format(calendar.getTime());
+                selectedDay = today.format(calendar.getTime());
                 agendaheader.setText(selectedDay);
                 HNTList.addHeaderView(agendaheader);
                 agendaheader.setFocusable(false);
@@ -93,13 +94,12 @@ public class HomeNotTracking_Controller extends Fragment {
         app.getcurrentJob().setOnObjectChangeListener(new OnObjectChangeListener() {
             @Override
             public void OnObjectChanged(Object newobj) {
-                try {
-                    Calendar calendar = Calendar.getInstance();
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                    String selectedDay = dateFormatter.format(calendar.getTime());
-                    startLiveQuery(selectedDay);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(currentView != null) {
+                    try {
+                        startLiveQuery(selectedDay);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
