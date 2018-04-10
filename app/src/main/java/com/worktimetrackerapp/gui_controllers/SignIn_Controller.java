@@ -1,15 +1,18 @@
 package com.worktimetrackerapp.gui_controllers;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.ProgressBar;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,6 +33,8 @@ public class SignIn_Controller extends AppCompatActivity  {
     private static final int RC_GOOGLE_SIGN_IN = 9001;
     public static final String INTENT_ACTION_LOGOUT = "logout";
 
+    ProgressBar progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +42,9 @@ public class SignIn_Controller extends AppCompatActivity  {
         final SignInButton btnLoginGoogle = findViewById(R.id.btn_loginGoogle);
         btnLoginGoogle.setSize(SignInButton.SIZE_STANDARD);
 
+        progress = findViewById(R.id.progressBar_loadingApp);
+
+        progress.setVisibility(View.GONE);
         //google sign in
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
@@ -62,6 +70,7 @@ public class SignIn_Controller extends AppCompatActivity  {
 
     @Override
     protected void onDestroy() {
+        progress.setVisibility(View.GONE);
         super.onDestroy();
     }
 
@@ -83,6 +92,7 @@ public class SignIn_Controller extends AppCompatActivity  {
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        progress.setVisibility(View.VISIBLE);
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String idToken = account.getIdToken();

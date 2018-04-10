@@ -3,6 +3,7 @@ package com.worktimetrackerapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -271,6 +272,7 @@ public class DB extends android.app.Application implements Replication.ChangeLis
 
         return true;
     }
+
 
 
     //************************************************************** Sync Gateway ***********************************************
