@@ -74,7 +74,6 @@ This code of conduct and its related procedures also applies to unacceptable beh
 ## 9. Contact info
 
 axel.van.hoyweghen@outlook.com
-
 laskowskinoahm@gmail.com
 
 ## 10. License and attribution
